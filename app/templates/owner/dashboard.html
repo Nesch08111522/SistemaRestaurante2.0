@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Panel · {{ APP_NAME }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Panel de {{ empresa.nombre }}</h1>
+  <p class="muted">Plan: {{ empresa.suscripcion.plan }} · Estado: {{ empresa.estado }}</p>
+  <ul>
+    {% for r in restaurantes %}
+      <li>{{ r.nombre }} — {{ r.estado_publicacion or "sin estado" }}</li>
+    {% else %}
+      <li>Sin restaurantes todavía.</li>
+    {% endfor %}
+  </ul>
+  <p>Reseñas: {{ total_resenas }} · Promedio: {{ promedio_calificacion }}</p>
+</section>
+{% endblock %}

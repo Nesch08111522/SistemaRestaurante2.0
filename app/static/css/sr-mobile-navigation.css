@@ -1,0 +1,297 @@
+
+/* ============================================================
+   SMARTRESTO — MOBILE BOTTOM NAVIGATION
+   Archivo: sr-mobile-navigation.css
+
+   - Navegación inferior para usuarios públicos y comensales.
+   - Visible únicamente en dispositivos móviles y tablets.
+   - No altera la navegación de escritorio ni el sidebar.
+   - Compatible con tema claro y oscuro.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   01. VARIABLES
+   ------------------------------------------------------------ */
+
+:root {
+    --sr-mobile-nav-height: 68px;
+    --sr-mobile-nav-bg: var(--sr-surface, #fffefa);
+    --sr-mobile-nav-border: var(--sr-border, #e5e9df);
+    --sr-mobile-nav-active: var(--sr-primary, #28684f);
+    --sr-mobile-nav-muted: var(--sr-muted, #738078);
+}
+
+/* ------------------------------------------------------------
+   02. OCULTAR POR DEFECTO
+   ------------------------------------------------------------ */
+
+.sr-mobile-nav {
+    display: none;
+}
+
+/* ------------------------------------------------------------
+   03. TABLETS Y DISPOSITIVOS MÓVILES
+   ------------------------------------------------------------ */
+
+@media (max-width: 1024px) {
+
+    .sr-mobile-nav {
+        position: fixed;
+        inset-inline: 0;
+        bottom: 0;
+
+        z-index: var(--z-sticky, 200);
+
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-items: stretch;
+
+        width: 100%;
+        min-height: var(--sr-mobile-nav-height);
+
+        padding: 7px 10px;
+        padding-bottom: max(7px, env(safe-area-inset-bottom));
+
+        background: var(--sr-mobile-nav-bg);
+
+        border-top: 1px solid var(--sr-mobile-nav-border);
+
+        box-shadow: 0 -5px 22px rgba(23, 57, 47, 0.07);
+
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+
+        transition:
+            background-color 200ms ease,
+            border-color 200ms ease;
+    }
+
+    /* --------------------------------------------------------
+       04. ENLACES
+       -------------------------------------------------------- */
+
+    .sr-mobile-nav > a {
+        position: relative;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        gap: 4px;
+
+        min-width: 0;
+        min-height: 52px;
+
+        padding: 5px 3px;
+
+        color: var(--sr-mobile-nav-muted);
+
+        text-decoration: none;
+        text-align: center;
+
+        border-radius: 13px;
+
+        font-family: var(--font-body, "DM Sans", sans-serif);
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 1.2;
+
+        transition:
+            color 180ms ease,
+            background-color 180ms ease,
+            transform 180ms ease;
+
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* --------------------------------------------------------
+       05. ICONOS SVG
+       -------------------------------------------------------- */
+
+    .sr-mobile-nav > a svg {
+        display: block;
+
+        width: 21px;
+        height: 21px;
+
+        flex-shrink: 0;
+
+        stroke: currentColor;
+        transition:
+            transform 180ms ease,
+            color 180ms ease;
+    }
+
+    .sr-mobile-nav > a span {
+        display: block;
+
+        max-width: 100%;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* --------------------------------------------------------
+       06. ESTADOS HOVER Y ACTIVE
+       -------------------------------------------------------- */
+
+    .sr-mobile-nav > a:hover {
+        color: var(--sr-mobile-nav-active);
+        background: var(--sr-primary-soft, #e5f0e8);
+    }
+
+    .sr-mobile-nav > a:active {
+        transform: scale(0.96);
+    }
+
+    /* Página actual */
+
+    .sr-mobile-nav > a[aria-current="page"] {
+        color: var(--sr-mobile-nav-active);
+        background: var(--sr-primary-soft, #e5f0e8);
+
+        font-weight: 800;
+    }
+
+    .sr-mobile-nav > a[aria-current="page"] svg {
+        transform: translateY(-2px);
+    }
+
+    /* Indicador de selección */
+
+    .sr-mobile-nav > a[aria-current="page"]::before {
+        content: "";
+
+        position: absolute;
+        top: -7px;
+        left: 50%;
+
+        width: 22px;
+        height: 3px;
+
+        background: var(--sr-mobile-nav-active);
+        border-radius: 0 0 5px 5px;
+
+        transform: translateX(-50%);
+    }
+
+    /* Accesibilidad */
+
+    .sr-mobile-nav > a:focus-visible {
+        outline: 3px solid var(--sr-mobile-nav-active);
+        outline-offset: -3px;
+    }
+}
+
+/* ------------------------------------------------------------
+   07. TABLETS GRANDES
+   ------------------------------------------------------------ */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    .sr-mobile-nav {
+        min-height: 74px;
+        padding-inline: clamp(24px, 8vw, 100px);
+    }
+
+    .sr-mobile-nav > a {
+        gap: 5px;
+        font-size: 12px;
+    }
+
+    .sr-mobile-nav > a svg {
+        width: 23px;
+        height: 23px;
+    }
+}
+
+/* ------------------------------------------------------------
+   08. MÓVILES
+   ------------------------------------------------------------ */
+
+@media (max-width: 560px) {
+
+    .sr-mobile-nav {
+        min-height: 64px;
+
+        padding-inline: 8px;
+        padding-top: 5px;
+        padding-bottom: max(5px, env(safe-area-inset-bottom));
+    }
+
+    .sr-mobile-nav > a {
+        min-height: 48px;
+        gap: 3px;
+
+        font-size: 10px;
+    }
+
+    .sr-mobile-nav > a svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* ------------------------------------------------------------
+   09. MÓVILES PEQUEÑOS
+   ------------------------------------------------------------ */
+
+@media (max-width: 360px) {
+
+    .sr-mobile-nav {
+        padding-inline: 4px;
+    }
+
+    .sr-mobile-nav > a {
+        font-size: 9px;
+        gap: 3px;
+    }
+
+    .sr-mobile-nav > a svg {
+        width: 19px;
+        height: 19px;
+    }
+}
+
+/* ------------------------------------------------------------
+   10. TEMA OSCURO
+   ------------------------------------------------------------ */
+
+[data-theme="dark"] .sr-mobile-nav {
+    --sr-mobile-nav-bg: var(--sr-surface, #202b28);
+    --sr-mobile-nav-border: var(--sr-border, #34443b);
+    --sr-mobile-nav-active: var(--sr-primary, #80c6a1);
+    --sr-mobile-nav-muted: var(--sr-muted, #aab9af);
+
+    box-shadow: 0 -5px 22px rgba(0, 0, 0, 0.2);
+}
+
+/* ------------------------------------------------------------
+   11. EVITAR SOLAPAMIENTO CON EL CONTENIDO
+   ------------------------------------------------------------ */
+
+@media (max-width: 1024px) {
+
+    body:has(.sr-mobile-nav) main {
+        padding-bottom: calc(
+            var(--sr-mobile-nav-height) +
+            env(safe-area-inset-bottom) +
+            12px
+        );
+    }
+}
+
+/* ------------------------------------------------------------
+   12. REDUCCIÓN DE MOVIMIENTO
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sr-mobile-nav,
+    .sr-mobile-nav * {
+        transition: none !important;
+        animation: none !important;
+    }
+}

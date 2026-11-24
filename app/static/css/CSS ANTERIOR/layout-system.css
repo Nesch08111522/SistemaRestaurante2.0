@@ -1,0 +1,16 @@
+/* Reusable page compositions. */
+.layout-bento{--layout-gap:var(--space-md,1rem);display:grid;grid-template-columns:repeat(var(--layout-columns,4),minmax(0,1fr));gap:var(--layout-gap);align-items:stretch;min-width:0}
+.layout-gap-sm{--layout-gap:var(--space-sm,.75rem)}.layout-gap-md{--layout-gap:var(--space-md,1rem)}.layout-gap-lg{--layout-gap:var(--space-lg,1.5rem)}
+.layout-bento>[data-layout-span="2x1"]{grid-column:span 2}.layout-bento>[data-layout-span="1x2"]{grid-row:span 2}.layout-bento>[data-layout-span="2x2"]{grid-column:span 2;grid-row:span 2}
+.layout-split{--layout-ratio:1fr 1fr;display:grid;grid-template-columns:var(--layout-ratio);align-items:stretch;min-width:0}
+.layout-split-40-60{--layout-ratio:2fr 3fr}.layout-split-60-40{--layout-ratio:3fr 2fr}
+.layout-visual-left>[data-layout-side="visual"]{grid-column:1;grid-row:1}.layout-visual-left>[data-layout-side="content"]{grid-column:2;grid-row:1}
+.layout-visual-right>[data-layout-side="visual"]{grid-column:2;grid-row:1}.layout-visual-right>[data-layout-side="content"]{grid-column:1;grid-row:1}
+.layout-masonry{--layout-gap:var(--space-md,1rem);columns:var(--layout-columns,3);column-gap:var(--layout-gap);min-width:0}.layout-masonry>*{display:inline-block;vertical-align:top;width:100%;margin:0 0 var(--layout-gap);break-inside:avoid}
+.layout-masonry img,.layout-masonry video{display:block;width:100%;height:auto;max-width:100%}
+.layout-full-bleed{position:relative;width:100%;max-width:none;margin-inline:calc(50% - 50vw);overflow:hidden}
+.layout-editorial{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(var(--space-lg,1.5rem),6vw,var(--space-2xl,4rem));align-items:center;min-width:0}
+.layout-observe [data-layout-reveal]{opacity:0;transform:translateY(12px);transition:opacity .42s ease,transform .42s ease}.layout-observe [data-layout-reveal].is-visible{opacity:1;transform:none}
+@media(max-width:900px){.layout-bento{grid-template-columns:repeat(2,minmax(0,1fr))}.layout-masonry{columns:2}}
+@media(max-width:600px){.layout-bento{grid-template-columns:repeat(2,minmax(0,1fr))}.layout-masonry{columns:1}.layout-split,.layout-editorial{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.layout-observe [data-layout-reveal],.layout-observe [data-layout-reveal].is-visible{opacity:1;transform:none;transition:none}}

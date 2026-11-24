@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Plataforma · {{ APP_NAME }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Panel de plataforma</h1>
+  <p>Empresas: {{ total_empresas }} · Admins: {{ total_admins }}</p>
+  <ul>
+    {% for e in empresas %}
+      <li>{{ e.nombre }} — {{ e.estado }}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

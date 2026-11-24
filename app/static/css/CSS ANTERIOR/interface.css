@@ -1,0 +1,23 @@
+/* 60% canvas, 30% surfaces, 10% accents. Icons keep their glyph fonts. */
+:root {
+  --sr-bg: var(--theme-bg); --sr-surface: var(--theme-surface); --sr-tint: var(--theme-elevated); --sr-line: var(--theme-border);
+  --sr-text: var(--theme-text); --sr-muted: var(--theme-muted); --sr-brand: var(--theme-accent); --sr-focus: var(--theme-focus);
+  --sr-accent: var(--theme-accent); --sr-ink: var(--theme-danger); --sr-on-brand: var(--theme-text);
+  --sr-hero: var(--theme-surface); --sr-glow: var(--theme-elevated); --sr-display:"DM Sans",system-ui,sans-serif;
+  --font-main: var(--sr-display); --font-heading: var(--sr-display);
+}
+:root[data-theme=dark] {
+  --sr-bg: var(--theme-bg); --sr-surface: var(--theme-surface); --sr-tint: var(--theme-elevated); --sr-line: var(--theme-border);
+  --sr-text: var(--theme-text); --sr-muted: var(--theme-muted); --sr-brand: var(--theme-accent); --sr-focus: var(--theme-focus);
+  --sr-accent: var(--theme-accent); --sr-ink: var(--theme-text); --sr-on-brand: var(--theme-danger);
+  --sr-hero: var(--theme-surface); --sr-glow: var(--theme-elevated);
+}
+*, *::before, *::after {scrollbar-width:none}
+*::-webkit-scrollbar {display:none}
+.sr-dragging, .sr-dragging * {user-select:none!important;cursor:grabbing!important;scroll-behavior:auto!important}
+@media(min-width:1100px){
+  body .sr-sidebar{display:flex;position:fixed;inset:var(--sr-header) auto 0 0;width:var(--sr-rail);z-index:1400;box-sizing:border-box}
+  body #main-content,body .sr-footer{margin-left:var(--sr-rail)}
+  body .sr-menu-button{display:none}
+  .sr-compact .sr-sidebar :is(a span,form span,.sr-group){position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}
+}

@@ -1,0 +1,22 @@
+{%- set workspace_user = session.get('user', {}) -%}
+
+{%- set owner_space = workspace_user.get('role') == 'business_owner' -%}
+
+{%- set workspace_titles = {
+
+  'admin.dashboard': 'Centro de control', 'owner.dashboard': 'Resumen de mi empresa',
+  'salon.index': 'Salón y mesas', 'kitchen.index': 'Cocina en vivo',
+  'market.index': 'Mercado gastronómico', 'loyalty.index': 'Recompensas',
+  'pantry.index': 'Mi cocina', 'ar.index': 'Menú 3D'
+} -%}
+{%- set workspace_title = workspace_titles.get(request.endpoint, 'Espacio de trabajo') -%}
+<div class="sr-workspace-header">
+  <div>
+    <nav class="sr-workspace-crumbs" aria-label="Ruta de navegación">
+      <span>SmartResto</span><span aria-hidden="true">/</span>
+      <span>{{ 'Mi empresa' if owner_space else 'Administración' if workspace_user.get('role') == 'admin' else 'Personal' }}</span>
+      <span aria-hidden="true">/</span><strong>{{ workspace_title }}</strong>
+    </nav>
+    <p class="sr-workspace-kicker">{{ 'OPERACIÓN COMERCIAL' if owner_space else 'OPERACIÓN DE PLATAFORMA' if workspace_user.get('role') == 'admin' else 'ESPACIO PERSONAL' }}</p>
+  </div>
+</div>

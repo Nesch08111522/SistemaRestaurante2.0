@@ -1,0 +1,338 @@
+
+{%- set shell_user = current_user or {} -%}
+{%- set sr_authenticated = session.get('user_id') is not none -%}
+{%- set sr_private = sr_authenticated and request.blueprint in ('owner', 'admin', 'salon', 'kitchen', 'copilot', 'intelligence', 'loyalty', 'pantry', 'home_kitchen', 'comunicacion', 'catalog', 'sites', 'trust_center', 'companies', 'business_access') -%}
+{%- set sr_auth = request.blueprint == 'auth' -%}
+{%- set sr_discover = request.endpoint == 'public.home' -%}
+{%- set sr_admin_ui = sr_private and shell_user is mapping and shell_user.get('role') == 'admin' -%}
+{%- set sr_workspace = sr_private -%}
+{%- set sr_saas_private = sr_private -%}
+<!DOCTYPE html>
+<html lang="es" class="sr-compact" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+
+  {% include 'partials/theme_head.html' %}
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+  <title>
+    {% block title %}
+      {{ APP_NAME }} - Recomendación Inteligente de Restaurantes
+    {% endblock %}
+  </title>
+
+  <!-- =====================================================
+       FUENTES
+  ====================================================== -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Text&family=Lora:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+    media="print"
+    onload="this.media='all'"
+  />
+
+  <!-- =====================================================
+       LIBRERÍAS EXTERNAS
+  ====================================================== -->
+
+  {% if not sr_auth %}
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='vendor/material-icons/material-icons.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='vendor/fontawesome/css/all.min.css') }}"
+    />
+
+    {% if sr_discover %}
+      <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}"
+      />
+    {% endif %}
+
+  {% endif %}
+
+  <!-- =====================================================
+       SISTEMA GLOBAL DE ESTILOS
+  ====================================================== -->
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/forest/discovery.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sr-footer.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sr-mobile-navigation.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/restaurant-cards.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/discovery-cards.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/discovery-page.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/business-plans.css') }}" />
+
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout-system.css') }}" />
+
+  <!-- =====================================================
+       ESTILOS CONDICIONALES
+  ====================================================== -->
+
+  {% if sr_auth %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}" />
+  {% endif %}
+
+  {% if sr_discover %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forest-home.css') }}" />
+  {% endif %}
+
+  {% if sr_saas_private %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/saas-private.css') }}" />
+  {% endif %}
+
+  {% if sr_workspace %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/internal-workspace.css') }}" />
+  {% endif %}
+
+  {% if sr_admin_ui %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-precision.css') }}" />
+  {% endif %}
+
+  <!-- =====================================================
+       SEO Y METADATOS
+  ====================================================== -->
+
+  <meta
+    name="description"
+    content="{% block description %}Descubre restaurantes y sabores de Trujillo con SmartResto.{% endblock %}"
+  />
+
+  {% if sr_auth or sr_private %}
+    <meta name="robots" content="noindex, nofollow" />
+  {% endif %}
+
+  <!-- =====================================================
+       PWA: METADATOS
+  ====================================================== -->
+
+  <meta name="theme-color" content="#111827" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <link
+    rel="manifest"
+    href="{{ url_for('static', filename='manifest.json') }}"
+  />
+
+  <!-- Espacio para metadatos y recursos específicos -->
+  {% block head %}{% endblock %}
+
+  <!-- =====================================================
+       AJUSTES VISUALES
+  ====================================================== -->
+
+  <style>
+    /* Se deshabilitan animaciones decorativas. */
+    html {
+      scroll-behavior: auto !important;
+    }
+
+    .ax-stage,
+    .ax-stage *,
+    .forest-hero *,
+    .forest-card {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    /* Los indicadores de carga mantienen su animación. */
+    .ax-stage .ax-spinner {
+      animation: ax-spin .8s linear infinite !important;
+    }
+  </style>
+
+</head>
+
+<body
+  data-role="{{ shell_user.get('role') if sr_authenticated else 'guest' }}"
+  class="
+    {{ 'sr-admin-precision' if sr_admin_ui else '' }}
+    {{ 'sr-private' if sr_private else 'sr-public-site' }}
+    {{ 'sr-workspace' if sr_workspace else '' }}
+    {{ 'sr-saas-private' if sr_saas_private else '' }}
+    {{ 'sr-discover' if sr_discover else '' }}
+    {{ 'sr-auth' if sr_auth else '' }}
+    {% block body_class %}{% endblock %}
+  "
+>
+
+  <!-- =====================================================
+       NAVEGACIÓN
+  ====================================================== -->
+
+  {% if sr_auth %}
+
+    <a
+      class="sr-auth-home-link"
+      href="{{ url_for('public.home') }}"
+      aria-label="Volver al inicio"
+    >
+      <svg
+        aria-hidden="true"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+
+      <span>Volver al inicio</span>
+    </a>
+
+  {% else %}
+
+    {% include 'partials/header.html' %}
+
+  {% endif %}
+
+  <!-- =====================================================
+       CONTENIDO PRINCIPAL
+  ====================================================== -->
+
+  <main
+    id="main-content"
+    class="main-content"
+    tabindex="-1"
+  >
+
+    {% include 'partials/flash.html' %}
+
+    {% if sr_workspace %}
+      {% include 'partials/internal_workspace_header.html' %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+  </main>
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  {% if not sr_auth and (show_public_footer is not defined or show_public_footer) %}
+    {% include 'partials/footer.html' %}
+  {% endif %}
+
+  <!-- =====================================================
+       NAVEGACIÓN MÓVIL
+  ====================================================== -->
+
+  {% if not sr_private and not sr_auth %}
+    {% include 'partials/mobile_navigation.html' %}
+  {% endif %}
+
+  <!-- =====================================================
+       JAVASCRIPT GLOBAL
+  ====================================================== -->
+
+  <script
+    defer
+    src="{{ url_for('static', filename='js/shell.js') }}"
+  ></script>
+
+  {% if sr_private %}
+    <script
+      defer
+      src="{{ url_for('static', filename='js/private-shell.js') }}"
+    ></script>
+  {% endif %}
+
+  <script
+    defer
+    src="{{ url_for('static', filename='js/security.js') }}"
+  ></script>
+
+  <script
+    defer
+    src="{{ url_for('static', filename='js/responsive-layout.js') }}"
+  ></script>
+
+  <script
+    defer
+    src="{{ url_for('static', filename='js/layout-system.js') }}"
+  ></script>
+
+  <!-- =====================================================
+       LEAFLET: SOLO DESCUBRIMIENTO
+  ====================================================== -->
+
+  {% if sr_discover %}
+    <script
+      defer
+      src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}"
+    ></script>
+  {% endif %}
+
+  <!-- =====================================================
+       SCRIPTS ESPECÍFICOS DE CADA PÁGINA
+
+       IMPORTANTE:
+       Este bloque debe existir UNA SOLA VEZ.
+  ====================================================== -->
+
+  {% block scripts %}{% endblock %}
+
+  
+<!-- =====================================================
+     PWA: REGISTRO DEL SERVICE WORKER
+====================================================== -->
+
+<script>
+(() => {
+    "use strict";
+
+    if (!("serviceWorker" in navigator)) {
+        console.warn("Este navegador no soporta Service Workers.");
+        return;
+    }
+
+    window.addEventListener("load", async () => {
+        try {
+            const registration = await navigator.serviceWorker.register(
+                "{{ url_for('public.service_worker') }}",
+                {
+                    scope: "/",
+                    updateViaCache: "none"
+                }
+            );
+
+            console.info(
+                "SmartResto PWA: Service Worker registrado.",
+                registration.scope
+            );
+
+            await registration.update();
+
+        } catch (error) {
+            console.error(
+                "SmartResto PWA: Error al registrar Service Worker:",
+                error
+            );
+        }
+    });
+})();
+</script>
+</body>
+</html>

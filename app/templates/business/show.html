@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ restaurante.nombre }} · {{ APP_NAME }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/business-sites.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="bs-public-site">
+  <div style="max-width:1180px;margin:0 auto;padding:32px 24px;">
+    <p class="bs-kicker">Restaurante</p>
+    <h1 style="font-family:var(--bs-display);font-size:clamp(42px,6vw,72px);line-height:1;letter-spacing:-.04em;margin:16px 0;">
+      {{ restaurante.nombre }}
+    </h1>
+    <p style="color:var(--theme-muted);max-width:60ch;">{{ restaurante.descripcion or '' }}</p>
+
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:24px;">
+      {% if restaurante.distrito %}<span class="sr-chip">{{ restaurante.distrito }}</span>{% endif %}
+      {% if restaurante.telefono %}<a class="sr-chip" href="tel:{{ restaurante.telefono }}">{{ restaurante.telefono }}</a>{% endif %}
+      {% if resumen.total_resenas %}
+        <span class="sr-chip">{{ '%.1f'|format(resumen.promedio_calificacion) }} ★ · {{ resumen.total_resenas }} reseñas</span>
+      {% endif %}
+    </div>
+
+    {% if promociones %}
+    <section style="margin-top:32px;">
+      <h2>Promociones vigentes</h2>
+      <ul>
+        {% for promo in promociones %}
+          <li>{{ promo.descripcion }}
+            {% if promo.porcentaje_descuento %}<strong>{{ promo.porcentaje_descuento }}%</strong>{% endif %}
+            {% if promo.valida_hasta %}<small> · Hasta {{ promo.valida_hasta }}</small>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    <section style="margin-top:40px;">
+      <h2>Platos</h2>
+      {% if restaurante.platos %}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px;">
+          {% for plato in restaurante.platos %}
+          <article style="padding:16px;border:1px solid var(--theme-border);border-radius:12px;background:var(--theme-surface);">
+            <h3 style="margin:0 0 8px;">{{ plato.nombre }}</h3>
+            <p style="color:var(--theme-muted);font-size:14px;line-height:1.5;margin:0 0 12px;">{{ plato.descripcion or '' }}</p>
+            <strong>{{ MONEDA }} {{ '%.2f'|format(plato.precio) if plato.precio else '—' }}</strong>
+          </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="color:var(--theme-muted);">Aún no hay platos publicados.</p>
+      {% endif %}
+    </section>
+
+    {% if resenas %}
+    <section style="margin-top:40px;">
+      <h2>Reseñas</h2>
+      <ul>
+        {% for resena in resenas %}
+        <li style="margin:12px 0;padding:12px;border:1px solid var(--theme-border);border-radius:8px;">
+          <strong>{{ resena.calificacion }}★</strong> — {{ resena.comentario or 'Sin comentario' }}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

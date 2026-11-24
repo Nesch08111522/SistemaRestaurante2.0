@@ -1,0 +1,9 @@
+/* Componentes con tokens del tema. */
+.theme-card { background: var(--theme-surface); color: var(--theme-text); border: 1px solid var(--theme-border); border-radius: 12px; padding: 16px; }
+.theme-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; font-weight: 600; text-decoration: none; cursor: pointer; border: 0; }
+.theme-btn-primary { background: var(--theme-accent-bg); color: var(--theme-text); }
+.theme-btn-secondary { background: var(--theme-elevated); color: var(--theme-text); }
+.theme-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--theme-elevated); color: var(--theme-text); }
+.theme-badge-success { background: var(--theme-success-bg); color: var(--theme-success); }
+.theme-badge-warning { background: var(--theme-warning-bg); color: var(--theme-warning); }
+.theme-badge-danger { background: var(--theme-danger-bg); color: var(--theme-danger); }

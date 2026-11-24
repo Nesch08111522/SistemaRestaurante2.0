@@ -1,0 +1,389 @@
+
+/* =========================================================
+   SMARTRESTO — FOOTER UNIFICADO
+   Archivo: app/static/css/sr-footer.css
+
+   Alcance:
+   - Footer público.
+   - Identidad visual del prototipo.
+   - Diseño responsive.
+   - Accesibilidad y estados interactivos.
+   - No modifica la lógica Flask/Jinja.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. TOKENS LOCALES
+   --------------------------------------------------------- */
+
+:root {
+    --sr-footer-bg: var(--color-paper, #fffefa);
+    --sr-footer-page: var(--color-bg, #f7f6f0);
+    --sr-footer-ink: var(--color-ink, #17392f);
+    --sr-footer-green: var(--color-primary, #28684f);
+    --sr-footer-green-hover: var(--color-primary-dark, #20563f);
+    --sr-footer-muted: var(--color-muted, #738078);
+    --sr-footer-border: var(--color-border, #e5e9df);
+
+    --sr-footer-radius: 22px;
+    --sr-footer-transition: 180ms ease;
+}
+
+/* ---------------------------------------------------------
+   2. CONTENEDOR PRINCIPAL
+   --------------------------------------------------------- */
+
+.sr-footer,
+.sr-unified-footer {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    margin-top: auto;
+    padding: clamp(42px, 6vw, 76px) clamp(20px, 5vw, 72px) 0;
+
+    color: var(--sr-footer-ink);
+    background: var(--sr-footer-bg);
+
+    border-top: 1px solid var(--sr-footer-border);
+
+    font-family: var(--font-body, "DM Sans", sans-serif);
+    box-sizing: border-box;
+}
+
+.sr-footer *,
+.sr-unified-footer * {
+    box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------
+   3. GRID PRINCIPAL
+   --------------------------------------------------------- */
+
+.sr-footer-grid {
+    width: min(100%, 1240px);
+    margin-inline: auto;
+
+    display: grid;
+    grid-template-columns: minmax(240px, 1.5fr) repeat(3, minmax(145px, 1fr));
+
+    gap: clamp(28px, 5vw, 76px);
+    align-items: start;
+}
+
+/* ---------------------------------------------------------
+   4. IDENTIDAD DE MARCA
+   --------------------------------------------------------- */
+
+.sr-footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 13px;
+
+    min-width: 0;
+}
+
+.sr-footer-brand .sr-logo {
+    display: inline-flex;
+    align-items: center;
+
+    color: var(--sr-footer-ink);
+    text-decoration: none;
+
+    font-family: var(--font-display, Georgia, serif);
+    font-size: clamp(23px, 2vw, 29px);
+    font-weight: 700;
+    letter-spacing: -0.8px;
+
+    transition: color var(--sr-footer-transition);
+}
+
+.sr-footer-brand .sr-logo:hover {
+    color: var(--sr-footer-green);
+}
+
+.sr-footer-brand p {
+    max-width: 310px;
+    margin: 0;
+
+    color: var(--sr-footer-muted);
+    font-size: 14px;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+}
+
+.sr-footer-brand > a:not(.sr-logo) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--sr-footer-muted);
+    text-decoration: none;
+
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+
+    transition:
+        color var(--sr-footer-transition),
+        transform var(--sr-footer-transition);
+}
+
+.sr-footer-brand > a:not(.sr-logo):hover {
+    color: var(--sr-footer-green);
+    transform: translateX(2px);
+}
+
+/* ---------------------------------------------------------
+   5. COLUMNAS DE NAVEGACIÓN
+   --------------------------------------------------------- */
+
+.sr-footer-grid > nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 13px;
+
+    min-width: 0;
+}
+
+.sr-footer-grid > nav strong {
+    display: block;
+    margin-bottom: 7px;
+
+    color: var(--sr-footer-ink);
+
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.sr-footer-grid > nav a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    width: fit-content;
+    max-width: 100%;
+
+    color: var(--sr-footer-muted);
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.65;
+
+    overflow-wrap: anywhere;
+
+    transition:
+        color var(--sr-footer-transition),
+        transform var(--sr-footer-transition);
+}
+
+.sr-footer-grid > nav a:hover {
+    color: var(--sr-footer-green);
+    transform: translateX(3px);
+}
+
+.sr-footer-grid > nav a:focus-visible,
+.sr-footer-brand a:focus-visible {
+    outline: 3px solid rgba(40, 104, 79, 0.25);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+/* Enlaces pendientes: conservar su estado deshabilitado */
+
+.sr-footer-grid > nav a[aria-disabled="true"] {
+    opacity: 0.58;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+.sr-footer-grid > nav a[aria-disabled="true"]:hover {
+    color: var(--sr-footer-muted);
+    transform: none;
+}
+
+/* ---------------------------------------------------------
+   6. FRANJA INFERIOR
+   --------------------------------------------------------- */
+
+.sr-footer-bottom {
+    width: min(100%, 1240px);
+    margin: 54px auto 0;
+    padding: 22px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    gap: 12px 24px;
+
+    border-top: 1px solid var(--sr-footer-border);
+}
+
+.sr-footer-bottom span {
+    color: var(--sr-footer-muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.sr-footer-bottom span:first-child {
+    color: var(--sr-footer-ink);
+    font-weight: 600;
+}
+
+.sr-footer-bottom span:last-child {
+    text-align: right;
+}
+
+/* ---------------------------------------------------------
+   7. RESPONSIVE — TABLETS
+   --------------------------------------------------------- */
+
+@media (max-width: 1024px) {
+    .sr-footer {
+        padding-inline: clamp(24px, 4vw, 42px);
+    }
+
+    .sr-footer-grid {
+        grid-template-columns: minmax(220px, 1.3fr) repeat(3, minmax(125px, 1fr));
+        gap: 28px;
+    }
+
+    .sr-footer-brand p {
+        max-width: 260px;
+    }
+}
+
+@media (max-width: 800px) {
+    .sr-footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 36px;
+        row-gap: 38px;
+    }
+
+    .sr-footer-brand {
+        grid-column: 1 / -1;
+    }
+
+    .sr-footer-brand p {
+        max-width: 440px;
+    }
+
+    .sr-footer-bottom {
+        margin-top: 42px;
+    }
+}
+
+/* ---------------------------------------------------------
+   8. RESPONSIVE — MÓVILES
+   --------------------------------------------------------- */
+
+@media (max-width: 560px) {
+    .sr-footer {
+        padding: 38px 20px 0;
+    }
+
+    .sr-footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 32px 20px;
+    }
+
+    .sr-footer-brand {
+        grid-column: 1 / -1;
+        gap: 11px;
+    }
+
+    .sr-footer-brand .sr-logo {
+        font-size: 25px;
+    }
+
+    .sr-footer-brand p {
+        font-size: 13px;
+    }
+
+    .sr-footer-grid > nav {
+        gap: 11px;
+    }
+
+    .sr-footer-grid > nav strong {
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+
+    .sr-footer-grid > nav a {
+        font-size: 12px;
+    }
+
+    .sr-footer-bottom {
+        margin-top: 36px;
+        padding: 19px 0 22px;
+
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .sr-footer-bottom span {
+        font-size: 11px;
+        text-align: left !important;
+    }
+}
+
+/* ---------------------------------------------------------
+   9. MÓVILES PEQUEÑOS
+   --------------------------------------------------------- */
+
+@media (max-width: 360px) {
+    .sr-footer {
+        padding-inline: 16px;
+    }
+
+    .sr-footer-grid {
+        column-gap: 14px;
+    }
+
+    .sr-footer-grid > nav strong {
+        font-size: 14px;
+    }
+
+    .sr-footer-grid > nav a {
+        font-size: 11px;
+    }
+
+    .sr-footer-brand p {
+        font-size: 12px;
+    }
+}
+
+/* ---------------------------------------------------------
+   10. PREFERENCIAS DE MOVIMIENTO
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .sr-footer *,
+    .sr-footer *::before,
+    .sr-footer *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ---------------------------------------------------------
+   11. TEMA OSCURO
+   --------------------------------------------------------- */
+
+[data-theme="dark"] .sr-footer {
+    --sr-footer-bg: var(--color-paper, #202b28);
+    --sr-footer-page: var(--color-bg, #17211e);
+    --sr-footer-ink: var(--color-ink, #edf4ed);
+    --sr-footer-green: var(--color-primary, #80c6a1);
+    --sr-footer-green-hover: var(--color-primary-dark, #a1d9b8);
+    --sr-footer-muted: var(--color-muted, #aab9af);
+    --sr-footer-border: var(--color-border, #34443b);
+}

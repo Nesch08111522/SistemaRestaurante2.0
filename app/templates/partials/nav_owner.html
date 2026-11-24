@@ -1,0 +1,10 @@
+<!-- app/templates/partials/nav_owner.html -->
+<nav>
+  <a href="{{ url_for('owner.dashboard') }}">Panel</a>
+  <a href="{{ url_for('salon.index') }}">Salón</a>
+  <a href="{{ url_for('kitchen.index') }}">Cocina</a>
+  <a href="{{ url_for('market.index') }}">Mercado</a>
+  <a href="{{ url_for('loyalty.index') }}">Recompensas</a>
+  <span class="nav-user">{{ current_user.name or current_user.username }} ({{ current_user.role }})</span>
+  <a href="{{ url_for('auth.logout') }}">Salir</a>
+</nav>

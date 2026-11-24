@@ -1,0 +1,1708 @@
+
+/* ============================================================
+   SMARTRESTO — DISCOVERY / FOREST DESIGN SYSTEM
+   Página: Descubre restaurantes
+   Diseño: Editorial gastronómico / Forest
+   ============================================================ */
+
+
+/* ============================================================
+   01. VARIABLES
+   ============================================================ */
+
+.forest-shell {
+    --forest-bg: #f7f6f0;
+    --forest-surface: #ffffff;
+    --forest-surface-soft: #eff2e9;
+
+    --forest-primary: #246d55;
+    --forest-primary-dark: #173b30;
+    --forest-primary-light: #438e6d;
+
+    --forest-accent: #a8cda8;
+    --forest-accent-soft: #e2eddf;
+
+    --forest-text: #193b31;
+    --forest-text-secondary: #687c73;
+    --forest-text-muted: #8b9990;
+
+    --forest-border: #e4e8df;
+    --forest-border-strong: #d5ded3;
+
+    --forest-shadow-sm:
+        0 5px 18px rgba(26, 55, 43, 0.045);
+
+    --forest-shadow-md:
+        0 12px 35px rgba(26, 55, 43, 0.085);
+
+    --forest-shadow-lg:
+        0 22px 55px rgba(26, 55, 43, 0.12);
+
+    --forest-radius-sm: 12px;
+    --forest-radius-md: 20px;
+    --forest-radius-lg: 28px;
+    --forest-radius-xl: 36px;
+
+    --forest-container: 1440px;
+
+    width: 100%;
+    min-height: 100vh;
+    padding: 28px clamp(16px, 4vw, 64px) 80px;
+
+    background: var(--forest-bg);
+    color: var(--forest-text);
+
+    font-family:
+        "DM Sans",
+        "Manrope",
+        "Inter",
+        Arial,
+        sans-serif;
+}
+
+
+/* ============================================================
+   02. RESET LOCAL
+   ============================================================ */
+
+.forest-shell *,
+.forest-shell *::before,
+.forest-shell *::after {
+    box-sizing: border-box;
+}
+
+.forest-shell img {
+    display: block;
+    max-width: 100%;
+}
+
+.forest-shell a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.forest-shell button,
+.forest-shell input,
+.forest-shell select {
+    font: inherit;
+}
+
+.forest-shell button {
+    cursor: pointer;
+}
+
+.forest-shell button:focus-visible,
+.forest-shell a:focus-visible,
+.forest-shell input:focus-visible,
+.forest-shell select:focus-visible {
+    outline: 3px solid rgba(67, 142, 109, 0.45);
+    outline-offset: 4px;
+}
+
+.forest-shell h1,
+.forest-shell h2,
+.forest-shell h3,
+.forest-shell p {
+    margin-top: 0;
+}
+
+.forest-shell .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* ============================================================
+   03. BUSCADOR PRINCIPAL
+   ============================================================ */
+
+.forest-search {
+    position: relative;
+    z-index: 5;
+
+    width: min(100%, 1050px);
+    margin: 0 auto 48px;
+
+    padding: 9px;
+
+    background: var(--forest-surface);
+    border: 1px solid var(--forest-border);
+    border-radius: 999px;
+
+    box-shadow: var(--forest-shadow-sm);
+}
+
+.forest-search-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.forest-city {
+    flex: 0 0 175px;
+    min-width: 0;
+}
+
+.forest-city select {
+    width: 100%;
+    height: 48px;
+    padding: 0 15px;
+
+    border: 0;
+    border-right: 1px solid var(--forest-border);
+    border-radius: 0;
+
+    background: transparent;
+    color: var(--forest-text);
+
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.forest-query {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+}
+
+.forest-query > i {
+    position: absolute;
+    left: 17px;
+    color: var(--forest-primary-light);
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.forest-query input {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 16px 0 45px;
+
+    border: 0;
+    outline: none;
+    background: transparent;
+
+    color: var(--forest-text);
+    font-size: 0.92rem;
+}
+
+.forest-query input::placeholder {
+    color: #9aa79e;
+}
+
+.forest-query input:focus {
+    outline: none;
+}
+
+.forest-search-submit {
+    display: grid;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: var(--forest-primary);
+    color: white;
+
+    transition:
+        background 180ms ease,
+        transform 180ms ease;
+}
+
+.forest-search-submit:hover {
+    background: var(--forest-primary-dark);
+    transform: scale(1.04);
+}
+
+.forest-ai-search {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    min-height: 48px;
+    padding: 0 21px;
+
+    border: 0;
+    border-radius: 999px;
+
+    background: var(--forest-accent-soft);
+    color: var(--forest-primary-dark);
+
+    font-size: 0.88rem;
+    font-weight: 700;
+
+    transition:
+        background 180ms ease,
+        transform 180ms ease;
+}
+
+.forest-ai-search:hover {
+    background: #d5e8d4;
+    transform: translateY(-1px);
+}
+
+.forest-ai-search i {
+    color: var(--forest-primary);
+}
+
+
+/* ============================================================
+   04. HERO EDITORIAL
+   ============================================================ */
+
+.forest-hero {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: center;
+
+    width: min(100%, var(--forest-container));
+    min-height: 490px;
+
+    margin: 0 auto 46px;
+    padding: clamp(25px, 4vw, 58px);
+
+    overflow: hidden;
+
+    border-radius: var(--forest-radius-xl);
+    background: #e9eee4;
+}
+
+.forest-hero-copy {
+    position: relative;
+    z-index: 2;
+
+    max-width: 560px;
+    padding: 15px 0;
+}
+
+.forest-campaign {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+
+    margin-bottom: 25px;
+
+    color: var(--forest-primary-light);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.forest-campaign span {
+    display: block;
+    width: 27px;
+    height: 2px;
+    background: var(--forest-primary-light);
+}
+
+.forest-hero-copy h1 {
+    max-width: 590px;
+    margin: 0 0 23px;
+
+    color: var(--forest-primary-dark);
+
+    font-family:
+        "DM Serif Display",
+        "DM Serif Text",
+        "Lora",
+        Georgia,
+        serif;
+
+    font-size: clamp(3rem, 5.2vw, 5.6rem);
+    font-weight: 400;
+    line-height: 0.99;
+    letter-spacing: -0.055em;
+}
+
+.forest-hero-copy > p:not(.forest-campaign) {
+    max-width: 470px;
+    margin-bottom: 30px;
+
+    color: var(--forest-text-secondary);
+    font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+    line-height: 1.85;
+}
+
+.forest-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+}
+
+
+/* ============================================================
+   05. BOTONES
+   ============================================================ */
+
+.forest-light-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+
+    min-height: 54px;
+    padding: 0 24px;
+
+    border: 1px solid transparent;
+    border-radius: 999px;
+
+    background: var(--forest-primary);
+    color: #ffffff !important;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+
+    box-shadow: 0 9px 22px rgba(36, 109, 85, 0.13);
+
+    transition:
+        background 180ms ease,
+        transform 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.forest-light-button:hover {
+    background: var(--forest-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 13px 25px rgba(36, 109, 85, 0.2);
+}
+
+.forest-light-button i,
+.forest-light-button span {
+    transition: transform 180ms ease;
+}
+
+.forest-light-button:hover i,
+.forest-light-button:hover span {
+    transform: translateX(3px);
+}
+
+.forest-hero-personal {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    color: var(--forest-primary-dark);
+
+    font-size: 0.92rem;
+    font-weight: 700;
+
+    transition: color 180ms ease;
+}
+
+.forest-hero-personal:hover {
+    color: var(--forest-primary-light);
+}
+
+.forest-hero-personal i {
+    transition: transform 180ms ease;
+}
+
+.forest-hero-personal:hover i {
+    transform: translateX(4px);
+}
+
+
+/* ============================================================
+   06. IMAGEN HERO
+   ============================================================ */
+
+.forest-hero-photo {
+    position: relative;
+
+    width: 100%;
+    height: 390px;
+
+    overflow: hidden;
+    border-radius: var(--forest-radius-lg);
+
+    background: #dce5d9;
+    box-shadow: var(--forest-shadow-md);
+}
+
+.forest-hero-photo::after {
+    content: "";
+    position: absolute;
+    inset: 45% 0 0;
+
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(16, 39, 29, 0.36)
+    );
+
+    pointer-events: none;
+}
+
+.forest-hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    transition: transform 600ms ease;
+}
+
+.forest-hero-photo:hover img {
+    transform: scale(1.035);
+}
+
+.forest-hero-photo > span {
+    position: absolute;
+    z-index: 1;
+    right: 17px;
+    bottom: 16px;
+
+    padding: 8px 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+
+    background: rgba(24, 42, 32, 0.5);
+    color: white;
+
+    font-size: 0.69rem;
+    backdrop-filter: blur(10px);
+}
+
+
+/* ============================================================
+   07. CATEGORÍAS
+   ============================================================ */
+
+.forest-categories {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 11px;
+
+    width: min(100%, var(--forest-container));
+    margin: 0 auto 70px;
+}
+
+.forest-categories button,
+.forest-categories > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    min-height: 45px;
+    padding: 0 19px;
+
+    border: 1px solid var(--forest-border);
+    border-radius: 999px;
+
+    background: var(--forest-surface);
+    color: var(--forest-text-secondary);
+
+    font-size: 0.83rem;
+    font-weight: 600;
+    white-space: nowrap;
+
+    transition:
+        background 180ms ease,
+        color 180ms ease,
+        border-color 180ms ease,
+        transform 180ms ease;
+}
+
+.forest-categories button:hover,
+.forest-categories > a:hover {
+    border-color: var(--forest-accent);
+    color: var(--forest-primary);
+    transform: translateY(-2px);
+}
+
+.forest-categories button.active {
+    border-color: var(--forest-primary);
+    background: var(--forest-primary);
+    color: #ffffff;
+}
+
+.forest-categories button.active i {
+    color: #cce8d1;
+}
+
+.forest-categories i {
+    color: var(--forest-primary-light);
+    font-size: 0.9rem;
+}
+
+.forest-categories button.active i {
+    color: #cce8d1;
+}
+
+
+/* ============================================================
+   08. SECCIONES GENERALES
+   ============================================================ */
+
+.forest-restaurants,
+.forest-offers,
+.forest-nearby,
+.forest-home-kitchen,
+.forest-business {
+    width: min(100%, var(--forest-container));
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.forest-restaurants,
+.forest-offers {
+    margin-bottom: 85px;
+}
+
+.forest-section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 25px;
+
+    margin-bottom: 26px;
+}
+
+.forest-section-heading h2 {
+    margin: 0 0 9px;
+
+    color: var(--forest-primary-dark);
+
+    font-family:
+        "DM Serif Display",
+        "DM Serif Text",
+        "Lora",
+        Georgia,
+        serif;
+
+    font-size: clamp(2rem, 3.2vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+}
+
+.forest-section-heading p {
+    margin: 0;
+    color: var(--forest-text-muted);
+    font-size: 0.94rem;
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   09. ENLACES SECUNDARIOS
+   ============================================================ */
+
+.forest-outline,
+.forest-text-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    font-size: 0.87rem;
+    font-weight: 700;
+
+    transition:
+        color 180ms ease,
+        transform 180ms ease;
+}
+
+.forest-outline {
+    min-height: 45px;
+    padding: 0 18px;
+
+    border: 1px solid var(--forest-border-strong);
+    border-radius: 999px;
+
+    color: var(--forest-primary-dark);
+    background: transparent;
+}
+
+.forest-outline:hover {
+    border-color: var(--forest-primary);
+    background: var(--forest-primary);
+    color: white;
+}
+
+.forest-outline span,
+.forest-text-link span {
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+}
+
+.forest-outline:hover span,
+.forest-text-link:hover span {
+    transform: translateX(4px);
+}
+
+.forest-text-link {
+    color: var(--forest-primary);
+}
+
+.forest-text-link:hover {
+    color: var(--forest-primary-dark);
+}
+
+
+/* ============================================================
+   10. BARRA DE RESULTADOS
+   ============================================================ */
+
+.forest-results-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 36px;
+    margin-bottom: 19px;
+}
+
+.forest-results-toolbar p {
+    margin: 0;
+    color: var(--forest-text-muted);
+    font-size: 0.83rem;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   11. GRID DE RESTAURANTES
+   ============================================================ */
+
+.forest-shell .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 25px;
+    align-items: stretch;
+}
+
+.forest-shell .results-grid > * {
+    min-width: 0;
+}
+
+.forest-shell .results-grid > .empty-state {
+    grid-column: 1 / -1;
+}
+
+
+/* ============================================================
+   12. ESTADO VACÍO
+   ============================================================ */
+
+.forest-shell .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 270px;
+    padding: 40px 25px;
+
+    border: 1px dashed var(--forest-border-strong);
+    border-radius: var(--forest-radius-lg);
+
+    background: var(--forest-surface);
+    text-align: center;
+}
+
+.forest-shell .empty-state h3 {
+    margin-bottom: 10px;
+
+    color: var(--forest-primary-dark);
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        serif;
+
+    font-size: 1.8rem;
+    font-weight: 400;
+}
+
+.forest-shell .empty-state p {
+    margin: 0;
+    color: var(--forest-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   13. OFERTAS EDITORIALES
+   ============================================================ */
+
+.forest-promo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.forest-promo {
+    position: relative;
+
+    display: block;
+    min-height: 300px;
+
+    overflow: hidden;
+    border-radius: var(--forest-radius-lg);
+
+    background: #dce6dc;
+    box-shadow: var(--forest-shadow-sm);
+
+    isolation: isolate;
+}
+
+.forest-promo::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+
+    background: linear-gradient(
+        180deg,
+        rgba(14, 33, 24, 0.02) 20%,
+        rgba(14, 33, 24, 0.78) 100%
+    );
+
+    transition: opacity 250ms ease;
+}
+
+.forest-promo img {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform 650ms ease;
+}
+
+.forest-promo:hover img {
+    transform: scale(1.07);
+}
+
+.forest-promo > div {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    padding: 27px;
+    color: white;
+}
+
+.forest-promo h3 {
+    margin: 0 0 8px;
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        serif;
+
+    font-size: clamp(1.6rem, 2.3vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.forest-promo p {
+    margin: 0 0 17px;
+    color: rgba(255, 255, 255, 0.83);
+    font-size: 0.86rem;
+}
+
+.forest-promo span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.forest-promo span::after {
+    content: "→";
+    font-size: 1.1rem;
+    transition: transform 180ms ease;
+}
+
+.forest-promo:hover span::after {
+    transform: translateX(5px);
+}
+
+
+/* ============================================================
+   14. RECOMENDACIÓN INTELIGENTE
+   ============================================================ */
+
+.forest-recommendation {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 25px;
+
+    width: min(100%, var(--forest-container));
+    margin: 0 auto 65px;
+
+    padding: 30px clamp(22px, 4vw, 48px);
+
+    border: 1px solid #e1e9dc;
+    border-radius: var(--forest-radius-lg);
+
+    background: #edf2e9;
+}
+
+.forest-chef {
+    flex: 0 0 150px;
+    width: 150px;
+    height: 105px;
+    object-fit: contain;
+    object-position: center;
+}
+
+.forest-recommendation-copy {
+    flex: 1;
+    min-width: 200px;
+}
+
+.forest-recommendation-copy h2 {
+    margin: 0 0 7px;
+
+    color: var(--forest-primary-dark);
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        serif;
+
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 400;
+}
+
+.forest-recommendation-copy p {
+    margin: 0;
+    color: var(--forest-text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+#forest-craving-form {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 9px;
+
+    min-width: 280px;
+    max-width: 470px;
+    padding: 6px;
+
+    border: 1px solid var(--forest-border);
+    border-radius: 999px;
+
+    background: white;
+    box-shadow: var(--forest-shadow-sm);
+}
+
+#forest-craving-form input {
+    width: 100%;
+    min-width: 0;
+    height: 43px;
+    padding: 0 13px;
+
+    border: 0;
+    outline: none;
+    background: transparent;
+
+    color: var(--forest-text);
+    font-size: 0.84rem;
+}
+
+#forest-craving-form input:focus {
+    outline: none;
+}
+
+#forest-craving-form input::placeholder {
+    color: #a0aaa2;
+}
+
+#forest-craving-form button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 43px;
+    padding: 0 17px;
+
+    border: 0;
+    border-radius: 999px;
+
+    background: var(--forest-primary);
+    color: white;
+
+    font-size: 0.81rem;
+    font-weight: 700;
+
+    transition: background 180ms ease;
+}
+
+#forest-craving-form button:hover {
+    background: var(--forest-primary-dark);
+}
+
+
+/* ============================================================
+   15. DESCUBRIMIENTO CERCANO
+   ============================================================ */
+
+.forest-nearby {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+
+    margin-bottom: 22px;
+    padding: 28px 32px;
+
+    border: 1px solid var(--forest-border);
+    border-radius: var(--forest-radius-lg);
+
+    background: var(--forest-surface);
+}
+
+.forest-nearby > div {
+    display: flex;
+    align-items: center;
+    gap: 19px;
+}
+
+.forest-nearby h2,
+.forest-home-kitchen h2 {
+    margin: 0 0 7px;
+
+    color: var(--forest-primary-dark);
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        serif;
+
+    font-size: 1.65rem;
+    font-weight: 400;
+}
+
+.forest-nearby p,
+.forest-home-kitchen p {
+    margin: 0;
+    color: var(--forest-text-muted);
+    font-size: 0.87rem;
+    line-height: 1.65;
+}
+
+
+/* ============================================================
+   16. ICONOS COMPACTOS
+   ============================================================ */
+
+.forest-compact-icon {
+    display: grid;
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    place-items: center;
+
+    border-radius: 17px;
+
+    background: var(--forest-accent-soft);
+    color: var(--forest-primary);
+
+    font-size: 1.25rem;
+}
+
+
+/* ============================================================
+   17. MI COCINA
+   ============================================================ */
+
+.forest-home-kitchen {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-bottom: 65px;
+    padding: 25px 30px;
+
+    border: 1px solid var(--forest-border);
+    border-radius: var(--forest-radius-lg);
+
+    background: #f0f2eb;
+}
+
+.forest-home-kitchen-copy {
+    display: flex;
+    align-items: center;
+    gap: 19px;
+}
+
+
+/* ============================================================
+   18. CTA PARA NEGOCIOS
+   ============================================================ */
+
+.forest-business {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+
+    min-height: 190px;
+    padding: 30px clamp(24px, 5vw, 60px);
+
+    overflow: hidden;
+
+    border-radius: var(--forest-radius-xl);
+
+    background: var(--forest-primary-dark);
+    color: white;
+}
+
+.forest-business::before {
+    content: "";
+    position: absolute;
+    top: -130px;
+    right: 12%;
+    width: 300px;
+    height: 300px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+.forest-business::after {
+    content: "";
+    position: absolute;
+    right: 4%;
+    bottom: -180px;
+
+    width: 330px;
+    height: 330px;
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+.forest-business > img {
+    position: relative;
+    z-index: 1;
+
+    flex: 0 0 180px;
+    width: 180px;
+    max-height: 105px;
+
+    object-fit: contain;
+}
+
+.forest-business > div {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+.forest-business h2 {
+    margin: 0 0 9px;
+
+    color: white;
+
+    font-family:
+        "DM Serif Display",
+        Georgia,
+        serif;
+
+    font-size: clamp(1.7rem, 3vw, 2.6rem);
+    font-weight: 400;
+}
+
+.forest-business p {
+    margin: 0;
+    color: #c3d7ca;
+    font-size: 0.95rem;
+}
+
+.forest-business .forest-light-button {
+    position: relative;
+    z-index: 1;
+
+    flex: 0 0 auto;
+
+    background: #f7f6f0;
+    color: var(--forest-primary-dark) !important;
+    box-shadow: none;
+}
+
+.forest-business .forest-light-button:hover {
+    background: #e1ecdf;
+}
+
+
+/* ============================================================
+   19. ANIMACIONES SUAVES
+   ============================================================ */
+
+@keyframes forest-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.forest-hero-copy,
+.forest-hero-photo {
+    animation: forest-fade-up 650ms ease both;
+}
+
+.forest-hero-photo {
+    animation-delay: 100ms;
+}
+
+.forest-promo {
+    transition:
+        transform 220ms ease,
+        box-shadow 220ms ease;
+}
+
+.forest-promo:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--forest-shadow-md);
+}
+
+
+/* ============================================================
+   20. TABLET — 1024 PX
+   ============================================================ */
+
+@media (max-width: 1024px) {
+
+    .forest-shell {
+        padding-right: 25px;
+        padding-left: 25px;
+    }
+
+    .forest-hero {
+        grid-template-columns: 1fr 0.9fr;
+        min-height: 420px;
+        padding: 35px;
+    }
+
+    .forest-hero-copy h1 {
+        font-size: clamp(2.8rem, 5vw, 4.2rem);
+    }
+
+    .forest-hero-photo {
+        height: 330px;
+    }
+
+    .forest-shell .results-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .forest-recommendation {
+        flex-wrap: wrap;
+    }
+
+    .forest-recommendation-copy {
+        flex: 1 1 55%;
+    }
+
+    #forest-craving-form {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    .forest-business {
+        gap: 22px;
+    }
+}
+
+
+/* ============================================================
+   21. TABLET PEQUEÑA — 768 PX
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .forest-shell {
+        padding: 20px 18px 55px;
+    }
+
+    .forest-search {
+        margin-bottom: 30px;
+        padding: 8px;
+        border-radius: 22px;
+    }
+
+    .forest-search-row {
+        flex-wrap: wrap;
+    }
+
+    .forest-city {
+        flex: 1 1 100%;
+    }
+
+    .forest-city select {
+        height: 42px;
+        border-right: 0;
+        border-bottom: 1px solid var(--forest-border);
+    }
+
+    .forest-query {
+        flex: 1 1 calc(100% - 110px);
+    }
+
+    .forest-query input {
+        height: 46px;
+    }
+
+    .forest-ai-search {
+        flex: 1 1 100%;
+        min-height: 45px;
+    }
+
+    .forest-hero {
+        grid-template-columns: 1fr;
+        gap: 30px;
+
+        padding: 30px;
+        border-radius: 26px;
+    }
+
+    .forest-hero-copy {
+        max-width: 100%;
+    }
+
+    .forest-hero-copy h1 {
+        max-width: 600px;
+        font-size: clamp(3rem, 8vw, 4.5rem);
+    }
+
+    .forest-hero-photo {
+        height: 340px;
+    }
+
+    .forest-categories {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+
+        margin-bottom: 50px;
+        padding: 3px 1px 12px;
+
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--forest-accent) transparent;
+    }
+
+    .forest-categories > * {
+        flex: 0 0 auto;
+    }
+
+    .forest-section-heading {
+        align-items: flex-start;
+    }
+
+    .forest-section-heading h2 {
+        font-size: 2.2rem;
+    }
+
+    .forest-promo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .forest-promo:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .forest-recommendation {
+        gap: 18px;
+        padding: 25px;
+    }
+
+    .forest-chef {
+        flex-basis: 110px;
+        width: 110px;
+        height: 90px;
+    }
+
+    .forest-nearby,
+    .forest-home-kitchen {
+        padding: 23px;
+    }
+
+    .forest-business {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .forest-business > img {
+        flex-basis: 130px;
+        width: 130px;
+    }
+}
+
+
+/* ============================================================
+   22. MÓVIL — 640 PX
+   ============================================================ */
+
+@media (max-width: 640px) {
+
+    .forest-shell {
+        padding: 14px 14px 45px;
+    }
+
+    .forest-search {
+        margin-bottom: 22px;
+    }
+
+    .forest-query {
+        flex-basis: calc(100% - 60px);
+    }
+
+    .forest-query input {
+        font-size: 0.83rem;
+    }
+
+    .forest-ai-search {
+        font-size: 0.84rem;
+    }
+
+    .forest-hero {
+        gap: 23px;
+        padding: 24px 20px;
+        border-radius: 23px;
+    }
+
+    .forest-campaign {
+        margin-bottom: 19px;
+        font-size: 0.7rem;
+    }
+
+    .forest-hero-copy h1 {
+        font-size: clamp(2.7rem, 10vw, 3.8rem);
+        line-height: 1.02;
+    }
+
+    .forest-hero-copy > p:not(.forest-campaign) {
+        font-size: 0.94rem;
+        line-height: 1.75;
+    }
+
+    .forest-desktop-break {
+        display: none;
+    }
+
+    .forest-hero-actions {
+        align-items: flex-start;
+        gap: 17px;
+    }
+
+    .forest-light-button {
+        min-height: 49px;
+        padding: 0 19px;
+        font-size: 0.82rem;
+    }
+
+    .forest-hero-personal {
+        min-height: 49px;
+        font-size: 0.83rem;
+    }
+
+    .forest-hero-photo {
+        height: 245px;
+        border-radius: 19px;
+    }
+
+    .forest-categories {
+        margin-bottom: 42px;
+    }
+
+    .forest-categories button,
+    .forest-categories > a {
+        min-height: 41px;
+        padding: 0 15px;
+        font-size: 0.79rem;
+    }
+
+    .forest-restaurants,
+    .forest-offers {
+        margin-bottom: 55px;
+    }
+
+    .forest-section-heading {
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .forest-section-heading h2 {
+        font-size: 2rem;
+    }
+
+    .forest-section-heading p {
+        font-size: 0.85rem;
+    }
+
+    .forest-result-actions {
+        width: 100%;
+    }
+
+    .forest-outline {
+        min-height: 42px;
+        font-size: 0.8rem;
+    }
+
+    .forest-shell .results-grid {
+        grid-template-columns: 1fr;
+        gap: 17px;
+    }
+
+    .forest-promo-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .forest-promo,
+    .forest-promo:last-child {
+        grid-column: auto;
+        min-height: 260px;
+    }
+
+    .forest-promo > div {
+        padding: 22px;
+    }
+
+    .forest-recommendation {
+        display: grid;
+        grid-template-columns: 75px 1fr;
+        gap: 15px;
+
+        margin-bottom: 45px;
+        padding: 22px 17px;
+    }
+
+    .forest-chef {
+        grid-row: 1;
+        width: 75px;
+        height: 75px;
+    }
+
+    .forest-recommendation-copy {
+        min-width: 0;
+    }
+
+    .forest-recommendation-copy h2 {
+        font-size: 1.5rem;
+    }
+
+    .forest-recommendation-copy p {
+        font-size: 0.79rem;
+    }
+
+    #forest-craving-form {
+        grid-column: 1 / -1;
+        min-width: 0;
+    }
+
+    #forest-craving-form input {
+        font-size: 0.78rem;
+    }
+
+    #forest-craving-form button {
+        padding: 0 13px;
+        font-size: 0.76rem;
+    }
+
+    .forest-nearby {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+
+        padding: 21px;
+        margin-bottom: 15px;
+    }
+
+    .forest-nearby > div {
+        align-items: flex-start;
+        gap: 13px;
+    }
+
+    .forest-nearby h2,
+    .forest-home-kitchen h2 {
+        font-size: 1.4rem;
+    }
+
+    .forest-nearby p,
+    .forest-home-kitchen p {
+        font-size: 0.81rem;
+    }
+
+    .forest-home-kitchen {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 17px;
+
+        padding: 21px;
+        margin-bottom: 45px;
+    }
+
+    .forest-home-kitchen-copy {
+        align-items: flex-start;
+        gap: 13px;
+    }
+
+    .forest-compact-icon {
+        flex-basis: 43px;
+        width: 43px;
+        height: 43px;
+        border-radius: 14px;
+        font-size: 1rem;
+    }
+
+    .forest-business {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 19px;
+
+        min-height: 0;
+        padding: 26px 22px;
+        border-radius: 25px;
+    }
+
+    .forest-business > img {
+        width: 115px;
+        max-height: 75px;
+    }
+
+    .forest-business h2 {
+        font-size: 1.85rem;
+    }
+
+    .forest-business p {
+        font-size: 0.85rem;
+    }
+}
+
+
+/* ============================================================
+   23. MÓVILES PEQUEÑOS — 375 PX
+   ============================================================ */
+
+@media (max-width: 375px) {
+
+    .forest-shell {
+        padding-right: 11px;
+        padding-left: 11px;
+    }
+
+    .forest-hero {
+        padding: 20px 16px;
+    }
+
+    .forest-hero-copy h1 {
+        font-size: 2.55rem;
+    }
+
+    .forest-hero-actions {
+        gap: 12px;
+    }
+
+    .forest-light-button {
+        padding: 0 15px;
+        font-size: 0.75rem;
+    }
+
+    .forest-hero-personal {
+        font-size: 0.77rem;
+    }
+
+    .forest-hero-photo {
+        height: 210px;
+    }
+
+    .forest-section-heading h2 {
+        font-size: 1.8rem;
+    }
+
+    .forest-recommendation {
+        grid-template-columns: 60px 1fr;
+        padding: 18px 14px;
+    }
+
+    .forest-chef {
+        width: 60px;
+        height: 60px;
+    }
+
+    #forest-craving-form button {
+        gap: 5px;
+        padding: 0 10px;
+    }
+}
+
+
+/* ============================================================
+   24. ACCESIBILIDAD Y MOVIMIENTO
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .forest-shell *,
+    .forest-shell *::before,
+    .forest-shell *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* ============================================================
+   FIN — SMARTRESTO DISCOVERY
+   ============================================================ */

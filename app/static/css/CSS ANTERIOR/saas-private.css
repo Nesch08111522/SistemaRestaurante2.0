@@ -1,0 +1,70 @@
+/* Loaded last, exclusively for authenticated internal views. */
+.sr-saas-private .private-account { position: relative; }
+.sr-saas-private .private-account-menu { position: absolute; right: 0; top: calc(100% + 8px); width: 224px; padding: 6px; border: 1px solid var(--theme-border); background: var(--theme-surface); border-radius: 8px; z-index: 110; }
+.sr-saas-private .private-account-menu a { display: block; padding: 10px; color: var(--theme-text); text-decoration: none; border-radius: 6px; }
+.sr-saas-private .private-account-menu a:hover { background: var(--theme-elevated); }
+.sr-saas-private .sr-header { height: 54px; border-bottom: 1px solid var(--theme-border); background: var(--theme-surface); z-index: 100; }
+.sr-saas-private .sr-menu-button { display: inline-flex !important; }
+.sr-saas-private .sr-sidebar { position: fixed; border-right: 1px solid var(--theme-border); z-index: 102; overflow-y: auto; overflow-x: hidden; }
+.sr-saas-private .sr-top .theme-toggle { width: auto; white-space: nowrap; }
+.sr-saas-private .sr-favorites-link { display: none; }
+@media(min-width:1100px) {
+  .sr-saas-private .sr-sidebar .sr-collapse { display: inline-flex !important; }
+  .sr-compact .sr-saas-private .sr-sidebar { width: 64px !important; padding: 8px; }
+  .sr-compact .sr-saas-private #main-content { margin-left: 64px !important; }
+}
+@media(max-width:1099px) {
+  .sr-drawer-open .sr-saas-private .sr-sidebar { width: min(280px,85vw) !important; transform: none !important; top: 0 !important; bottom: 0; }
+  .sr-drawer-open .sr-saas-private .sr-backdrop { display: block; position: fixed; inset: 0; z-index: 101; background: var(--theme-bg); opacity: .8; }
+}
+@media(max-width:699px) {
+  .sr-saas-private .sr-top [data-theme-label], .sr-saas-private .saas-context { display: none; }
+}
+body.sr-saas-private {
+  --sr-header: 54px; --sr-rail: 232px; --workspace-radius: 8px;
+  --font-main: 'Manrope', system-ui, sans-serif;
+  --font-heading: var(--font-main); --sr-display: var(--font-main);
+  --sr-text: var(--theme-text); --sr-gutter: 24px;
+  background: var(--theme-bg); color: var(--theme-text);
+  font-size: 13px; font-variant-numeric: tabular-nums;
+}
+.sr-saas-private :is(.sr-header,.sr-sidebar,.sr-mark,.sr-icon,.sr-account,.theme-toggle,.private-account-menu,.sr-workspace-header,.mgr-hero,.mgr-card,.mgr-metric,.stat-card,.market-panel,.catalog-panel,.catalog-metric-card,.bs-panel,.bs-preview-card,.bs-action-card,.sr-service-card,.sr-table-card,.radar-panel,.radar-candidate,.radar-empty,.profile-sidebar,.profile-form-container,.saas-panel,.card,.chart-card,.recent-activity,.admin-filters,.admin-form,.um-modal,.owner-dialog,.owner-toast,.restaurant-card,.dish-item,.review-dish-card,.m-card,.m-section,.m-stat,.m-toolbar,.m-row,.m-status-note,button,input,select,textarea) {
+  box-shadow: none !important; text-shadow: none !important; backdrop-filter: none !important;
+}
+.sr-saas-private [hidden] { display: none !important; }
+.sr-saas-private :is(h1,h2,h3) { font-family: var(--font-main); color: var(--theme-text); }
+.sr-saas-private h1 { font-size: 22px !important; font-weight: 600 !important; letter-spacing: -.02em; line-height: 1.35 !important; max-width: none !important; margin: 0 0 6px; }
+.sr-saas-private :is(h2,h3) { font-size: 14px !important; font-weight: 500; line-height: 1.5; }
+.sr-saas-private p { font-size: 13px; color: var(--theme-muted); line-height: 1.6; }
+.sr-saas-private .sr-top { height: 54px; max-width: none; padding: 0 20px; gap: 16px; }
+.sr-saas-private .sr-logo { font-size: 15px; font-weight: 600; letter-spacing: -.02em; min-height: 32px; }
+.sr-saas-private .sr-mark { width: 28px; height: 28px; border: 1px solid var(--theme-border); border-radius: 6px; background: var(--theme-elevated); }
+.sr-saas-private .saas-context { padding-left: 16px; border-left: 1px solid var(--theme-border); color: var(--theme-text); text-decoration: none; }
+.sr-saas-private .saas-global-links { display: flex; gap: 20px; margin-left: auto; }
+.sr-saas-private .saas-global-links a { color: var(--theme-muted); text-decoration: none; }
+.sr-saas-private .sr-actions { margin-left: 0; }
+.sr-saas-private :is(.sr-icon,.sr-account) { min-height: 32px; min-width: 32px; width: 32px; height: 32px; border-radius: 6px; }
+.sr-saas-private .sr-account { border-radius: 999px; }
+.sr-saas-private .sr-sidebar { width: 232px !important; padding: 12px; background: var(--theme-surface); gap: 2px; }
+.sr-saas-private .sr-sidebar :is(a,form button) { min-height: 34px; padding: 7px 10px; font-size: 13px; font-weight: 500; gap: 10px; border-radius: 6px; }
+.sr-saas-private .sr-group { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; margin: 20px 10px 6px; }
+.sr-saas-private .sr-nav-section { border: 0; }
+.sr-saas-private .sr-nav-section summary { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 10px; color: var(--theme-muted); }
+.sr-saas-private .sr-section-links { padding: 0; }
+.sr-saas-private .saas-sidebar-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--theme-border); }
+.sr-saas-private .sr-footer, .sr-saas-private .sr-mobile-nav { display: none !important; }
+.sr-saas-private #main-content { width: auto !important; max-width: none !important; min-width: 0; padding: 24px 32px; background: var(--theme-bg); }
+.sr-saas-private #main-content > :is(section,div,header) { max-width: 1280px; margin-inline: auto; }
+.sr-saas-private .sr-workspace-header { border: 0; border-bottom: 1px solid var(--theme-border); border-radius: 0; padding: 0 0 14px; margin-bottom: 24px; background: transparent; }
+.sr-saas-private .sr-workspace-kicker { font-size: 11px; font-weight: 500; color: var(--theme-muted); }
+.sr-saas-private .sr-workspace-tools > a:not(.sr-workspace-avatar) { padding: 6px 10px; font-size: 12px; border-radius: 6px; font-weight: 500; }
+.sr-saas-private :is(.mgr,.market-shell,.catalog-shell,.bs-editor-shell,.sr-service,.radar,.profile-container,.copilot-page) { width: 100% !important; max-width: 1280px !important; margin: 0 auto; padding: 0; background: transparent; border: 0; }
+.sr-saas-private :is(.catalog-atmosphere,.catalog-pulse,.bs-eyebrow-dot,.mgr-metric::before,.intelligence-hero::before,.intelligence-hero::after) { display: none; }
+.sr-saas-private :is(.catalog-eyebrow,.bs-eyebrow,.bs-kicker,.radar-kicker,.copilot-kicker) { font-size: 11px; letter-spacing: .06em; font-weight: 500; color: var(--theme-muted); }
+.sr-saas-private :is(.mgr-card,.mgr-metric,.stat-card,.market-panel,.catalog-panel,.catalog-metric-card,.bs-panel,.bs-preview-card,.bs-action-card,.sr-service-card,.sr-table-card,.radar-panel,.radar-candidate,.radar-empty,.profile-sidebar,.profile-form-container,.saas-panel) { background: var(--theme-surface) !important; color: var(--theme-text); border: 1px solid var(--theme-border); border-radius: 8px !important; padding: 16px 20px; }
+.sr-saas-private :is(.mgr-metric dd,.stat-value,.catalog-metric-card strong) { font-size: 26px; font-weight: 600; line-height: 1.4; }
+.sr-saas-private :is(.mgr-filter,.market-form,.sr-service-form) { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,220px),1fr)); gap: 16px; align-items: end; padding: 16px 20px; margin: 0 0 20px; background: var(--theme-surface); border: 1px solid var(--theme-border); border-radius: 8px; }
+.sr-saas-private label { font-size: 13px; font-weight: 500; color: var(--theme-text); }
+.sr-saas-private :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=color]),select,textarea) { min-width: 0; max-width: 100%; width: 100%; min-height: 36px; padding: 8px 12px; font-size: 13px; color: var(--theme-text); background: var(--theme-elevated); border: 1px solid var(--theme-border); border-radius: 6px; }
+.sr-saas-private textarea { min-height: 80px; resize: vertical; }
+.sr-saas-private :is(button,.sr-button,.catalog-button,.bs-button,.radar-primary,.mgr-hero>a) { min-height: 34px; border: 1px solid var(--theme-border); border-radius: 6px; padding: 6px 12px; font-size: 13px; }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Error {{ status }} · SmartResto</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-tokens.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/shell.css') }}">
+  <style>
+    body { display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 24px; }
+    .error-card { max-width: 480px; width: 100%; padding: 32px; text-align: center; background: var(--theme-surface); color: var(--theme-text); border: 1px solid var(--theme-border); border-radius: 18px; box-shadow: 0 12px 32px rgba(0,0,0,.15); }
+    .error-card h1 { font-size: 48px; margin: 0 0 8px; color: var(--theme-warning); font-weight: 700; }
+    .error-card p { margin: 0 0 24px; line-height: 1.55; color: var(--theme-muted); }
+    .error-card a { display: inline-flex; padding: 12px 24px; border-radius: 100px; background: var(--theme-accent-bg); color: var(--theme-text); text-decoration: none; font-weight: 600; }
+    .error-card a:hover { filter: brightness(1.06); }
+  </style>
+</head>
+<body>
+  <main class="error-card">
+    <h1>{{ status }}</h1>
+    <p>Algo salió mal. Vuelve al inicio e inténtalo nuevamente.</p>
+    <a href="{{ url_for('public.home') }}">Volver al inicio</a>
+  </main>
+</body>
+</html>
