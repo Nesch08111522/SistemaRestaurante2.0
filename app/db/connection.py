@@ -51,7 +51,9 @@ _IDENTIFIER_PATTERN = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
 
 def testing_enabled() -> bool:
+    from flask import current_app, has_app_context
     return bool(
+        (has_app_context() and current_app.testing) or
         getattr(Config, "TESTING", False)
         or str(getattr(Config, "APP_ENV", "")).lower() == "test"
         or os.environ.get("FLASK_TESTING", "").strip().lower()
