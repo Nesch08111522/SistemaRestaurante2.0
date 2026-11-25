@@ -36,6 +36,20 @@ def test_setup_render_and_preserved_error(app,data,monkeypatch):
         assert 'value="Mi local"' in response.text
         assert 'registration-error' in response.text
 
+
+def test_registration_uses_maplibre_and_openfreemap_styles(app, data, monkeypatch):
+    data[0]['rol'] = 'business_owner'
+    monkeypatch.setattr('app.models.company.get_company_for_user', lambda *a: None)
+    with app.test_client() as client:
+        sign_in(client)
+        response = client.get('/owner/')
+    assert 'vendor/maplibre/maplibre-gl.css' in response.text
+    assert 'vendor/maplibre/maplibre-gl.js' in response.text
+    source = open('app/static/js/business-registration.js', encoding='utf-8').read()
+    assert 'tiles.openfreemap.org/styles/liberty' in source
+    assert 'tiles.openfreemap.org/styles/positron' in source
+    assert 'maplibregl.Map' in source
+
 def test_edit_other_company_denied(app,data,monkeypatch):
     data[0]['rol']='business_owner'
     monkeypatch.setattr('app.blueprints.owner.business_routes.RestaurantesRepository.get_by_id',lambda *a:{'id_empresa':99})

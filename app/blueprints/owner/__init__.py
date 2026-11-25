@@ -138,4 +138,4 @@ def api_ai_audit_menu(restaurante_id: int):
     return jsonify({"success": True, "auditoria": resultado}), 200
 
 
-from . import operation_routes, business_routes  # noqa: E402,F401
+from . import operation_routes, business_routes, document_routes  # noqa: E402,F401
