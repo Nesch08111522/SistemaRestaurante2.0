@@ -123,7 +123,7 @@ def test_csrf_and_external_redirect(app, data):
     assert app.test_client().post("/auth/login", data={"username": "qa", "password": "QA-only-pass123"}).status_code == 400
     app.config["WTF_CSRF_ENABLED"] = False
     response = app.test_client().post("/auth/login", data={"username": "qa", "password": "QA-only-pass123", "next": "https://example.com"})
-    assert response.headers["Location"] == "/"
+    assert response.headers["Location"] == "/auth/inicio"
 
 
 def test_search_contract(app, data):
