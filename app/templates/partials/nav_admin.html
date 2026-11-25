@@ -2,7 +2,7 @@
 <nav>
   <a href="{{ url_for('admin.dashboard') }}">Plataforma</a>
   <a href="{{ url_for('owner.dashboard') }}">Empresas</a>
-  <a href="{{ url_for('market.index') }}">Mercado</a>
+  <a href="{{ url_for('market.index') }}">Pedir comida</a>
   <a href="{{ url_for('discovery.index') }}">Descubrir</a>
   <span class="nav-user">{{ current_user.name or current_user.username }} (admin)</span>
   <a href="{{ url_for('auth.logout') }}">Salir</a>
