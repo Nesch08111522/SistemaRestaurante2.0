@@ -76,33 +76,9 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/discovery-page.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/business-plans.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth-register.css') }}" />
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/auth-login.css') }}" />
 
-  
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout-system.css') }}" />
-
-  <!-- =====================================================
-       ESTILOS CONDICIONALES
-  ====================================================== -->
-
-  {% if sr_auth %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}" />
-  {% endif %}
-
-  {% if sr_discover %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/forest-home.css') }}" />
-  {% endif %}
-
-  {% if sr_saas_private %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/saas-private.css') }}" />
-  {% endif %}
-
-  {% if sr_workspace %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/internal-workspace.css') }}" />
-  {% endif %}
-
-  {% if sr_admin_ui %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-precision.css') }}" />
-  {% endif %}
 
   <!-- =====================================================
        SEO Y METADATOS

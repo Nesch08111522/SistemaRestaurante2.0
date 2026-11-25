@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ restaurante.nombre }} · Menú 3D{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/menu3d.css') }}">{% endblock %}
+{% block content %}
+<div class="m3d" id="menu3d" data-restaurant="{{ restaurante.id_restaurante }}">
+  <header class="m3d-restaurant-head">
+    <div class="m3d-monogram" aria-hidden="true">{{ restaurante.nombre[:1] }}</div>
+    <div><span class="m3d-eyebrow">MENÚ 3D · SMARTRESTO</span><h2>{{ restaurante.nombre }}</h2><p>{{ restaurante.direccion or restaurante.distrito or '' }}{% if restaurante.calificacion is not none %} · ★ {{ restaurante.calificacion }}{% endif %}{% if restaurante.hora_apertura and restaurante.hora_cierre %} · {{ restaurante.hora_apertura }}–{{ restaurante.hora_cierre }}{% endif %}</p></div>
+    <div class="m3d-actions"><a href="#m3d-categories">Categorías</a><button type="button" id="m3d-share">Compartir ↗</button></div>
+  </header>
+  <section class="m3d-hero">
+    <div><span class="m3d-eyebrow">LA CARTA COBRA OTRA DIMENSIÓN</span><h1>Descubre cada plato desde una nueva perspectiva</h1><p>Acércate a los detalles. Gira, explora y encuentra tu próximo favorito con nuestra experiencia 3D.</p><a class="m3d-button" href="#m3d-catalog">Explorar menú ↓</a><span class="m3d-360">360° · A tu ritmo</span></div>
+    {% if restaurante.url_imagen and restaurante.url_imagen.startswith(('https://','/static/')) %}<img class="m3d-hero-image" src="{{ restaurante.url_imagen }}" alt="{{ restaurante.nombre }}" fetchpriority="high" width="900" height="900">{% else %}<div class="m3d-hero-art" aria-hidden="true"><span>360°</span><small>Una mesa.<br>Infinitas perspectivas.</small></div>{% endif %}
+  </section>
+  <section id="m3d-catalog" class="m3d-catalog">
+    <div class="m3d-section-title"><div><span class="m3d-eyebrow">HECHO PARA DISFRUTAR</span><h2>Elige tu próxima experiencia</h2></div><span>Fotos reales · Modelos desde fotografías</span></div>
+    <nav class="m3d-categories" id="m3d-categories" aria-label="Categorías de platos"></nav>
+    <form id="m3d-filters" class="m3d-filters">
+      <label>Buscar un plato<input name="q" type="search" placeholder="¿Qué te apetece hoy?" maxlength="160"></label>
+      <label>Precio máximo (S/)<input name="max_precio" type="number" min="0" step="0.01" placeholder="Sin límite"></label>
+      <label>Ordenar<select name="orden"><option value="nombre">Nombre</option><option value="precio_asc">Menor precio</option><option value="precio_desc">Mayor precio</option><option value="recomendados">Recomendados primero</option></select></label>
+      <label class="m3d-check"><input name="disponible" type="checkbox" value="1"> Solo disponibles</label>
+      <label class="m3d-check"><input name="recomendado" type="checkbox" value="1"> Recomendados</label>
+      <button type="submit">Aplicar</button><button type="reset" class="m3d-quiet">Limpiar</button>
+    </form>
+    <p id="m3d-message" role="status" aria-live="polite"></p>
+    <div id="m3d-grid" class="m3d-grid" aria-busy="true"><div class="m3d-skeleton"></div><div class="m3d-skeleton"></div><div class="m3d-skeleton"></div></div>
+    <div class="m3d-pagination"><button id="m3d-prev" disabled>← Anterior</button><span id="m3d-page">Página 1</span><button id="m3d-next" disabled>Siguiente →</button></div>
+  </section>
+  <section id="m3d-recommended" hidden><span class="m3d-eyebrow">LOS FAVORITOS DE LA CASA</span><h2>El restaurante recomienda</h2><div class="m3d-grid" id="m3d-recommended-grid"></div></section>
+  <aside class="m3d-note"><strong>Una perspectiva, no una réplica exacta.</strong> Los modelos se generan a partir de fotografías. La IA interpreta las partes ocultas: la forma y la presentación pueden variar.</aside>
+  <section class="m3d-contact"><h2>{{ restaurante.nombre }}</h2>{% if restaurante.direccion %}<p>{{ restaurante.direccion }}</p>{% endif %}{% if restaurante.telefono %}<p>Contacto: {{ restaurante.telefono }}</p>{% endif %}<a href="{{ url_for('business.show',restaurante_id=restaurante.id_restaurante) }}">Conocer el restaurante →</a></section>
+  {% include 'ar/viewer.html' %}
+</div>
+{% endblock %}
+{% block scripts %}<script type="module" src="{{ url_for('static',filename='js/menu3d-public.js') }}"></script>{% endblock %}

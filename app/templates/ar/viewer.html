@@ -1,0 +1,11 @@
+<dialog class="m3d-dialog" id="m3d-viewer" aria-labelledby="m3d-dish-title">
+  <button type="button" class="m3d-close" id="m3d-close" aria-label="Cerrar detalles">✕</button>
+  <div class="m3d-viewer-layout">
+    <section class="m3d-stage"><div id="m3d-model"></div><p id="m3d-viewer-status" role="status" aria-live="polite"></p>
+      <div class="m3d-viewer-controls" id="m3d-controls" hidden>
+        <button type="button" data-control="reset">Restablecer</button><button type="button" data-control="zoom-in" aria-label="Acercar modelo">＋</button><button type="button" data-control="zoom-out" aria-label="Alejar modelo">−</button><button type="button" data-control="rotate" aria-pressed="false">Giro automático</button><button type="button" data-control="fullscreen">Pantalla completa</button>
+      </div>
+    </section>
+    <section class="m3d-dish-info"><span class="m3d-eyebrow">CADA DETALLE CUENTA</span><h2 id="m3d-dish-title"></h2><p class="m3d-price" id="m3d-dish-price"></p><div id="m3d-dish-info"></div><p class="m3d-muted">La representación 3D es aproximada. Consulta al restaurante si necesitas información adicional sobre alérgenos.</p></section>
+  </div>
+</dialog>

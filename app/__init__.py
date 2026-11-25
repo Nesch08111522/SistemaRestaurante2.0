@@ -45,6 +45,12 @@ def create_app(test_config: dict | None = None) -> Flask:
         check_application_schema()
         logger.info("Esquema PostgreSQL verificado.")
 
+    # Bound multipart size before Flask-WTF reads the body for CSRF validation.
+    @app.before_request
+    def menu3d_upload_limit():
+        if request.endpoint == "ar.upload":
+            request.max_content_length = 9 * 1024 * 1024
+
     # 4. CSRF
     csrf.init_app(app)
 
@@ -136,6 +142,9 @@ def create_app(test_config: dict | None = None) -> Flask:
     # 11. Registrar blueprints
     from app.blueprints import register_blueprints
     register_blueprints(app)
+
+    from app.services.menu3d_worker import register_cli
+    register_cli(app)
 
     logger.info("SmartResto inicializado correctamente.")
     return app

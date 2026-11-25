@@ -1,8 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Menú 3D · {{ APP_NAME }}{% endblock %}
+{% block title %}Menú 3D · SmartResto{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/menu3d.css') }}">{% endblock %}
 {% block content %}
-<section class="card">
-  <h1>Menú 3D / AR</h1>
-  <p>Experiencias inmersivas de platos.</p>
-</section>
+<div class="m3d">
+  <header class="m3d-heading"><span class="m3d-eyebrow">SMARTRESTO / EXPERIENCIAS GASTRONÓMICAS</span><h1>Una nueva perspectiva<br>de tus sabores favoritos.</h1><p>Explora las cartas de nuestros restaurantes. Los platos con un modelo aprobado se pueden descubrir en 360°.</p>{% if current_user %}<a class="m3d-button" href="{{ url_for('ar.manage') }}">Gestionar mi menú 3D</a>{% endif %}</header>
+  <div class="m3d-grid">
+  {% for r in restaurantes %}
+    <a class="m3d-card m3d-restaurant" href="{{ url_for('ar.menu', rid=r.id_restaurante) }}">
+      {% if r.url_imagen and r.url_imagen.startswith(('https://','/static/')) %}<img src="{{ r.url_imagen }}" alt="{{ r.nombre }}" loading="lazy" width="600" height="400">{% else %}<div class="m3d-photo-empty">{{ r.nombre[:1] }}</div>{% endif %}
+      <div class="m3d-card-body"><span class="m3d-eyebrow">{{ r.distrito or 'Restaurante' }}</span><h2>{{ r.nombre }}</h2><p>{{ r.descripcion or '' }}</p><span>Explorar su menú →</span></div>
+    </a>
+  {% else %}<p class="m3d-empty">Todavía no hay restaurantes publicados.</p>{% endfor %}
+  </div>
+</div>
 {% endblock %}

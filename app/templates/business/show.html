@@ -10,6 +10,7 @@
 <div class="bs-public-site">
   <div style="max-width:1180px;margin:0 auto;padding:32px 24px;">
     <p class="bs-kicker">Restaurante</p>
+    <a href="{{ url_for('ar.menu', rid=restaurante.id_restaurante) }}">Explorar Menú 3D →</a>
     <h1 style="font-family:var(--bs-display);font-size:clamp(42px,6vw,72px);line-height:1;letter-spacing:-.04em;margin:16px 0;">
       {{ restaurante.nombre }}
     </h1>
