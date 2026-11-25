@@ -144,3 +144,5 @@ from . import workspace_routes  # noqa: E402,F401
 from . import profile_routes  # noqa: E402,F401
 
 from . import favorite_routes  # noqa: E402,F401
+
+from . import notification_routes  # noqa: E402,F401
