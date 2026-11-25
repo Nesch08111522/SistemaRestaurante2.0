@@ -23,7 +23,6 @@ _EXISTING_ENDPOINTS = frozenset({
     "salon.index",
     "kitchen.index",
     "loyalty.index",
-    "pantry.index",
     "ar.index",
 })
 

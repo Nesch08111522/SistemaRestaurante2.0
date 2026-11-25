@@ -94,7 +94,6 @@ def navigation():
         ('MI CUENTA', [
         ('auth.notifications', 'Notificaciones', 'bell', True),
         ('auth.profile', 'Mi perfil', 'user', True),
-        ('loyalty.index', 'Mis puntos', 'star', True),
-        ('pantry.index', 'Cocina en casa', 'kitchen', True)])]
+        ('loyalty.index', 'Mis puntos', 'star', True)])]
     return [(title, [(url_for(ep), label, icon, ep == request.endpoint) for ep,label,icon,allowed in entries
                      if allowed and ep in current_app.view_functions]) for title,entries in groups]

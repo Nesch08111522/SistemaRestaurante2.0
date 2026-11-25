@@ -16,7 +16,7 @@ FILES = {}
 # ============================================================
 FILES["base.html"] = r"""{%- set shell_user = session.get('user') -%}
 {%- set sr_authenticated = session.get('user_id') is not none -%}
-{%- set sr_private = sr_authenticated and request.blueprint in ('owner', 'admin', 'salon', 'kitchen', 'copilot', 'intelligence', 'loyalty', 'pantry', 'home_kitchen', 'comunicacion', 'catalog', 'sites', 'trust_center', 'companies', 'business_access') -%}
+{%- set sr_private = sr_authenticated and request.blueprint in ('owner', 'admin', 'salon', 'kitchen', 'copilot', 'intelligence', 'loyalty', 'comunicacion', 'catalog', 'sites', 'trust_center', 'companies', 'business_access') -%}
 {%- set sr_auth = request.blueprint == 'auth' -%}
 {%- set sr_discover = request.endpoint == 'public.home' -%}
 {%- set sr_admin_ui = sr_private and shell_user is mapping and shell_user.get('role') == 'admin' -%}
@@ -293,7 +293,6 @@ FILES["partials/header.html"] = r"""{%- set sr_icons = {
   {{ navlink('discovery.index','Restaurantes','store') }}
   {{ navlink('market.index','Mercado gastronómico','basket-shopping') }}
   {{ navlink('ar.index','Menú 3D','chart-line') }}
-  {{ navlink('pantry.index','Cocina en casa','store') }}
   {{ navlink('loyalty.index','Recompensas','tags') }}
   {% if user %}
     {{ navlink('admin.dashboard' if user.role == 'admin' else 'owner.dashboard' if user.role == 'business_owner' else 'market.index','Mi espacio','user') }}
@@ -339,13 +338,11 @@ FILES["partials/header.html"] = r"""{%- set sr_icons = {
     {{ navlink('market.index','Mercado','basket-shopping') }}
     {{ navlink('loyalty.index','Recompensas','tags') }}
     <strong class="sr-group">Mi espacio</strong>
-    {{ navlink('pantry.index','Cocina en casa','store') }}
   {% else %}
     <strong class="sr-group">Mi espacio</strong>
     {{ navlink('market.index','Mis pedidos','receipt') }}
     {{ navlink('loyalty.index','Mis puntos','tags') }}
     {{ navlink('#auth.favorites','Favoritos','heart') }}
-    {{ navlink('pantry.index','Cocina en casa','store') }}
   {% endif %}
 
   {% if user %}
@@ -382,7 +379,6 @@ FILES["partials/footer.html"] = r"""{% if show_public_footer is not defined or s
       <strong>Tu espacio</strong>
       <a href="{{ url_for('auth.register_form') }}">Crear cuenta</a>
       <a href="{{ url_for('loyalty.index') }}">Recompensas</a>
-      <a href="{{ url_for('pantry.index') }}">Cocina en casa</a>
     </nav>
     <nav aria-label="Ayuda y transparencia">
       <strong>Ayuda y transparencia</strong>
@@ -449,7 +445,7 @@ FILES["partials/internal_workspace_header.html"] = r"""{%- set workspace_user = 
   'admin.dashboard': 'Centro de control', 'owner.dashboard': 'Resumen de mi empresa',
   'salon.index': 'Salón y mesas', 'kitchen.index': 'Cocina en vivo',
   'market.index': 'Mercado gastronómico', 'loyalty.index': 'Recompensas',
-  'pantry.index': 'Mi cocina', 'ar.index': 'Menú 3D'
+  'ar.index': 'Menú 3D'
 } -%}
 {%- set workspace_title = workspace_titles.get(request.endpoint, 'Espacio de trabajo') -%}
 <div class="sr-workspace-header">
@@ -773,17 +769,6 @@ FILES["public/home.html"] = r"""{% extends "base.html" %}
       </div>
     </div>
     <a class="forest-outline" href="{{ url_for('discovery.index') }}">Ver mapa <span aria-hidden="true">→</span></a>
-  </section>
-
-  <section class="forest-home-kitchen" aria-labelledby="forest-home-kitchen-title">
-    <div class="forest-home-kitchen-copy">
-      <span class="forest-compact-icon"><i class="fas fa-kitchen-set" aria-hidden="true"></i></span>
-      <div>
-        <h2 id="forest-home-kitchen-title">¿Prefieres cocinar en casa?</h2>
-        <p>Encuentra ingredientes y productos para preparar algo delicioso.</p>
-      </div>
-    </div>
-    <a class="forest-text-link" href="{{ url_for('pantry.index') }}">Mi cocina <span aria-hidden="true">→</span></a>
   </section>
 
   <section class="forest-business" id="negocios" aria-labelledby="forest-business-title">
