@@ -1,10 +1,11 @@
 {% extends 'workspace/base.html' %}
 {% block title %}{{ 'Editar restaurante' if restaurant else 'Registrar mi negocio' }}{% endblock %}
 {% block section %}Mi empresa{% endblock %}
-{% block head %}<link rel="stylesheet" href="{{ url_for('static',filename='css/business-registration.css') }}"><link rel="stylesheet" href="{{ url_for('static',filename='vendor/leaflet/leaflet.css') }}">{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static',filename='css/business-registration.css') }}"><link rel="stylesheet" href="{{ url_for('static',filename='vendor/maplibre/maplibre-gl.css') }}">{% endblock %}
 {% macro field(name,label,type='text',required=false,placeholder='',max=120) %}<div class="ws-field"><label for="{{ name }}">{{ label }}{{ ' *' if required else '' }}</label><input id="{{ name }}" name="{{ name }}" type="{{ type }}" value="{{ values.get(name,'') }}" maxlength="{{ max }}" placeholder="{{ placeholder }}" {% if required %}required{% endif %} {% if type=='number' %}step="any"{% endif %}></div>{% endmacro %}
 {% block content %}
 <header class="ws-welcome registration-hero"><span class="ws-eyebrow">TU NEGOCIO EN SMARTRESTO</span><h1>{{ 'Haz que tu negocio destaque.' if restaurant else 'Tu próximo capítulo empieza aquí.' }}</h1><p>Presenta tu restaurante, define cómo atiendes y comparte lo que hace especial a tu cocina.</p><div class="ws-actions"><span class="ws-badge">01 · Identidad</span><span class="ws-badge">02 · Ubicación</span><span class="ws-badge">03 · Presentación</span></div></header>
+{% include 'owner/document_import.html' %}
 <div class="registration-layout">
 <form id="business-registration" class="ws-form" method="post" action="{{ url_for('owner.edit_restaurant',restaurant_id=restaurant.id_restaurante) if restaurant else url_for('owner.create_business') if new_company else url_for('owner.create_restaurant') }}">
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -29,4 +30,4 @@
 </form>
 <aside class="registration-aside"><div class="ws-card"><span class="ws-eyebrow">VISTA PREVIA</span><div class="registration-preview-art" aria-hidden="true">S</div><h2 id="preview-name">Tu restaurante</h2><p id="preview-description" class="muted">Tu propuesta gastronómica aparecerá aquí.</p><span id="preview-district" class="ws-badge">Tu distrito</span><p class="registration-preview-note">{{ 'Vista previa de los datos de tu ficha.' if restaurant else 'Vista previa de los datos. Tu negocio todavía no se publica al completar este formulario.' }}</p></div><div class="ws-card"><h2>Todo empieza con tu ficha</h2><p class="muted">Después podrás gestionar tu catálogo, consultar pedidos y acceder al salón y la cocina.</p>{% if new_company %}<p class="muted">El registro utiliza el plan básico. Las funciones de otros planes conservan sus condiciones.</p>{% endif %}</div></aside>
 </div>{% endblock %}
-{% block scripts %}<script src="{{ url_for('static',filename='vendor/leaflet/leaflet.js') }}"></script><script type="module" src="{{ url_for('static',filename='js/business-registration.js') }}"></script>{% endblock %}
+{% block scripts %}<script src="{{ url_for('static',filename='vendor/maplibre/maplibre-gl.js') }}"></script><script type="module" src="{{ url_for('static',filename='js/business-registration.js') }}"></script><script type="module" src="{{ url_for('static',filename='js/business-document.js') }}"></script>{% endblock %}
