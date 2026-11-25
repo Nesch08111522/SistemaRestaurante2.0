@@ -1,0 +1,6 @@
+{% extends "workspace/base.html" %}
+{% block title %}Mi inicio{% endblock %}
+{% block content %}
+<section class="ws-welcome"><span class="ws-eyebrow">TU EXPERIENCIA SMARTRESTO</span><h1>Hola, {{ current_user.name or current_user.username }}.<br><em>Todo tu mundo gastronómico.</em></h1><p>Tus favoritos, tus pedidos y las herramientas de tu día a día, en un solo lugar.</p><a class="ws-button primary" href="{{ url_for('public.home') }}">Explorar negocios ↗</a></section>
+{% for title,entries in workspace_navigation() %}{% if entries %}<section class="ws-section"><h2>{{ title }}</h2><div class="ws-grid three">{% for href,label,kind,active in entries %}{% if not active %}<a class="ws-card ws-shortcut" href="{{ href }}">{{ icon(kind) }}<div><strong>{{ label }}</strong><small>Abrir mi espacio →</small></div></a>{% endif %}{% endfor %}</div></section>{% endif %}{% endfor %}
+{% endblock %}

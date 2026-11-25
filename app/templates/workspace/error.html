@@ -1,0 +1,3 @@
+{% extends "workspace/base.html" %}
+{% block title %}No se pudo completar la solicitud{% endblock %}
+{% block content %}<section class="ws-card ws-empty"><span class="ws-eyebrow">SOLICITUD {{ status }}</span><h1>No pudimos completar esta acción</h1><p>{{ message }}</p><a class="ws-button" href="{{ url_for('auth.workspace_home') }}">Volver a mi espacio</a></section>{% endblock %}
