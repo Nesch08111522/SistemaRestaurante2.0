@@ -26,6 +26,7 @@ PLANS = ("basic", "decente", "premium")
 LEVELS = dict(zip(PLANS, range(3)))
 
 CAPABILITIES = {
+    "orders.manage.business": 0, "inventory.manage": 0,
     "business.manage": 0, "branch.manage": 0, "catalog.manage": 0,
     "orders.read.business": 0, "notifications.manage.business": 0,
     "tables.service": 0, "tables.manage": 1, "staff.manage": 1,

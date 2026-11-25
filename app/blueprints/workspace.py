@@ -2,6 +2,8 @@
 from functools import wraps
 from flask import abort, current_app, g, jsonify, render_template, request, url_for
 from psycopg import IntegrityError, OperationalError
+from psycopg.errors import UndefinedTable, UndefinedColumn
+from app.services.errors import DomainError
 from app.core.security import fresh_session_user
 from app.db.connection import DatabaseConfigurationError, DatabaseConnectionError
 
@@ -16,8 +18,11 @@ def workspace_errors(fn):
     def wrapped(*args, **kwargs):
         try:
             return fn(*args, **kwargs)
-        except WorkspaceError as error:
+        except (WorkspaceError, DomainError) as error:
             message, status = error.message, error.status
+        except (UndefinedTable, UndefinedColumn):
+            g.database_unavailable = True
+            message, status = "Esta función todavía no está habilitada. El equipo debe completar su preparación antes de utilizarla.", 503
         except IntegrityError:
             message, status = "No se pudo guardar: los datos ya existen o tienen una relación incompatible.", 409
         except (DatabaseConfigurationError, DatabaseConnectionError, OperationalError):
@@ -70,6 +75,7 @@ def navigation():
     kitchen = business or role == 'kitchen'
     groups = [ ('MI EXPERIENCIA', [
         ('auth.workspace_home', 'Mi inicio', 'home', True),
+        ('market.checkout', 'Hacer un pedido', 'menu', True),
         ('market.orders', 'Mis pedidos', 'orders', True),
         ('auth.favorites', 'Favoritos', 'heart', True),
         ('auth.history', 'Mi historial', 'clock', True),
