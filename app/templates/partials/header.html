@@ -121,7 +121,6 @@
   {{ navlink('discovery.index','Restaurantes','store') }}
   {{ navlink('market.index','Mercado gastronómico','basket-shopping') }}
   {{ navlink('ar.index','Menú 3D','chart-line') }}
-  {{ navlink('pantry.index','Cocina en casa','store') }}
   {{ navlink('loyalty.index','Recompensas','tags') }}
   {% if user %}
     {{ navlink('admin.dashboard' if user.role == 'admin' else 'owner.dashboard' if user.role == 'business_owner' else 'market.index','Mi espacio','user') }}
@@ -167,13 +166,11 @@
     {{ navlink('market.index','Mercado','basket-shopping') }}
     {{ navlink('loyalty.index','Recompensas','tags') }}
     <strong class="sr-group">Mi espacio</strong>
-    {{ navlink('pantry.index','Cocina en casa','store') }}
   {% else %}
     <strong class="sr-group">Mi espacio</strong>
     {{ navlink('market.index','Mis pedidos','receipt') }}
     {{ navlink('loyalty.index','Mis puntos','tags') }}
     {{ navlink('#auth.favorites','Favoritos','heart') }}
-    {{ navlink('pantry.index','Cocina en casa','store') }}
   {% endif %}
 
   {% if user %}

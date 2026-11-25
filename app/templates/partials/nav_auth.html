@@ -4,7 +4,6 @@
   <a href="{{ url_for('discovery.index') }}">Descubrir</a>
   <a href="{{ url_for('market.index') }}">Mercado</a>
   <a href="{{ url_for('loyalty.index') }}">Recompensas</a>
-  <a href="{{ url_for('pantry.index') }}">Mi cocina</a>
   <span class="nav-user">{{ current_user.name or current_user.username }}</span>
   <a href="{{ url_for('auth.logout') }}">Salir</a>
 </nav>

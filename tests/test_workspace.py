@@ -18,6 +18,8 @@ def test_workspace_has_role_navigation_and_no_public_assets(app,data,role):
         sign_in(client)
         response = client.get('/auth/inicio')
         assert response.status_code == 200
+        assert '/mi-cocina' not in response.text
+        assert 'Cocina en casa' not in response.text
         assert 'css/workspace.css' in response.text
         assert 'css/site.css' not in response.text
         assert ('href="/admin/"' in response.text) == (role == 'admin')
