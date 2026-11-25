@@ -101,7 +101,9 @@ def empresa_required(fn):
         from app.models.company import get_company_for_user
         empresa = get_company_for_user(user["id"])
         if not empresa:
-            return _forbidden("No tienes una empresa activa.")
+            if not _wants_json() and user.get('role') in {'business_owner', 'admin'}:
+                return redirect(url_for('owner.dashboard'))
+            return _forbidden("No tienes una empresa activa. Solicita una membresía al administrador del negocio.")
         from flask import g
         g.empresa = empresa
         return fn(*args, **kwargs)

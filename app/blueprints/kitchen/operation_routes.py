@@ -15,12 +15,15 @@ from . import bp
 @role_required("business_owner", "business_admin", "manager", "kitchen")
 def board():
     from flask import g
-    restaurant_ids = {r["id_restaurante"] for r in RestaurantModel.list_by_empresa(g.empresa["id_empresa"])}
+    from app.blueprints.owner.operation_routes import _restaurant_for_company
+    restaurants, selected = _restaurant_for_company()
+    restaurant_ids = {selected['id_restaurante']} if selected else set()
     orders = []
     for rid in restaurant_ids:
         orders.extend(OrderModel.list_by_restaurante(rid, limit=100))
     active = [order for order in orders if order.get("estado") in {"accepted", "preparing", "ready"}]
-    return render_template("workspace/kitchen.html", orders=sorted(active, key=lambda x: x.get("creado_en") or ""))
+    return render_template("workspace/kitchen.html", restaurants=restaurants, restaurant=selected,
+                           orders=sorted(active, key=lambda x: str(x.get("creado_en") or "")))
 
 
 @bp.post("/api/pedidos/<int:order_id>/estado")

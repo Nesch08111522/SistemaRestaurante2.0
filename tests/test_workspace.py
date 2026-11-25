@@ -42,3 +42,27 @@ def test_logout_get_does_not_change_session(app,data):
 def test_login_enters_private_workspace(app,data):
     response=app.test_client().post('/auth/login',data={'username':'qa','password':'QA-only-pass123'})
     assert response.location.endswith('/auth/inicio')
+
+
+def test_diner_navigation_destinations_and_return_link(app, data, monkeypatch):
+    monkeypatch.setattr('app.repositories.operations.OperationsRepository.catalog', lambda *a: [])
+    monkeypatch.setattr('app.models.order.OrderModel.list_by_usuario', lambda *a, **k: [])
+    monkeypatch.setattr('app.models.favorite.FavoriteModel.list_by_usuario', lambda *a, **k: [])
+    monkeypatch.setattr('app.models.notification.NotificationModel.list_by_usuario', lambda *a, **k: [])
+    monkeypatch.setattr('app.models.review.ReviewModel.list_by_usuario', lambda *a, **k: [])
+    monkeypatch.setattr('app.models.search_history.SearchHistoryModel.get_full',
+                        lambda *a: {'busquedas': [], 'envios': []})
+    with app.test_client() as client:
+        sign_in(client)
+        home = client.get('/auth/inicio')
+        nav = re.search(r'<nav class="ws-nav">(.*?)</nav>', home.text, re.S).group(1)
+        destinations = re.findall(r'<a href="([^"]+)"', nav)
+        assert len(destinations) == 9
+        for path in destinations:
+            response = client.get(path)
+            assert response.status_code == 200, path
+            header = re.search(r'<header.*?</header>', response.text, re.S).group(0)
+            assert 'Volver a SmartResto' in header
+            assert 'href="/"' in header
+            assert 'href="/auth/profile" aria-label="Mi perfil"' in header
+        assert client.get('/').status_code == 200

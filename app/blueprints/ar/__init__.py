@@ -16,12 +16,6 @@ from app.services.menu3d_storage import Storage, IntegrationError
 bp = Blueprint('ar',__name__)
 
 
-@bp.before_request
-def file_limit():
-    if request.endpoint == 'ar.upload':
-        request.max_content_length = 9*1024*1024
-
-
 @bp.errorhandler(ValueError)
 def invalid(error):
     return jsonify(success=False,error=str(error),code='invalid_input'),400

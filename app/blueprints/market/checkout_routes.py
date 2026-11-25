@@ -1,5 +1,7 @@
 """Authenticated purchasing workspace; does not replace the public market."""
-from flask import jsonify, render_template, request, url_for
+from flask import current_app, jsonify, render_template, request, url_for
+from psycopg.errors import UndefinedTable, UndefinedColumn
+from app.repositories.platos import PlatosRepository
 from app.core.auth_guard import login_required
 from app.models.restaurant import RestaurantModel
 from app.services import commerce
@@ -14,12 +16,22 @@ from . import bp
 def checkout():
     restaurants=[r for r in RestaurantModel.list_published(limit=100) if not r.get('suspendido') and not r.get('rechazado')]
     raw=request.args.get('restaurante_id')
-    try: rid=int(raw) if raw else (restaurants[0]['id_restaurante'] if restaurants else None)
+    try: rid=int(raw) if raw else None
     except (ValueError,TypeError): raise WorkspaceError('Restaurante inválido.')
     selected=next((r for r in restaurants if r['id_restaurante']==rid),None)
     if raw and not selected: raise WorkspaceError('Restaurante no disponible.',404)
-    dishes=OperationsRepository.catalog(rid) if selected else []
-    return render_template('workspace/checkout.html',restaurants=restaurants,restaurant=selected,dishes=dishes)
+    dishes = []
+    ordering_available = True
+    if selected:
+        try:
+            dishes = OperationsRepository.catalog(rid)
+        except (UndefinedTable, UndefinedColumn) as error:
+            current_app.logger.warning('Checkout schema unavailable: %s', type(error).__name__)
+            ordering_available = False
+            dishes = PlatosRepository.list_by_restaurante(rid, only_available=True)
+    return render_template('workspace/checkout.html', restaurants=restaurants,
+                           restaurant=selected, dishes=dishes,
+                           ordering_available=ordering_available)
 
 
 @bp.post('/api/comprar')
