@@ -29,6 +29,10 @@ document.querySelectorAll('form[data-workspace-form]').forEach(form => {
     event.preventDefault(); if (busy || !form.reportValidity()) return;
     const data = Object.fromEntries(new FormData(form));
     delete data.csrf_token;
+    if (form.querySelector('[name="restriction-choice"]')) {
+      data.restrictions = [...form.querySelectorAll('[name="restriction-choice"]:checked')].map(node => node.value);
+      delete data['restriction-choice'];
+    }
     for (const node of form.querySelectorAll('[data-list]')) data[node.name] = node.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
     for (const node of form.querySelectorAll('[data-integer]')) data[node.name] = Number(node.value);
     busy = true;

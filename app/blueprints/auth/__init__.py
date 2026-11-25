@@ -140,3 +140,5 @@ def api_whoami():
     }), 200
 
 from . import workspace_routes  # noqa: E402,F401
+
+from . import profile_routes  # noqa: E402,F401

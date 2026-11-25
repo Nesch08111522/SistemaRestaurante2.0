@@ -1,0 +1,13 @@
+{% extends "workspace/base.html" %}{% block title %}Mi perfil{% endblock %}{% block section %}Mi cuenta{% endblock %}
+{% block content %}
+<div class="ws-pagehead"><div><span class="ws-eyebrow">MI CUENTA</span><h1>Mi perfil</h1><p>Una experiencia que empieza por ti.</p></div><span class="ws-badge good">Cuenta activa</span></div>
+<div class="ws-grid two"><section class="ws-card"><h2>Información personal</h2><form class="ws-form" data-workspace-form data-method="PATCH" action="{{ url_for('auth.update_profile') }}">
+<div class="ws-field"><label for="profile-name">Nombre</label><input id="profile-name" name="name" value="{{ account.profile.name }}" maxlength="180" required autocomplete="name"></div>
+<div class="ws-field"><label for="profile-email">Correo electrónico</label><input id="profile-email" name="email" type="email" value="{{ account.profile.email }}" maxlength="254" required autocomplete="email"></div>
+<div class="ws-field"><label for="profile-password">Contraseña actual</label><input id="profile-password" name="current_password" type="password" maxlength="256" autocomplete="current-password"><small>Necesaria solo si cambias tu correo.</small></div>
+<p class="ws-notice" role="status" aria-live="polite" hidden></p><button class="ws-button primary" type="submit">Guardar mis datos</button></form></section>
+<section class="ws-card"><h2>Mis gustos y necesidades</h2><form class="ws-form" data-workspace-form data-method="PATCH" action="{{ url_for('auth.update_profile') }}">
+<div class="ws-field"><label for="profile-preferences">Preferencias</label><textarea id="profile-preferences" name="preferences" data-list placeholder="Cocina criolla&#10;Mariscos">{{ account.profile.preferences|join('\n') }}</textarea><small>Una por línea; hasta 20 preferencias de 120 caracteres.</small></div>
+<fieldset><legend>Restricciones alimentarias</legend>{% for item in restrictions %}<label class="ws-check"><input type="checkbox" name="restriction-choice" value="{{ item }}" {% if item in account.profile.restrictions %}checked{% endif %}> {{ item|capitalize }}</label>{% endfor %}</fieldset>
+<p class="muted">Confirma siempre los ingredientes y alérgenos con el restaurante.</p><p class="ws-notice" role="status" aria-live="polite" hidden></p><button class="ws-button primary" type="submit">Guardar preferencias</button></form></section></div>
+{% endblock %}
