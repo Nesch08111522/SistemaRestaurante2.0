@@ -77,9 +77,9 @@
     <nav class="sr-public-links" aria-label="Descubrir">
       <a href="{{ url_for('public.home') }}" {% if request.endpoint == 'public.home' %}aria-current="page"{% endif %}>Descubrir</a>
       <a href="{{ url_for('discovery.index') }}" {% if request.endpoint == 'discovery.index' %}aria-current="page"{% endif %}>Restaurantes</a>
-      <a href="{{ url_for('market.index') }}" {% if request.endpoint == 'market.index' %}aria-current="page"{% endif %}>Mercado</a>
+      <a href="{{ url_for('market.index') }}" {% if request.endpoint == 'market.index' %}aria-current="page"{% endif %}>Pedir comida</a>
       <a href="{{ url_for('ar.index') }}" {% if request.endpoint == 'ar.index' %}aria-current="page"{% endif %}>Menú 3D</a>
-      <a href="#" data-pendiente="main.business_plans" aria-disabled="true">Para negocios</a>
+      <a href="{{ url_for('public.business_plans') }}" {% if request.endpoint == 'public.business_plans' %}aria-current="page"{% endif %}>Para negocios</a>
     </nav>
     {% endif %}
 
@@ -119,8 +119,9 @@
   <div class="sr-public-menu-top"><strong>Explora SmartResto</strong><button type="button" class="sr-icon sr-collapse" aria-label="Cerrar navegación">×</button></div>
   {{ navlink('public.home','Descubrir','compass') }}
   {{ navlink('discovery.index','Restaurantes','store') }}
-  {{ navlink('market.index','Mercado gastronómico','basket-shopping') }}
+  {{ navlink('market.index','Pedir comida','basket-shopping') }}
   {{ navlink('ar.index','Menú 3D','chart-line') }}
+  {{ navlink('public.business_plans','Para negocios','store') }}
   {{ navlink('loyalty.index','Recompensas','tags') }}
   {% if user %}
     {{ navlink('admin.dashboard' if user.role == 'admin' else 'owner.dashboard' if user.role == 'business_owner' else 'market.index','Mi espacio','user') }}
@@ -163,7 +164,7 @@
     {{ navlink('owner.dashboard','Resumen de mi empresa','chart-pie') }}
     {{ navlink('salon.index','Salón y mesas','store') }}
     {{ navlink('kitchen.index','Cocina','basket-shopping') }}
-    {{ navlink('market.index','Mercado','basket-shopping') }}
+    {{ navlink('market.index','Pedir comida','basket-shopping') }}
     {{ navlink('loyalty.index','Recompensas','tags') }}
     <strong class="sr-group">Mi espacio</strong>
   {% else %}

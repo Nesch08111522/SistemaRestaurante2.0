@@ -3,7 +3,7 @@
 <nav class="sr-mobile-nav" aria-label="Accesos rápidos">
   <a href="{{ url_for('public.home') }}" {% if request.endpoint == 'public.home' %}aria-current="page"{% endif %}>{{ glyph('compass') }}<span>Explorar</span></a>
   <a href="{{ url_for('discovery.index') }}" {% if request.endpoint == 'discovery.index' %}aria-current="page"{% endif %}>{{ glyph('heart') }}<span>Para ti</span></a>
-  <a href="{{ url_for('market.index') }}" {% if request.endpoint == 'market.index' %}aria-current="page"{% endif %}>{{ glyph('basket-shopping') }}<span>Mercado</span></a>
+  <a href="{{ url_for('market.index') }}" {% if request.endpoint == 'market.index' %}aria-current="page"{% endif %}>{{ glyph('basket-shopping') }}<span>Pedir comida</span></a>
   <a href="{{ url_for('market.index') if sr_authenticated else url_for('auth.login_form') }}" {% if request.endpoint in ('market.index', 'auth.login_form') %}aria-current="page"{% endif %}>{{ glyph('user') }}<span>{{ 'Pedidos' if sr_authenticated else 'Ingresar' }}</span></a>
 </nav>
 {% endif %}
