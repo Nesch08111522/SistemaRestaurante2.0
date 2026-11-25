@@ -1,7 +1,0 @@
-/* Profile responsive. */
-.profile-container { max-width: 1080px; margin: 0 auto; padding: 24px; }
-.profile-header { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
-.profile-content { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
-@media (max-width: 900px) {
-  .profile-content { grid-template-columns: 1fr; }
-}

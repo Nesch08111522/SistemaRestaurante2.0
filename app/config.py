@@ -100,6 +100,9 @@ class Config:
     TESTING = _flag("FLASK_TESTING", APP_ENV == "test")
     SECRET_KEY = _env("SECRET_KEY")
 
+    # Local template changes must not remain cached when debug is disabled.
+    TEMPLATES_AUTO_RELOAD = APP_ENV == "development"
+
     # Flask
     MAX_CONTENT_LENGTH = _bounded_int("MAX_CONTENT_LENGTH", 2 * 1024 * 1024, 1024, 100 * 1024 * 1024)
     JSON_AS_ASCII = False

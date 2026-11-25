@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import FrozenSet
 
 
-_ROLE_ALIASES = {"user": "diner", "owner": "business_owner"}
+from app.core.roles import canonical_role
 
 _PERMISSIONS: dict[str, FrozenSet[str]] = {
     "guest": frozenset({"catalog.read", "business.read", "profile.read.public"}),
@@ -69,7 +69,7 @@ for _role in ('business_owner','business_admin','manager','admin'):
 
 
 def _canonical_role(role: str | None) -> str:
-    return _ROLE_ALIASES.get(str(role or "guest"), str(role or "guest"))
+    return canonical_role(role)
 
 
 def permissions_for_role(role: str | None) -> list[str]:
