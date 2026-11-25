@@ -24,7 +24,8 @@ def dashboard():
     empresa = get_company_for_user(actor()['id'])
     if not empresa:
         if actor()['role'] in {'business_owner', 'admin'}:
-            return render_template('owner/setup.html')
+            from .business_routes import registration_form
+            return registration_form()
         raise WorkspaceError('Solicita una membresía activa al administrador de tu empresa.', 403)
     g.empresa = empresa
     restaurantes = RestaurantModel.list_by_empresa(empresa["id_empresa"])
