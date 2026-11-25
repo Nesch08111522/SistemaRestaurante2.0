@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Flask
+instance/
+
+# Entorno
+.env
+.env.*
+!.env.example
+
+# Tests
+.pytest_cache/
+.coverage
+
+# Artefactos
+artifacts/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store

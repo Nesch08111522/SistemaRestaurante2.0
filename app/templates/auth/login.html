@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión · {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<div id="ax-stage" class="ax-stage" data-mode="login" data-login-url="{{ url_for('auth.login_form') }}" data-register-url="{{ url_for('auth.register_form') }}">
+  <div class="ax-visual" aria-hidden="true">
+    <div class="ax-food-host" data-food-experience-api>
+      <div class="ax-food-canvas">
+        <img data-scene-fallback src="{{ url_for('static', filename='images/auth/lomo.webp') }}" alt="Lomo saltado con papas y arroz">
+      </div>
+      <div class="ax-food-caption">
+        <h3>Lomo saltado</h3>
+        <p>Cocina peruana · sabores con carácter</p>
+      </div>
+    </div>
+  </div>
+  <div class="ax-forms">
+    <div class="ax-panes">
+      <section class="ax-pane ax-pane-login" data-pane="login" aria-labelledby="ax-login-title">
+        <div class="ax-card">
+          <p class="ax-eyebrow"><span class="ax-mark" aria-hidden="true">✦</span> SmartResto</p>
+          <h1 id="ax-login-title" class="ax-title">Bienvenido de nuevo</h1>
+          <p class="ax-subtitle">Ingresa para descubrir, pedir y disfrutar.</p>
+          <form class="ax-form" method="post" action="{{ url_for('auth.login_submit') }}" novalidate>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="next" value="{{ next or '' }}">
+            <div class="ax-field">
+              <label class="ax-label" for="ax-login-username">Usuario o correo</label>
+              <div class="ax-control">
+                <svg class="ax-lead" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0M4 21v-2a8 6 0 0 1 16 0v2"/></svg>
+                <input id="ax-login-username" name="username" type="text" autocomplete="username" required value="{{ username or '' }}" placeholder="tu usuario o correo">
+              </div>
+              <p class="ax-error" data-error-for="ax-login-username" hidden></p>
+            </div>
+            <div class="ax-field">
+              <label class="ax-label" for="ax-login-password">Contraseña</label>
+              <div class="ax-control">
+                <svg class="ax-lead" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 10h14v11H5zM8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <input id="ax-login-password" name="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+                <button type="button" class="ax-eye" data-toggle-password="ax-login-password" aria-label="Mostrar contraseña" aria-pressed="false">
+                  <svg data-eye-open aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg data-eye-closed hidden aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22"/></svg>
+                </button>
+              </div>
+              <p class="ax-error" data-error-for="ax-login-password" hidden></p>
+            </div>
+            <button type="submit" class="ax-submit">
+              <span class="ax-spinner" aria-hidden="true"></span>
+              Ingresar
+            </button>
+          </form>
+          <p class="ax-switch">¿No tienes cuenta? <a href="{{ url_for('auth.register_form') }}">Crear cuenta</a></p>
+          <div class="ax-links">
+            <a class="ax-link" href="#" data-pendiente="auth.recover" aria-disabled="true">¿Olvidaste tu contraseña?</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth-login.css') }}">
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Crear cuenta · {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<div id="ax-stage" class="ax-stage" data-mode="register" data-login-url="{{ url_for('auth.login_form') }}" data-register-url="{{ url_for('auth.register_form') }}">
+  <div class="ax-visual" aria-hidden="true">
+    <div class="ax-food-host" data-food-experience-api>
+      <div class="ax-food-canvas">
+        <img data-scene-fallback src="{{ url_for('static', filename='images/auth/ceviche.webp') }}" alt="Ceviche norteño con camote y choclo">
+      </div>
+      <div class="ax-food-caption">
+        <h3>Ceviche norteño</h3>
+        <p>Frescura del norte · inspiración marina</p>
+      </div>
+    </div>
+  </div>
+  <div class="ax-forms">
+    <div class="ax-panes">
+      <section class="ax-pane ax-pane-register" data-pane="register" aria-labelledby="ax-register-title">
+        <div class="ax-card">
+          <p class="ax-eyebrow"><span class="ax-mark" aria-hidden="true">✦</span> SmartResto</p>
+          <h1 id="ax-register-title" class="ax-title">Crea tu cuenta</h1>
+          <p class="ax-subtitle">Descubre restaurantes, guarda favoritos y pide en minutos.</p>
+          <form class="ax-form" method="post" action="{{ url_for('auth.register_submit') }}" novalidate>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="ax-field">
+              <label class="ax-label" for="ax-reg-name">Nombre completo</label>
+              <div class="ax-control">
+                <svg class="ax-lead" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0M4 21v-2a8 6 0 0 1 16 0v2"/></svg>
+                <input id="ax-reg-name" name="name" type="text" autocomplete="name" required value="{{ name or '' }}" placeholder="Tu nombre completo">
+              </div>
+              <p class="ax-error" data-error-for="ax-reg-name" hidden></p>
+            </div>
+            <div class="ax-field">
+              <label class="ax-label" for="ax-reg-username">Usuario</label>
+              <div class="ax-control">
+                <svg class="ax-lead" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0M4 21v-2a8 6 0 0 1 16 0v2"/></svg>
+                <input id="ax-reg-username" name="username" type="text" autocomplete="username" required minlength="3" maxlength="80" value="{{ username or '' }}" placeholder="mínimo 3 caracteres">
+              </div>
+              <p class="ax-error" data-error-for="ax-reg-username" hidden></p>
+            </div>
+            <div class="ax-field">
+              <label class="ax-label" for="ax-reg-email">Correo</label>
+              <div class="ax-control">
+                <svg class="ax-lead" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v16H4zM4 8l8 6 8-6"/></svg>
+                <input id="ax-reg-email" name="email" type="email" autocomplete="email" required value="{{ email or '' }}" placeholder="tucorreo@ejemplo.com">
+              </div>
+              <p class="ax-error" data-error-for="ax-reg-email" hidden></p>
+            </div>
+            <div class="ax-field">
+              <label class="ax-label" for="ax-reg-password">Contraseña</label>
+              <div class="ax-control">
+                <svg class="ax-lead" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 10h14v11H5zM8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <input id="ax-reg-password" name="password" type="password" autocomplete="new-password" required minlength="8" placeholder="mínimo 8 caracteres">
+                <button type="button" class="ax-eye" data-toggle-password="ax-reg-password" aria-label="Mostrar contraseña" aria-pressed="false">
+                  <svg data-eye-open aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg data-eye-closed hidden aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22"/></svg>
+                </button>
+              </div>
+              <div class="ax-strength" id="ax-strength" data-score="0" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+              <p class="ax-hint" id="ax-strength-text">Usa al menos 8 caracteres con letras y números.</p>
+              <p class="ax-error" data-error-for="ax-reg-password" hidden></p>
+            </div>
+            <div class="ax-field">
+              <label class="ax-label" for="ax-reg-confirm">Confirmar contraseña</label>
+              <div class="ax-control">
+                <svg class="ax-lead" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 10h14v11H5zM8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <input id="ax-reg-confirm" name="confirm" type="password" autocomplete="new-password" required placeholder="repítela">
+              </div>
+              <p class="ax-error" data-error-for="ax-reg-confirm" hidden></p>
+            </div>
+            <button type="submit" class="ax-submit">
+              <span class="ax-spinner" aria-hidden="true"></span>
+              Crear cuenta
+            </button>
+          </form>
+          <p class="ax-switch">¿Ya tienes cuenta? <a href="{{ url_for('auth.login_form') }}">Ingresar</a></p>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth-register.css') }}">
+
+{% endblock %}

@@ -1,0 +1,41 @@
+<article class="restaurant-card rc forest-card" data-id="{{ r.id_restaurante }}" data-lat="{{ r.latitud or '' }}" data-lng="{{ r.longitud or '' }}">
+  <div class="card-image">
+    {% if r.url_imagen %}
+    <img src="{{ r.url_imagen }}" alt="{{ r.nombre }}" loading="lazy" width="640" height="480">
+    {% else %}
+    <div class="forest-photo-missing"><i class="fas fa-utensils" aria-hidden="true"></i><span>Conoce {{ r.nombre }}</span></div>
+    {% endif %}
+    {% if r.promocion_texto %}
+    <span class="forest-promo-badge"><i class="fas fa-tag" aria-hidden="true"></i> Promoción</span>
+    {% endif %}
+    <button type="button" class="fav-btn" onclick="toggleFavorite({{ r.id_restaurante }}, event)" aria-label="Guardar {{ r.nombre }} en favoritos" aria-pressed="false">
+      <i class="far fa-heart" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div class="card-content">
+    <h3>{{ r.nombre }}</h3>
+    <div class="card-location">
+      <i class="fas fa-location-dot" aria-hidden="true"></i>
+      <span>{{ r.distrito or 'Ubicación por confirmar' }}</span>
+    </div>
+    <div class="forest-card-meta">
+      <span class="rating">
+        <i class="fas fa-star" aria-hidden="true"></i> {{ '%.1f'|format(r.calificacion) if r.calificacion else 'Sin reseñas' }}
+        {% if r.cantidad_resenas_reportada %}<small> ({{ r.cantidad_resenas_reportada }} reseñas)</small>{% endif %}
+      </span>
+      {% if r.hora_apertura and r.hora_cierre %}
+      <span class="forest-hours">{{ r.hora_apertura }} – {{ r.hora_cierre }}</span>
+      {% endif %}
+    </div>
+    <p class="card-price">
+      {% if r.precio_promedio %}
+      <strong>{{ MONEDA }} {{ '%.0f'|format(r.precio_promedio) }}</strong> por persona
+      {% else %}
+      Consultar precio
+      {% endif %}
+    </p>
+    <div class="forest-card-bottom">
+      <a href="{{ url_for('business.show', restaurante_id=r.id_restaurante) }}" class="card-link">Ver restaurante <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>

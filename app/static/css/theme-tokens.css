@@ -1,0 +1,69 @@
+/* Canonical design tokens: dark without any OS media query. */
+:root {
+  --theme-shadow-rgb: 9 17 22;
+  --theme-bg: #17211e;
+  --theme-surface: #202b28;
+  --theme-elevated: #25332e;
+  --theme-text: #edf4ed;
+  --theme-muted: #aab9af;
+  --theme-border: #34443b;
+  --theme-accent: #80c6a1;
+  --theme-accent-bg: #233b34;
+  --theme-success: #80c6a1;
+  --theme-success-bg: #233b34;
+  --theme-warning: #f2d08b;
+  --theme-warning-bg: #3c3424;
+  --theme-danger: #ffb9bb;
+  --theme-danger-bg: #402c32;
+  --theme-info: #b7d8ff;
+  --theme-info-bg: #283748;
+  --theme-focus: #f2d08b;
+  --theme-shadow: #09111666;
+  --theme-edge: #aab9af1a;
+  --theme-overlay: #10171de6;
+  --theme-chart-1: #80c6a1;
+  --theme-chart-2: #b7d8ff;
+  --theme-chart-3: #f2d08b;
+  --theme-chart-4: #ffb9bb;
+  --theme-chart-5: #d6c6ff;
+  --theme-chart-6: #a7dce2;
+  --theme-map-background: #e7eef1;
+  --theme-map-control-text: #263238;
+  --theme-map-control-bg: rgba(255, 255, 255, .9);
+  --theme-brand-primary: #245447;
+  --theme-brand-secondary: #d8a65d;
+  color-scheme: dark;
+}
+[data-theme="light"] {
+  --theme-shadow-rgb: 24 36 44;
+  --theme-bg: #f7f6f0;
+  --theme-surface: #ffffff;
+  --theme-elevated: #e6ecef;
+  --theme-text: #17392f;
+  --theme-muted: #6e8178;
+  --theme-border: #d3dbd0;
+  --theme-accent: #17533f;
+  --theme-accent-bg: #dcece5;
+  --theme-success: #17533f;
+  --theme-success-bg: #dcece5;
+  --theme-warning: #674500;
+  --theme-warning-bg: #f4ead4;
+  --theme-danger: #852737;
+  --theme-danger-bg: #fae4e8;
+  --theme-info: #214d78;
+  --theme-info-bg: #e1ecf9;
+  --theme-focus: #674500;
+  --theme-shadow: #17392f26;
+  --theme-edge: #ffffffb3;
+  --theme-overlay: #e6eceff2;
+  --theme-chart-1: #17533f;
+  --theme-chart-2: #214d78;
+  --theme-chart-3: #674500;
+  --theme-chart-4: #852737;
+  --theme-chart-5: #584182;
+  --theme-chart-6: #23535b;
+  --theme-brand-primary: #245447;
+  --theme-brand-secondary: #d8a65d;
+  color-scheme: light;
+}
+:root { --theme-photo-bg:#111; --theme-photo-text:#fff; --theme-photo-rgb:0 0 0; --theme-promo-bg:#a34813; }

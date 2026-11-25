@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Gestionar Menú 3D · SmartResto{% endblock %}
+{% block head %}<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="{{ url_for('static', filename='css/menu3d.css') }}">{% endblock %}
+{% block content %}
+<div class="m3d" id="menu3d-admin">
+  <header class="m3d-heading"><span class="m3d-eyebrow">TU RESTAURANTE / ESTUDIO 3D</span><h1>De tu cocina,<br>a una nueva dimensión.</h1><p>Administra tu carta, fotografía tus platos y aprueba cada modelo antes de compartirlo.</p></header>
+  <div class="m3d-toolbar"><label>Restaurante<select id="m3d-restaurant">{% for r in restaurantes %}<option value="{{ r.id_restaurante }}">{{ r.nombre }}</option>{% endfor %}</select></label><button id="m3d-new" {% if not restaurantes %}disabled{% endif %}>＋ Registrar plato</button><a id="m3d-public-link" hidden>Ver menú público ↗</a></div>
+  {% if not restaurantes %}<p class="m3d-empty">No hay restaurantes que puedas administrar con tu membresía y suscripción actuales.</p>{% endif %}
+  <div class="m3d-stats" id="m3d-stats"></div>
+  <p id="m3d-message" role="status" aria-live="polite"></p>
+  <div class="m3d-grid" id="m3d-admin-grid"></div>
+  <div class="m3d-pagination"><button id="m3d-prev" disabled>← Anterior</button><span id="m3d-page">Página 1</span><button id="m3d-next" disabled>Siguiente →</button></div>
+  <dialog id="m3d-editor" class="m3d-dialog m3d-editor" aria-labelledby="m3d-editor-title">
+    <button class="m3d-close" type="button" data-close="m3d-editor" aria-label="Cerrar editor">✕</button>
+    <h2 id="m3d-editor-title">Datos del plato</h2>
+    <form id="m3d-dish-form" class="m3d-form">
+      <label>Nombre<input name="nombre" required maxlength="160"></label><label>Precio (S/)<input name="precio" required type="number" min="0" max="999999" step="0.01"></label>
+      <label>Categoría<input name="categoria" maxlength="100" placeholder="Categoría de tu carta"></label><label>Descripción<textarea name="descripcion" maxlength="2000"></textarea></label>
+      <label>Alérgenos declarados (uno por línea)<textarea name="alergenos"></textarea></label><label>Ingredientes (uno por línea)<textarea name="ingredientes"></textarea></label><label>Restricciones alimentarias (una por línea)<textarea name="restricciones_dieteticas"></textarea></label><label>Etiquetas (una por línea)<textarea name="etiquetas"></textarea></label>
+      <label class="m3d-check"><input name="esta_disponible" type="checkbox" checked> Disponible</label><label class="m3d-check"><input name="es_recomendado" type="checkbox"> Recomendado por el restaurante</label>
+      <p role="status" id="m3d-editor-message"></p><button type="submit">Guardar plato</button>
+    </form>
+  </dialog>
+  <dialog id="m3d-studio" class="m3d-dialog m3d-editor" aria-labelledby="m3d-studio-title">
+    <button class="m3d-close" type="button" data-close="m3d-studio" aria-label="Cerrar estudio">✕</button><span class="m3d-eyebrow">FOTOGRAFÍA → MODELO → REVISIÓN</span><h2 id="m3d-studio-title"></h2>
+    <p>Usa luz uniforme, un fondo sencillo y el plato completo. Puedes subir entre una y cuatro fotos del mismo plato desde distintos ángulos. Máximo 2 MB por foto; JPEG, PNG o WebP.</p>
+    <p class="m3d-note">Una sola foto no muestra las partes ocultas. La IA las interpreta y el resultado puede diferir del plato real.</p>
+    <form id="m3d-photo-form"><label>Fotografías del plato<input name="fotos" type="file" accept="image/jpeg,image/png,image/webp" multiple required></label><div id="m3d-photo-preview" class="m3d-previews"></div><button type="submit">Guardar fotografías / nueva versión</button></form>
+    <p role="status" id="m3d-studio-message" aria-live="polite"></p><div id="m3d-resources"></div>
+  </dialog>
+  <dialog id="m3d-confirm" class="m3d-dialog m3d-editor" aria-labelledby="m3d-confirm-title"><h2 id="m3d-confirm-title">Confirmar generación 3D</h2><p>Las fotografías se enviarán a Meshy. Esta operación puede consumir créditos y generar un costo según tu cuenta del proveedor. Revisa su tarifa antes de continuar.</p><p>El resultado será un borrador privado y requerirá tu aprobación.</p><div class="m3d-actions"><button id="m3d-confirm-cancel">Cancelar</button><button id="m3d-confirm-yes">Acepto el costo y autorizo el envío</button></div><p role="status" id="m3d-confirm-message"></p></dialog>
+  {% include 'ar/viewer.html' %}
+</div>
+{% endblock %}
+{% block scripts %}<script type="module" src="{{ url_for('static',filename='js/menu3d-admin.js') }}"></script>{% endblock %}

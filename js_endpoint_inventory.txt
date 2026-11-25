@@ -1,0 +1,36 @@
+app\static\js\admin.js:24:        const res = await fetch(url, opts);
+app\static\js\admin.js:50:            const data = await this.requestJSON('/admin/api/analytics');
+app\static\js\admin.js:113:            const data = await this.requestJSON(`/admin/restaurant/${id}`);
+app\static\js\admin.js:137:            await this.requestJSON(`/admin/restaurant/${id}`, 'PUT', payload);
+app\static\js\admin.js:146:            await this.requestJSON(`/admin/restaurant/${id}`, 'DELETE');
+app\static\js\ai-assistant.js:4:    const API_CHAT = '/descubrir/api/recommend';
+app\static\js\ai-assistant.js:58:                const response = await fetch(API_CHAT, {
+app\static\js\app.js:139:            const response = await fetch('/descubrir/api/recommend', {
+app\static\js\catalog-explore.js:16:        const response = await fetch(url, body ? {method:'POST', headers:{'Content-Type':'application/json', 'X-CSRFToken':token || ''}, body:JSON.stringify(body)} : {});
+app\static\js\catalog-explore.js:26:            const data = await api('/descubrir/api/restaurants', filters);
+app\static\js\context-location.js:9:    const response=await fetch('/api/save-location',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lat:coords.latitude,lng:coords.longitude})});
+app\static\js\copilot.js:27:      const response = await fetch('/descubrir/api/recommend', {
+app\static\js\discovery.js:7:    const response = await fetch(path, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+app\static\js\discovery.js:39:        const result = await api('/admin/api/discovery/runs', {source:button.dataset.source});
+app\static\js\dish-model.js:4: async function track(event){try{await fetch(button.dataset.event,{method:'POST',body:new URLSearchParams({event})});}catch{}}
+app\static\js\dish-model.js:8:   const [metadataResponse]=await Promise.all([fetch(button.dataset.metadata,{headers:{Accept:'application/json'}}),import('/static/vendor/model-viewer/model-viewer-4.1.0.min.js')]);
+app\static\js\market-map.js:4:    fetch('/mercado/interaccion', {method:'POST', headers:{'Content-Type':'application/json'},
+app\static\js\menu3d-admin.js:15:    try{const data=await api(`/ar/api/gestion/restaurantes/${select.value}?page=${page}`);if(ticket!==revision)return;
+app\static\js\menu3d-admin.js:20:          e.currentTarget.disabled=true;try{await api(`/ar/api/gestion/platos/${d.id_plato}/publicacion`,{method:'POST',body:{publicado:!d.publicado}});await load();message('m3d-message',d.publicado?'Plato retirado del menú público.':'Plato publicado. Solo se mostrará un modelo si ha sido aprobado.');}catch(err){message('m3d-message',err.message,true);e.target.disabled=false;}
+app\static\js\menu3d-admin.js:34:    try{await api(editing?`/ar/api/gestion/platos/${editing.id_plato}`:`/ar/api/gestion/restaurantes/${select.value}/platos`,{method:editing?'PUT':'POST',body:payload});$('m3d-editor').close();await load();message('m3d-message','Plato guardado.');}catch(err){message('m3d-editor-message',err.message,true);}finally{submit.disabled=false;}
+app\static\js\menu3d-admin.js:39:    try{const data=await api(`/ar/api/gestion/platos/${pid}/recursos`);if(!studio.open||pid!==currentDish?.id_plato)return;
+app\static\js\menu3d-admin.js:50:          try{const data=await api(`/ar/api/gestion/recursos/${resource.id_recurso}/regenerar`,{method:'POST',body:{}});await resources();confirm(data.recurso);}catch(error){message('m3d-studio-message',error.message,true);event.target.disabled=false;}
+app\static\js\menu3d-admin.js:63:  async function review(resource,approved){try{await api(`/ar/api/gestion/recursos/${resource.id_recurso}/revision`,{method:'POST',body:{aprobado:approved}});message('m3d-studio-message',approved?'Modelo aprobado. Será visible si el plato está publicado.':'Modelo rechazado; no se mostrará en el menú.');await resources();}catch(e){message('m3d-studio-message',e.message,true);}}
+app\static\js\menu3d-admin.js:68:    try{await api(`/ar/api/gestion/recursos/${confirmation.resource.id_recurso}/generar`,{method:'POST',body:{confirmar_costo:true,clave_idempotencia:confirmation.key}});$('m3d-confirm').close();message('m3d-studio-message','Solicitud guardada. El trabajador procesará el modelo; puedes cerrar esta ventana.');await resources();}catch(err){message('m3d-confirm-message',err.message,true);}finally{$('m3d-confirm-yes').disabled=false;}
+app\static\js\menu3d-admin.js:77:    try{await api(`/ar/api/gestion/platos/${currentDish.id_plato}/fotografias`,{method:'POST',body:new FormData(photoForm)});photoForm.reset();clearPreviews();message('m3d-studio-message','Fotografías guardadas. La generación requiere tu confirmación de costo.');await resources();}catch(err){message('m3d-studio-message',err.message,true);}finally{b.disabled=false;}
+app\static\js\menu3d-common.js:10:  const response=await fetch(url,{credentials:'same-origin',...options,headers});
+app\static\js\menu3d-public.js:10:    try{const data=await api(`/ar/api/restaurantes/${rid}/menu?${params}`,{signal});
+app\static\js\menu3d-public.js:25:    try{const data=await api(`/ar/api/restaurantes/${rid}/categorias`);for(const name of ['',...data.categorias]){const b=button(name||'Todos los platos',()=>{category=name;page=1;setCategoryButtons();load();});b.dataset.category=name;$('m3d-categories').append(b);}setCategoryButtons();}catch(e){message('m3d-message',e.message,true);}
+app\static\js\menu3d-public.js:27:    try{const data=await api(`/ar/api/restaurantes/${rid}/menu?recomendado=1`);$('m3d-recommended').hidden=!data.platos.length;$('m3d-recommended-grid').replaceChildren(...data.platos.slice(0,3).map(d=>card(d,actions(d))));}catch{/* Main catalog reports service errors. */}
+app\static\js\notification-feed.js:64:      const response = await fetch(script.dataset.feed || '/api/notifications', {cache: 'no-store', signal: controller.signal});
+app\static\js\recommendations.js:6:    const response = await fetch(url, {
+app\static\js\scan.js:70:      const response = await fetch(form.action || location.href, {method: 'POST', body, credentials: 'same-origin', headers: {'Accept': 'application/json'}});
+app\static\js\search-history.js:12:      const response = await fetch(url, {
+app\static\js\search.js:77:            const response = await fetch('/descubrir/api/restaurants?' + filters, {
+app\static\js\shell.js:80:                    const response = await fetch(counters.dataset.countsUrl, {cache:'no-store'});
+app\static\js\workspace-api.js:8:  const response = await fetch(target, {method, headers, credentials:'same-origin', signal, body:body === undefined ? undefined : JSON.stringify(body)});

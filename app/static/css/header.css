@@ -1,0 +1,1614 @@
+
+/* ==========================================================
+   SMARTRESTO — HEADER Y NAVEGACIÓN GLOBAL
+   Archivo: app/static/css/header.css
+
+   Compatible con:
+   - Sitio público
+   - Usuarios autenticados
+   - Administración
+   - Propietarios de negocios
+   - Sidebar privado SaaS
+   - Tema claro / oscuro
+
+   No modifica la estructura HTML ni la lógica JavaScript.
+   ========================================================== */
+
+
+/* ==========================================================
+   01. VARIABLES Y CONFIGURACIÓN
+   ========================================================== */
+
+:root {
+  --sr-header: 68px;
+  --sr-rail: 250px;
+
+  --sr-header-bg: var(--theme-surface, #fffefa);
+  --sr-header-text: var(--theme-text, #17392f);
+  --sr-header-muted: var(--theme-muted, #718078);
+  --sr-header-border: var(--theme-border, #e4e9e1);
+  --sr-header-accent: var(--theme-accent, #28684f);
+  --sr-header-accent-bg: var(--theme-accent-bg, #e8f1e8);
+  --sr-header-hover: var(--theme-elevated, #f1f4ed);
+  --sr-header-focus: var(--theme-focus, #4b9870);
+  --sr-header-shadow: 0 12px 35px rgb(23 57 47 / 9%);
+
+  --sr-header-radius: 12px;
+  --sr-header-transition: 220ms ease;
+}
+
+:root[data-theme="dark"] {
+  --sr-header-bg: var(--theme-surface, #202b27);
+  --sr-header-text: var(--theme-text, #edf4ee);
+  --sr-header-muted: var(--theme-muted, #a4b4aa);
+  --sr-header-border: var(--theme-border, #35443d);
+  --sr-header-accent: var(--theme-accent, #8cc6a0);
+  --sr-header-accent-bg: var(--theme-accent-bg, #293d32);
+  --sr-header-hover: var(--theme-elevated, #2b3932);
+  --sr-header-shadow: 0 12px 35px rgb(0 0 0 / 22%);
+}
+
+
+/* ==========================================================
+   02. HEADER PRINCIPAL
+   ========================================================== */
+
+body .sr-header {
+  position: sticky;
+  top: 0;
+  z-index: 1550;
+
+  width: 100%;
+  height: var(--sr-header);
+
+  color: var(--sr-header-text);
+  background: var(--sr-header-bg);
+
+  border-bottom: 1px solid var(--sr-header-border);
+
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 35%),
+    0 5px 18px rgb(23 57 47 / 3%);
+
+  isolation: isolate;
+}
+
+body .sr-top {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 22px);
+
+  width: 100%;
+  max-width: 1700px;
+  height: 100%;
+
+  margin-inline: auto;
+  padding-inline: clamp(14px, 3vw, 42px);
+
+  overflow: visible;
+}
+
+body .sr-header,
+body .sr-top,
+body .sr-actions {
+  overflow: visible;
+}
+
+
+/* ==========================================================
+   03. LOGOTIPO
+   ========================================================== */
+
+body .sr-logo,
+body .sr-logo:hover {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 44px;
+
+  color: var(--sr-header-accent);
+
+  font-family: var(--font-heading, "DM Sans", sans-serif);
+  font-size: clamp(19px, 1.7vw, 25px);
+  font-weight: 800;
+  letter-spacing: -1.15px;
+
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+body .sr-mark {
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+
+  color: #fffefa;
+  background: linear-gradient(145deg, #28684f, #3f8965);
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 4px 10px rgb(40 104 79 / 18%),
+    inset 0 1px 0 rgb(255 255 255 / 25%);
+}
+
+body .sr-mark svg {
+  width: 21px;
+  height: 21px;
+  display: block;
+}
+
+
+/* ==========================================================
+   04. NAVEGACIÓN PÚBLICA DESKTOP
+   ========================================================== */
+
+body .sr-public-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+
+  gap: clamp(10px, 1.65vw, 25px);
+  margin-inline: auto;
+}
+
+body .sr-public-links a {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+  padding: 0 2px;
+
+  color: var(--sr-header-muted);
+
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -.1px;
+
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition:
+    color var(--sr-header-transition);
+}
+
+body .sr-public-links a:hover {
+  color: var(--sr-header-accent);
+}
+
+body .sr-public-links a[aria-current="page"] {
+  color: var(--sr-header-accent);
+}
+
+body .sr-public-links a[aria-current="page"]::after {
+  content: "";
+
+  position: absolute;
+  right: 0;
+  bottom: -11px;
+  left: 0;
+
+  height: 3px;
+
+  background: var(--sr-header-accent);
+  border-radius: 4px 4px 0 0;
+}
+
+
+/* ==========================================================
+   05. CONTEXTO SAAS
+   ========================================================== */
+
+body .saas-context {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  flex: 0 0 auto;
+
+  min-height: 38px;
+  padding: 0 13px;
+
+  color: var(--sr-header-text);
+  background: var(--sr-header-hover);
+
+  border: 1px solid var(--sr-header-border);
+  border-radius: 9px;
+
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition: background var(--sr-header-transition);
+}
+
+body .saas-context:hover {
+  background: var(--sr-header-accent-bg);
+}
+
+body .saas-context span {
+  color: var(--sr-header-muted);
+  font-size: 16px;
+}
+
+body .saas-global-links {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+
+  flex: 1;
+  min-width: 0;
+  margin-left: 8px;
+}
+
+body .saas-global-links a {
+  color: var(--sr-header-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition: color var(--sr-header-transition);
+}
+
+body .saas-global-links a:hover {
+  color: var(--sr-header-accent);
+}
+
+
+/* ==========================================================
+   06. ACCIONES DEL HEADER
+   ========================================================== */
+
+body .sr-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  flex: 0 0 auto;
+  gap: 5px;
+
+  margin-left: auto;
+}
+
+body .sr-icon,
+body .sr-account {
+  position: relative;
+
+  display: inline-grid;
+  place-items: center;
+
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  min-width: 40px;
+
+  padding: 0;
+
+  color: var(--sr-header-muted);
+  background: transparent;
+
+  border: 1px solid transparent;
+  border-radius: 50%;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition:
+    color var(--sr-header-transition),
+    background var(--sr-header-transition),
+    border-color var(--sr-header-transition),
+    transform var(--sr-header-transition);
+}
+
+body .sr-icon svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+}
+
+body .sr-icon:hover,
+body .sr-account:hover {
+  color: var(--sr-header-accent);
+  background: var(--sr-header-hover);
+  border-color: var(--sr-header-border);
+}
+
+body .sr-icon:active,
+body .sr-account:active {
+  transform: scale(.94);
+}
+
+
+/* ==========================================================
+   07. BOTÓN DE TEMA
+   ========================================================== */
+
+body .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 38px;
+  padding: 0 12px;
+
+  color: var(--sr-header-text);
+  background: var(--sr-header-hover);
+
+  border: 1px solid var(--sr-header-border);
+  border-radius: 100px;
+
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background var(--sr-header-transition),
+    border-color var(--sr-header-transition);
+}
+
+body .theme-toggle:hover {
+  background: var(--sr-header-accent-bg);
+  border-color: var(--sr-header-accent);
+}
+
+body .theme-toggle [data-theme-icon] {
+  display: inline-grid;
+  place-items: center;
+
+  width: 19px;
+  height: 19px;
+
+  font-size: 16px;
+  line-height: 1;
+}
+
+
+/* ==========================================================
+   08. BOTONES DE AUTENTICACIÓN
+   ========================================================== */
+
+body .sr-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+  padding-inline: 12px;
+
+  color: var(--sr-header-text);
+
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition: color var(--sr-header-transition);
+}
+
+body .sr-login:hover {
+  color: var(--sr-header-accent);
+}
+
+body .sr-button,
+body .sr-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 40px;
+  padding: 0 17px;
+
+  color: #fffefa;
+  background: linear-gradient(135deg, #28684f, #3f8965);
+
+  border: 1px solid transparent;
+  border-radius: 100px;
+
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+
+  box-shadow: 0 4px 12px rgb(40 104 79 / 15%);
+
+  transition:
+    transform var(--sr-header-transition),
+    box-shadow var(--sr-header-transition),
+    filter var(--sr-header-transition);
+}
+
+body .sr-signup:hover {
+  color: #fffefa;
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 7px 17px rgb(40 104 79 / 20%);
+}
+
+
+/* ==========================================================
+   09. BOTÓN HAMBURGUESA
+   ========================================================== */
+
+body .sr-menu-button {
+  display: none;
+  place-items: center;
+
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+
+  padding: 0;
+
+  color: var(--sr-header-text);
+  background: var(--sr-header-hover);
+
+  border: 1px solid var(--sr-header-border);
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition:
+    background var(--sr-header-transition),
+    color var(--sr-header-transition),
+    transform var(--sr-header-transition);
+}
+
+body .sr-menu-button svg {
+  width: 21px;
+  height: 21px;
+}
+
+body .sr-menu-button:hover {
+  color: var(--sr-header-accent);
+  background: var(--sr-header-accent-bg);
+}
+
+body .sr-menu-button:active {
+  transform: scale(.94);
+}
+
+
+/* ==========================================================
+   10. CONTADOR DE NOTIFICACIONES
+   ========================================================== */
+
+body .sr-count {
+  position: absolute;
+  top: 1px;
+  right: 0;
+
+  display: grid;
+  place-items: center;
+
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+
+  color: #fff;
+  background: #d96852;
+
+  border: 2px solid var(--sr-header-bg);
+  border-radius: 100px;
+
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+
+/* ==========================================================
+   11. MENÚ DE CUENTA
+   ========================================================== */
+
+body .private-account {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+body .sr-account {
+  color: #fff;
+  background: var(--sr-header-accent);
+
+  border: 2px solid var(--sr-header-bg);
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+body .private-account-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+
+  z-index: 1700;
+
+  width: min(245px, calc(100vw - 24px));
+  padding: 7px;
+
+  color: var(--sr-header-text);
+  background: var(--sr-header-bg);
+
+  border: 1px solid var(--sr-header-border);
+  border-radius: 14px;
+
+  box-shadow: var(--sr-header-shadow);
+
+  animation: sr-menu-appear 160ms ease both;
+}
+
+body .private-account-menu[hidden] {
+  display: none !important;
+}
+
+body .private-account-menu a {
+  display: flex;
+  align-items: center;
+
+  min-height: 42px;
+  padding: 9px 12px;
+
+  color: var(--sr-header-text);
+
+  border-radius: 9px;
+
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition:
+    background var(--sr-header-transition),
+    color var(--sr-header-transition);
+}
+
+body .private-account-menu a:hover {
+  color: var(--sr-header-accent);
+  background: var(--sr-header-hover);
+}
+
+
+/* ==========================================================
+   12. BACKDROP GENERAL
+   ========================================================== */
+
+body .sr-backdrop {
+  position: fixed;
+  inset: 0;
+
+  z-index: 1800;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 0;
+
+  background: rgb(15 28 22 / 48%);
+
+  border: 0;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+
+  animation: sr-backdrop-appear 180ms ease both;
+}
+
+body .sr-backdrop[hidden] {
+  display: none !important;
+}
+
+html.sr-drawer-open,
+html.sr-drawer-open body {
+  overflow: hidden;
+}
+
+
+/* ==========================================================
+   13. MENÚ PÚBLICO MÓVIL
+   ========================================================== */
+
+body .sr-public-menu {
+  display: none;
+}
+
+body .sr-public-menu-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  min-height: 48px;
+  padding: 0 10px 10px;
+
+  color: var(--sr-header-text);
+
+  border-bottom: 1px solid var(--sr-header-border);
+}
+
+body .sr-public-menu-top strong {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -.3px;
+}
+
+body .sr-public-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-height: 48px;
+  padding: 10px 12px;
+
+  color: var(--sr-header-text);
+  background: transparent;
+
+  border-radius: 11px;
+
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition:
+    color var(--sr-header-transition),
+    background var(--sr-header-transition);
+}
+
+body .sr-public-menu a svg {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-header-accent);
+}
+
+body .sr-public-menu a:hover,
+body .sr-public-menu a[aria-current="page"] {
+  color: var(--sr-header-accent);
+  background: var(--sr-header-accent-bg);
+}
+
+body .sr-collapse {
+  display: inline-grid;
+  place-items: center;
+
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  min-height: 38px;
+  min-width: 38px;
+
+  padding: 0;
+
+  color: var(--sr-header-muted);
+  background: transparent;
+
+  border: 0;
+  border-radius: 10px;
+
+  font-size: 22px;
+  cursor: pointer;
+
+  transition:
+    color var(--sr-header-transition),
+    background var(--sr-header-transition);
+}
+
+body .sr-collapse:hover {
+  color: var(--sr-header-accent);
+  background: var(--sr-header-hover);
+}
+
+
+/* ==========================================================
+   14. SIDEBAR PRIVADO — BASE
+   ========================================================== */
+
+body.sr-private .sr-sidebar {
+  position: fixed;
+  top: var(--sr-header);
+  bottom: 0;
+  left: 0;
+
+  z-index: 1400;
+
+  display: none;
+  flex-direction: column;
+  gap: 3px;
+
+  width: var(--sr-rail);
+  padding: 14px 12px;
+
+  color: var(--sr-header-text);
+  background: var(--sr-header-bg);
+
+  border-right: 1px solid var(--sr-header-border);
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  overscroll-behavior: contain;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--sr-header-border) transparent;
+
+  transition:
+    width var(--sr-header-transition),
+    transform var(--sr-header-transition);
+}
+
+body.sr-private .sr-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+body.sr-private .sr-sidebar::-webkit-scrollbar-thumb {
+  background: var(--sr-header-border);
+  border-radius: 10px;
+}
+
+body.sr-private .sr-sidebar a,
+body.sr-private .sr-sidebar summary,
+body.sr-private .sr-sidebar form button {
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+
+  margin: 0;
+  padding: 9px 11px;
+
+  color: var(--sr-header-muted);
+  background: transparent;
+
+  border: 0;
+  border-radius: 9px;
+
+  font-family: var(--font-main, "DM Sans", sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+
+  text-align: left;
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    color var(--sr-header-transition),
+    background var(--sr-header-transition);
+}
+
+body.sr-private .sr-sidebar a svg,
+body.sr-private .sr-sidebar summary svg,
+body.sr-private .sr-sidebar form button svg {
+  display: block;
+
+  flex: 0 0 19px;
+  width: 19px;
+  height: 19px;
+
+  color: currentColor;
+}
+
+body.sr-private .sr-sidebar a span,
+body.sr-private .sr-sidebar summary span,
+body.sr-private .sr-sidebar form button span {
+  min-width: 0;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.sr-private .sr-sidebar a:hover,
+body.sr-private .sr-sidebar summary:hover,
+body.sr-private .sr-sidebar form button:hover {
+  color: var(--sr-header-accent);
+  background: var(--sr-header-hover);
+}
+
+body.sr-private .sr-sidebar a[aria-current="page"] {
+  color: var(--sr-header-accent);
+  background: var(--sr-header-accent-bg);
+
+  font-weight: 800;
+
+  box-shadow: inset 3px 0 var(--sr-header-accent);
+}
+
+
+/* ==========================================================
+   15. TÍTULOS Y GRUPOS DEL SIDEBAR
+   ========================================================== */
+
+body.sr-private .sr-group {
+  display: block;
+
+  flex: 0 0 auto;
+
+  margin: 17px 10px 6px;
+
+  color: var(--sr-header-muted);
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+body.sr-private .sr-side-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  flex: 0 0 auto;
+
+  min-height: 42px;
+  margin-bottom: 9px;
+}
+
+body.sr-private .sr-side-top .sr-group {
+  margin: 0 10px;
+}
+
+body.sr-private .sr-side-top .sr-collapse {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+}
+
+body.sr-private .sr-collapse-arrow {
+  display: none;
+}
+
+body.sr-private .sr-collapse-close {
+  display: block;
+}
+
+
+/* ==========================================================
+   16. SECCIONES DESPLEGABLES
+   ========================================================== */
+
+body.sr-private .sr-nav-section {
+  display: block;
+
+  flex: 0 0 auto;
+  min-width: 0;
+
+  border: 0;
+}
+
+body.sr-private .sr-nav-section summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+}
+
+body.sr-private .sr-nav-section summary::-webkit-details-marker {
+  display: none;
+}
+
+body.sr-private .sr-nav-section summary::marker {
+  content: "";
+}
+
+body.sr-private .sr-nav-section summary.sr-section-active {
+  color: var(--sr-header-accent);
+  background: var(--sr-header-accent-bg);
+  font-weight: 800;
+}
+
+body.sr-private .sr-section-label {
+  min-width: 0;
+  flex: 1;
+}
+
+body.sr-private .sr-section-chevron {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+
+  margin-left: auto;
+
+  color: var(--sr-header-muted);
+
+  transition: transform 180ms ease;
+}
+
+body.sr-private .sr-nav-section[open] > summary .sr-section-chevron {
+  transform: rotate(180deg);
+}
+
+body.sr-private .sr-section-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  padding: 4px 0 5px 13px;
+  margin-left: 9px;
+
+  border-left: 1px solid var(--sr-header-border);
+}
+
+body.sr-private .sr-section-links a {
+  min-height: 38px;
+  padding: 7px 9px;
+
+  font-size: 11px;
+}
+
+body.sr-private .sr-section-links a svg {
+  width: 17px;
+  height: 17px;
+  flex-basis: 17px;
+}
+
+
+/* ==========================================================
+   17. CIERRE DE SESIÓN
+   ========================================================== */
+
+body.sr-private .saas-sidebar-footer {
+  flex: 0 0 auto;
+
+  margin-top: auto;
+  padding-top: 12px;
+
+  border-top: 1px solid var(--sr-header-border);
+}
+
+body.sr-private .saas-sidebar-footer form {
+  width: 100%;
+}
+
+body.sr-private .saas-sidebar-footer form button {
+  color: #c15c4c;
+}
+
+body.sr-private .saas-sidebar-footer form button:hover {
+  color: #fff;
+  background: #b94f43;
+}
+
+body.sr-private .saas-sidebar-footer form button svg {
+  color: currentColor;
+}
+
+
+/* ==========================================================
+   18. ESTADOS DE NAVEGACIÓN Y ACCESIBILIDAD
+   ========================================================== */
+
+body [data-pendiente][aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+body.sr-private .sr-sidebar [data-pendiente][aria-disabled="true"] {
+  opacity: .58;
+}
+
+body.sr-private .sr-sidebar [data-pendiente][aria-disabled="true"]:hover {
+  color: var(--sr-header-muted);
+  background: transparent;
+}
+
+body .sr-header :is(a, button, summary):focus-visible,
+body .sr-sidebar :is(a, button, summary):focus-visible,
+body .sr-public-menu :is(a, button):focus-visible {
+  outline: 3px solid var(--sr-header-focus);
+  outline-offset: 3px;
+}
+
+body .sr-header button,
+body .sr-sidebar button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ==========================================================
+   19. SIDEBAR PRIVADO — ESCRITORIO
+   ========================================================== */
+
+@media (min-width: 1100px) {
+
+  body.sr-private .sr-sidebar {
+    display: flex;
+    width: var(--sr-rail);
+  }
+
+  body.sr-private .sr-menu-button {
+    display: inline-grid;
+  }
+
+  body.sr-private .sr-collapse-arrow {
+    display: block;
+  }
+
+  body.sr-private .sr-collapse-close {
+    display: none;
+  }
+
+  body.sr-private #main-content,
+  body.sr-private .sr-footer {
+    margin-left: var(--sr-rail);
+    transition: margin-left var(--sr-header-transition);
+  }
+
+  /* Navegación privada: el menú global se sustituye por el sidebar. */
+  body.sr-private .sr-public-links {
+    display: none;
+  }
+
+  /* Sidebar compacto */
+  html.sr-compact body.sr-private {
+    --sr-rail: 70px;
+  }
+
+  html.sr-compact body.sr-private .sr-sidebar {
+    padding-inline: 8px;
+  }
+
+  html.sr-compact body.sr-private .sr-sidebar :is(
+    a span,
+    summary span,
+    form span,
+    .sr-group,
+    .sr-section-label
+  ) {
+    position: absolute !important;
+
+    width: 1px !important;
+    height: 1px !important;
+
+    padding: 0 !important;
+    margin: -1px !important;
+
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+  }
+
+  html.sr-compact body.sr-private .sr-sidebar :is(
+    a,
+    summary,
+    form button
+  ) {
+    justify-content: center;
+    padding-inline: 5px;
+  }
+
+  html.sr-compact body.sr-private .sr-side-top {
+    justify-content: center;
+  }
+
+  html.sr-compact body.sr-private .sr-section-chevron {
+    display: none;
+  }
+
+  html.sr-compact body.sr-private .sr-section-links {
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  html.sr-compact body.sr-private .sr-collapse-arrow {
+    transform: none;
+  }
+
+  html.sr-compact body.sr-private .sr-sidebar .sr-nav-section[open] {
+    position: relative;
+  }
+
+  html.sr-compact body.sr-private .sr-sidebar .sr-nav-section[open] .sr-section-links {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 8px);
+
+    width: 205px;
+    padding: 8px;
+
+    background: var(--sr-header-bg);
+    border: 1px solid var(--sr-header-border);
+    border-radius: 12px;
+
+    box-shadow: var(--sr-header-shadow);
+
+    z-index: 1500;
+  }
+
+  html.sr-compact body.sr-private .sr-sidebar .sr-section-links a {
+    justify-content: flex-start;
+    padding: 8px 10px;
+  }
+}
+
+
+/* ==========================================================
+   20. SIDEBAR PRIVADO — TABLET Y MÓVIL
+   ========================================================== */
+
+@media (max-width: 1099px) {
+
+  :root {
+    --sr-header: 62px;
+  }
+
+  body.sr-private .sr-header {
+    z-index: 1550;
+  }
+
+  body.sr-private .sr-menu-button {
+    display: inline-grid;
+  }
+
+  body.sr-private .sr-public-links {
+    display: none;
+  }
+
+  body.sr-private .sr-sidebar {
+    display: none;
+
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    width: min(300px, 88vw);
+    max-width: 340px;
+
+    padding:
+      max(15px, env(safe-area-inset-top))
+      13px
+      max(15px, env(safe-area-inset-bottom));
+
+    border-right: 1px solid var(--sr-header-border);
+
+    box-shadow: var(--sr-header-shadow);
+
+    transform: translateX(-105%);
+    visibility: hidden;
+
+    transition:
+      transform 240ms ease,
+      visibility 240ms ease;
+  }
+
+  html.sr-drawer-open body.sr-private .sr-sidebar {
+    display: flex;
+    transform: translateX(0);
+    visibility: visible;
+    z-index: 1900;
+  }
+
+  body.sr-private #main-content,
+  body.sr-private .sr-footer {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  html.sr-compact body.sr-private .sr-sidebar :is(
+    a span,
+    summary span,
+    form span,
+    .sr-group,
+    .sr-section-label
+  ) {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    clip: auto !important;
+    overflow: visible !important;
+    white-space: normal !important;
+  }
+
+  html.sr-compact body.sr-private .sr-sidebar :is(
+    a,
+    summary,
+    form button
+  ) {
+    justify-content: flex-start;
+  }
+
+  html.sr-compact body.sr-private .sr-section-chevron {
+    display: block;
+  }
+
+  html.sr-compact body.sr-private .sr-section-links {
+    padding-left: 13px;
+  }
+
+  body.sr-private .sr-collapse-arrow {
+    display: none;
+  }
+
+  body.sr-private .sr-collapse-close {
+    display: block;
+  }
+}
+
+
+/* ==========================================================
+   21. MENÚ PÚBLICO — RESPONSIVE
+   ========================================================== */
+
+@media (max-width: 1099px) {
+
+  body.sr-public-site .sr-menu-button {
+    display: inline-grid !important;
+  }
+
+  body.sr-public-site .sr-public-links {
+    display: none !important;
+  }
+
+  body.sr-public-site .sr-top {
+    padding-inline: clamp(12px, 3vw, 25px);
+    gap: 10px;
+  }
+
+  html.sr-drawer-open body.sr-public-site .sr-public-menu {
+    position: fixed;
+    top: calc(var(--sr-header) + 8px);
+    right: max(8px, env(safe-area-inset-right));
+
+    z-index: 1900;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    width: min(380px, calc(100vw - 16px));
+    max-height: calc(100dvh - var(--sr-header) - 20px);
+
+    padding: 12px;
+
+    color: var(--sr-header-text);
+    background: var(--sr-header-bg);
+
+    border: 1px solid var(--sr-header-border);
+    border-radius: 18px;
+
+    box-shadow: var(--sr-header-shadow);
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    animation: sr-menu-appear 180ms ease both;
+  }
+
+  html.sr-drawer-open body.sr-public-site .sr-backdrop:not([hidden]) {
+    z-index: 1800;
+  }
+}
+
+
+/* ==========================================================
+   22. SAAS PRIVADO
+   ========================================================== */
+
+body.sr-saas-private .sr-header {
+  --sr-header: 56px;
+
+  height: 56px;
+
+  background: var(--sr-header-bg);
+
+  border-bottom: 1px solid var(--sr-header-border);
+
+  box-shadow: none;
+}
+
+body.sr-saas-private .sr-top {
+  height: 56px;
+  padding-inline: clamp(12px, 2vw, 28px);
+  gap: 13px;
+}
+
+body.sr-saas-private .sr-logo {
+  font-size: 19px;
+}
+
+body.sr-saas-private .sr-mark {
+  width: 30px;
+  height: 30px;
+  flex-basis: 30px;
+  border-radius: 9px;
+}
+
+body.sr-saas-private .sr-favorites-link {
+  display: none;
+}
+
+body.sr-saas-private .sr-menu-button {
+  display: inline-grid !important;
+}
+
+body.sr-saas-private .sr-sidebar {
+  border-right: 1px solid var(--sr-header-border);
+}
+
+@media (min-width: 1100px) {
+
+  body.sr-saas-private .sr-sidebar {
+    top: 56px;
+  }
+
+  html.sr-compact body.sr-saas-private {
+    --sr-rail: 64px;
+  }
+}
+
+@media (max-width: 1099px) {
+
+  body.sr-saas-private .sr-sidebar {
+    top: 0;
+    bottom: 0;
+  }
+
+  html.sr-drawer-open body.sr-saas-private .sr-sidebar {
+    display: flex;
+    transform: translateX(0);
+    visibility: visible;
+    z-index: 1900;
+  }
+}
+
+
+/* ==========================================================
+   23. BREAKPOINTS PEQUEÑOS
+   ========================================================== */
+
+@media (max-width: 699px) {
+
+  :root {
+    --sr-header: 60px;
+  }
+
+  body .sr-top {
+    padding-inline: 11px;
+    gap: 7px;
+  }
+
+  body .sr-logo {
+    gap: 7px;
+    font-size: 19px;
+    letter-spacing: -.8px;
+  }
+
+  body .sr-mark {
+    flex-basis: 31px;
+    width: 31px;
+    height: 31px;
+    border-radius: 10px;
+  }
+
+  body .sr-menu-button {
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+  }
+
+  body .sr-actions {
+    gap: 1px;
+  }
+
+  body .sr-actions .sr-icon {
+    flex-basis: 36px;
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    min-height: 36px;
+  }
+
+  body .theme-toggle {
+    flex: 0 0 38px;
+    width: 38px;
+    min-width: 38px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  body .theme-toggle [data-theme-label] {
+    display: none;
+  }
+
+  body .sr-login {
+    padding-inline: 6px;
+    font-size: 11px;
+  }
+
+  body .sr-signup {
+    min-height: 36px;
+    padding-inline: 11px;
+    font-size: 10px;
+  }
+
+  body .saas-context {
+    min-height: 34px;
+    padding-inline: 8px;
+    font-size: 10px;
+  }
+
+  body .saas-global-links {
+    display: none;
+  }
+
+  body .sr-message-link {
+    display: none;
+  }
+}
+
+
+/* ==========================================================
+   24. MÓVILES ESTRECHOS
+   ========================================================== */
+
+@media (max-width: 480px) {
+
+  body.sr-public-site .sr-top {
+    gap: 5px;
+    padding-inline: 8px;
+  }
+
+  body.sr-public-site .sr-logo {
+    font-size: 18px;
+    letter-spacing: -.8px;
+  }
+
+  body.sr-public-site .sr-mark {
+    flex-basis: 29px;
+    width: 29px;
+    height: 29px;
+  }
+
+  body.sr-public-site .sr-favorites-link,
+  body.sr-public-site .sr-login,
+  body.sr-public-site .sr-signup {
+    display: none !important;
+  }
+
+  body.sr-public-site .sr-actions #themeToggle {
+    flex-basis: 36px;
+    width: 36px;
+    min-width: 36px;
+  }
+
+  body.sr-saas-private .saas-context {
+    display: none;
+  }
+
+  body.sr-saas-private .sr-top [data-theme-label] {
+    display: none;
+  }
+
+  body .private-account-menu {
+    right: -3px;
+    width: min(225px, calc(100vw - 20px));
+  }
+}
+
+
+/* ==========================================================
+   25. DISPOSITIVOS MUY PEQUEÑOS
+   ========================================================== */
+
+@media (max-width: 360px) {
+
+  body .sr-top {
+    gap: 4px;
+    padding-inline: 6px;
+  }
+
+  body .sr-logo {
+    gap: 5px;
+    font-size: 17px;
+  }
+
+  body .sr-mark {
+    flex-basis: 27px;
+    width: 27px;
+    height: 27px;
+  }
+
+  body .sr-actions {
+    gap: 0;
+  }
+
+  body .sr-actions .sr-icon {
+    flex-basis: 33px;
+    width: 33px;
+    min-width: 33px;
+    height: 33px;
+    min-height: 33px;
+  }
+
+  body .sr-menu-button {
+    flex-basis: 35px;
+    width: 35px;
+    min-width: 35px;
+    height: 35px;
+    min-height: 35px;
+  }
+
+  body .sr-saas-private .sr-logo {
+    font-size: 16px;
+  }
+}
+
+
+/* ==========================================================
+   26. ANIMACIONES
+   ========================================================== */
+
+@keyframes sr-menu-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sr-backdrop-appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+/* ==========================================================
+   27. REDUCCIÓN DE MOVIMIENTO
+   ========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  body .sr-header *,
+  body .sr-sidebar *,
+  body .sr-public-menu *,
+  body .private-account-menu {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

@@ -1,0 +1,718 @@
+
+{% extends "base.html" %}
+
+{% block title %}Mercado gastronómico · {{ APP_NAME }}{% endblock %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<main class="market-page">
+
+    <!-- HERO DEL MERCADO -->
+    <section class="page-hero">
+        <div class="container page-hero-grid">
+
+            <div class="page-hero-content">
+                <span class="eyebrow">Mercado gastronómico</span>
+
+                <h1 class="display">
+                    El antojo que buscas,
+                    <em>listo para elegir.</em>
+                </h1>
+
+                <p class="lead">
+                    Explora platos de negocios locales, compara opciones
+                    y prepara tu pedido. Precios y disponibilidad son
+                    datos de demostración.
+                </p>
+
+                <div class="searchbar market-search" style="margin-top:24px">
+                    <input
+                        type="search"
+                        id="catalog-search"
+                        placeholder="Busca ceviche, café, postres…"
+                        aria-label="Buscar platos"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="btn btn-primary btn-small"
+                        type="button"
+                        id="cart-button"
+                        aria-label="Ver pedido"
+                    >
+                        Pedido
+                        <span id="cart-count">0</span>
+                        · Ver
+                    </button>
+                </div>
+
+                <p class="market-search-hint" id="search-hint">
+                    Busca por nombre, ingrediente o negocio.
+                </p>
+            </div>
+
+            <div class="page-hero-art">
+                <img
+                    src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1000&q=85"
+                    alt="Variedad de platos gastronómicos"
+                    width="1000"
+                    height="750"
+                    fetchpriority="high"
+                >
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- CATÁLOGO -->
+    <section class="section market-section">
+        <div class="container">
+
+            <div class="section-head">
+                <div>
+                    <span class="eyebrow">Explora por antojo</span>
+                    <h2>Un mercado lleno de posibilidades.</h2>
+                </div>
+            </div>
+
+            <!-- FILTROS -->
+            <div class="filter-row" aria-label="Filtrar productos">
+
+                <button
+                    type="button"
+                    class="filter-chip active"
+                    data-filter="all"
+                    aria-pressed="true"
+                >
+                    Todos
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-chip"
+                    data-filter="marino"
+                    aria-pressed="false"
+                >
+                    Marinos
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-chip"
+                    data-filter="criollo"
+                    aria-pressed="false"
+                >
+                    Criollos
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-chip"
+                    data-filter="postre"
+                    aria-pressed="false"
+                >
+                    Postres
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-chip"
+                    data-filter="bebida"
+                    aria-pressed="false"
+                >
+                    Bebidas
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-chip"
+                    data-filter="vegetariano"
+                    aria-pressed="false"
+                >
+                    Vegetarianos
+                </button>
+
+            </div>
+
+
+            <!-- RESULTADOS -->
+            <div class="results-bar">
+                <span class="muted" id="results-count" aria-live="polite">
+                    8 productos
+                </span>
+
+                <span class="meta">
+                    Disponibilidad ilustrativa · Verificar en el negocio
+                </span>
+            </div>
+
+
+            <!-- PRODUCTOS -->
+            <div class="grid grid-4" id="market-grid">
+
+                <article
+                    class="card card-lift market-product"
+                    data-card
+                    data-category="marino"
+                    data-search="ceviche clásico pescado limón camote casa marea"
+                >
+                    <img
+                        class="card-image"
+                        src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=85"
+                        alt="Ceviche fresco"
+                        loading="lazy"
+                        width="800"
+                        height="600"
+                    >
+
+                    <div class="card-body">
+                        <span class="tag">Marino · Casa Marea</span>
+                        <h3 class="card-title">Ceviche clásico</h3>
+                        <p class="meta">
+                            Pescado, limón y guarnición declarada por el negocio.
+                        </p>
+
+                        <div class="card-foot">
+                            <strong class="price">S/ 28.00</strong>
+                            <button class="btn btn-primary btn-small add-cart"
+                                    type="button"
+                                    data-product="Ceviche clásico"
+                                    data-price="28">
+                                + Agregar
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+
+                <article
+                    class="card card-lift market-product"
+                    data-card
+                    data-category="criollo"
+                    data-search="lomo saltado carne papas arroz criollo sazón norteño"
+                >
+                    <img
+                        class="card-image"
+                        src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=85"
+                        alt="Lomo saltado"
+                        loading="lazy"
+                        width="800"
+                        height="600"
+                    >
+
+                    <div class="card-body">
+                        <span class="tag">Criollo · Sazón Norteño</span>
+                        <h3 class="card-title">Lomo saltado</h3>
+                        <p class="meta">Carne salteada, papas y arroz.</p>
+
+                        <div class="card-foot">
+                            <strong class="price">S/ 25.00</strong>
+                            <button class="btn btn-primary btn-small add-cart"
+                                    type="button"
+                                    data-product="Lomo saltado"
+                                    data-price="25">
+                                + Agregar
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+
+                <article
+                    class="card card-lift market-product"
+                    data-card
+                    data-category="postre"
+                    data-search="cheesecake frutos rojos postre pastel dulce la esquina dulce"
+                >
+                    <img
+                        class="card-image"
+                        src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=800&q=85"
+                        alt="Cheesecake con frutos rojos"
+                        loading="lazy"
+                        width="800"
+                        height="600"
+                    >
+
+                    <div class="card-body">
+                        <span class="tag">Postre · La Esquina Dulce</span>
+                        <h3 class="card-title">Cheesecake de frutos rojos</h3>
+                        <p class="meta">
+                            Porción individual · Presentación referencial.
+                        </p>
+
+                        <div class="card-foot">
+                            <strong class="price">S/ 12.00</strong>
+                            <button class="btn btn-primary btn-small add-cart"
+                                    type="button"
+                                    data-product="Cheesecake de frutos rojos"
+                                    data-price="12">
+                                + Agregar
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+
+                <article
+                    class="card card-lift market-product"
+                    data-card
+                    data-category="bebida"
+                    data-search="café latte bebida verde oliva leche"
+                >
+                    <img
+                        class="card-image"
+                        src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=800&q=85"
+                        alt="Café latte"
+                        loading="lazy"
+                        width="800"
+                        height="600"
+                    >
+
+                    <div class="card-body">
+                        <span class="tag">Bebida · Verde Oliva</span>
+                        <h3 class="card-title">Latte de la casa</h3>
+                        <p class="meta">
+                            Café y leche · Consulta opciones disponibles.
+                        </p>
+
+                        <div class="card-foot">
+                            <strong class="price">S/ 10.00</strong>
+                            <button class="btn btn-primary btn-small add-cart"
+                                    type="button"
+                                    data-product="Latte de la casa"
+                                    data-price="10">
+                                + Agregar
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+
+                <article
+                    class="card card-lift market-product"
+                    data-card
+                    data-category="marino"
+                    data-search="arroz con mariscos marino casa marea"
+                >
+                    <img
+                        class="card-image"
+                        src="https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=800&q=85"
+                        alt="Arroz con mariscos"
+                        loading="lazy"
+                        width="800"
+                        height="600"
+                    >
+
+                    <div class="card-body">
+                        <span class="tag">Marino · Casa Marea</span>
+                        <h3 class="card-title">Arroz con mariscos</h3>
+                        <p class="meta">
+                            Sugerencia relacionada con comida marina.
+                        </p>
+
+                        <div class="card-foot">
+                            <strong class="price">S/ 31.00</strong>
+                            <button class="btn btn-primary btn-small add-cart"
+                                    type="button"
+                                    data-product="Arroz con mariscos"
+                                    data-price="31">
+                                + Agregar
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+
+                <article
+                    class="card card-lift market-product"
+                    data-card
+                    data-category="criollo"
+                    data-search="pollo a la brasa papas ensalada brasa barrio"
+                >
+                    <img
+                        class="card-image"
+                        src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=85"
+                        alt="Pollo a la brasa"
+                        loading="lazy"
+                        width="800"
+                        height="600"
+                    >
+
+                    <div class="card-body">
+                        <span class="tag">Criollo · Brasa de Barrio</span>
+                        <h3 class="card-title">Pollo a la brasa</h3>
+                        <p class="meta">
+                            Cuarto de pollo · Acompañamientos.
+                        </p>
+
+                        <div class="card-foot">
+                            <strong class="price">S/ 19.00</strong>
+                            <button class="btn btn-primary btn-small add-cart"
+                                    type="button"
+                                    data-product="Pollo a la brasa"
+                                    data-price="19">
+                                + Agregar
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+
+                <article
+                    class="card card-lift market-product"
+                    data-card
+                    data-category="vegetariano"
+                    data-search="bowl vegetales quinoa vegetariano verde oliva"
+                >
+                    <img
+                        class="card-image"
+                        src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=85"
+                        alt="Bowl de vegetales"
+                        loading="lazy"
+                        width="800"
+                        height="600"
+                    >
+
+                    <div class="card-body">
+                        <span class="tag">Vegetariano · Verde Oliva</span>
+                        <h3 class="card-title">Bowl de temporada</h3>
+                        <p class="meta">
+                            Vegetales frescos y base a elección.
+                        </p>
+
+                        <div class="card-foot">
+                            <strong class="price">S/ 22.00</strong>
+                            <button class="btn btn-primary btn-small add-cart"
+                                    type="button"
+                                    data-product="Bowl de temporada"
+                                    data-price="22">
+                                + Agregar
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+
+                <article
+                    class="card card-lift market-product"
+                    data-card
+                    data-category="postre"
+                    data-search="tarta chocolate postre dulce la esquina dulce"
+                >
+                    <img
+                        class="card-image"
+                        src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=85"
+                        alt="Tarta de chocolate"
+                        loading="lazy"
+                        width="800"
+                        height="600"
+                    >
+
+                    <div class="card-body">
+                        <span class="tag">Postre · La Esquina Dulce</span>
+                        <h3 class="card-title">Tarta de chocolate</h3>
+                        <p class="meta">
+                            Porción individual · Elaboración del día.
+                        </p>
+
+                        <div class="card-foot">
+                            <strong class="price">S/ 11.00</strong>
+                            <button class="btn btn-primary btn-small add-cart"
+                                    type="button"
+                                    data-product="Tarta de chocolate"
+                                    data-price="11">
+                                + Agregar
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- ESTADO SIN RESULTADOS -->
+            <div class="market-empty" id="market-empty" hidden>
+                <span class="eyebrow">Sin coincidencias</span>
+                <h3>No encontramos lo que buscas.</h3>
+                <p class="meta">
+                    Prueba con otro nombre, ingrediente o categoría.
+                </p>
+                <button class="btn btn-outline btn-small"
+                        type="button"
+                        id="clear-market-filters">
+                    Limpiar búsqueda
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+
+<!-- NOTIFICACIÓN -->
+<div
+    class="market-toast"
+    id="market-toast"
+    role="status"
+    aria-live="polite"
+    hidden
+></div>
+
+
+<!-- PEDIDO -->
+<div
+    class="market-modal-backdrop"
+    id="market-modal"
+    hidden
+>
+    <section
+        class="market-cart-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="market-cart-title"
+    >
+        <button
+            type="button"
+            class="market-cart-close"
+            id="market-cart-close"
+            aria-label="Cerrar pedido"
+        >
+            ×
+        </button>
+
+        <span class="eyebrow">Tu selección</span>
+        <h2 id="market-cart-title">Mi pedido</h2>
+
+        <div id="market-cart-items">
+            <p class="meta">Todavía no agregaste productos.</p>
+        </div>
+
+        <div class="market-cart-total">
+            <span>Total referencial</span>
+            <strong id="market-cart-total">S/ 0.00</strong>
+        </div>
+
+        <p class="market-cart-note">
+            Este pedido es una demostración. Todavía no se procesa una compra.
+        </p>
+
+    </section>
+</div>
+
+
+<script>
+(() => {
+    "use strict";
+
+    const grid = document.getElementById("market-grid");
+    if (!grid) return;
+
+    const cards = [...grid.querySelectorAll("[data-card]")];
+    const searchInput = document.getElementById("catalog-search");
+    const filters = [...document.querySelectorAll("[data-filter]")];
+    const resultsCount = document.getElementById("results-count");
+    const emptyState = document.getElementById("market-empty");
+    const clearButton = document.getElementById("clear-market-filters");
+
+    const cartButton = document.getElementById("cart-button");
+    const cartCount = document.getElementById("cart-count");
+    const cartModal = document.getElementById("market-modal");
+    const cartClose = document.getElementById("market-cart-close");
+    const cartItemsContainer = document.getElementById("market-cart-items");
+    const cartTotalElement = document.getElementById("market-cart-total");
+    const toast = document.getElementById("market-toast");
+
+    let activeCategory = "all";
+    let cart = [];
+    let toastTimeout;
+
+    const normalize = (value) =>
+        String(value || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim();
+
+    const money = (value) =>
+        new Intl.NumberFormat("es-PE", {
+            style: "currency",
+            currency: "PEN"
+        }).format(value);
+
+    function showToast(message) {
+        toast.textContent = message;
+        toast.hidden = false;
+
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toast.hidden = true;
+        }, 2600);
+    }
+
+    function filterProducts() {
+        const query = normalize(searchInput.value);
+        let visible = 0;
+
+        cards.forEach(card => {
+            const category = card.dataset.category;
+            const searchable = normalize(
+                card.dataset.search + " " + card.textContent
+            );
+
+            const matchesCategory =
+                activeCategory === "all" ||
+                category === activeCategory;
+
+            const matchesSearch =
+                !query || searchable.includes(query);
+
+            const shouldShow = matchesCategory && matchesSearch;
+
+            card.hidden = !shouldShow;
+
+            if (shouldShow) visible++;
+        });
+
+        resultsCount.textContent =
+            `${visible} ${visible === 1 ? "producto" : "productos"}`;
+
+        emptyState.hidden = visible !== 0;
+    }
+
+    filters.forEach(button => {
+        button.addEventListener("click", () => {
+            activeCategory = button.dataset.filter;
+
+            filters.forEach(filter => {
+                const active = filter === button;
+                filter.classList.toggle("active", active);
+                filter.setAttribute("aria-pressed", String(active));
+            });
+
+            filterProducts();
+        });
+    });
+
+    searchInput.addEventListener("input", filterProducts);
+
+    clearButton.addEventListener("click", () => {
+        searchInput.value = "";
+        activeCategory = "all";
+
+        filters.forEach(filter => {
+            const active = filter.dataset.filter === "all";
+            filter.classList.toggle("active", active);
+            filter.setAttribute("aria-pressed", String(active));
+        });
+
+        filterProducts();
+        searchInput.focus();
+    });
+
+    function updateCart() {
+        const totalQuantity = cart.reduce(
+            (sum, item) => sum + item.quantity,
+            0
+        );
+
+        const totalPrice = cart.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+        );
+
+        cartCount.textContent = totalQuantity;
+        cartTotalElement.textContent = money(totalPrice);
+
+        if (!cart.length) {
+            cartItemsContainer.innerHTML =
+                '<p class="meta">Todavía no agregaste productos.</p>';
+            return;
+        }
+
+        cartItemsContainer.replaceChildren();
+
+        cart.forEach(item => {
+            const row = document.createElement("div");
+            row.className = "market-cart-item";
+
+            const info = document.createElement("div");
+
+            const name = document.createElement("strong");
+            name.textContent = item.name;
+
+            const detail = document.createElement("p");
+            detail.className = "meta";
+            detail.textContent =
+                `${item.quantity} × ${money(item.price)}`;
+
+            info.append(name, detail);
+
+            const subtotal = document.createElement("strong");
+            subtotal.textContent =
+                money(item.quantity * item.price);
+
+            row.append(info, subtotal);
+            cartItemsContainer.append(row);
+        });
+    }
+
+    grid.addEventListener("click", event => {
+        const button = event.target.closest(".add-cart");
+        if (!button) return;
+
+        const name = button.dataset.product;
+        const price = Number(button.dataset.price);
+
+        if (!name || !Number.isFinite(price) || price < 0) return;
+
+        const existing = cart.find(item => item.name === name);
+
+        if (existing) {
+            existing.quantity++;
+        } else {
+            cart.push({
+                name,
+                price,
+                quantity: 1
+            });
+        }
+
+        updateCart();
+        showToast(`${name} agregado a tu pedido.`);
+    });
+
+    function openCart() {
+        cartModal.hidden = false;
+        cartClose.focus();
+    }
+
+    function closeCart() {
+        cartModal.hidden = true;
+        cartButton.focus();
+    }
+
+    cartButton.addEventListener("click", openCart);
+    cartClose.addEventListener("click", closeCart);
+
+    cartModal.addEventListener("click", event => {
+        if (event.target === cartModal) closeCart();
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && !cartModal.hidden) {
+            closeCart();
+        }
+    });
+
+    updateCart();
+    filterProducts();
+
+})();
+</script>
+
+{% endblock %}
