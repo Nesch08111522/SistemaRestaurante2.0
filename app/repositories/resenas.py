@@ -66,6 +66,19 @@ class ResenasRepository(PostgresRepository):
             return cur.fetchone() is not None
 
     @classmethod
+    def get_for_user_restaurant(
+        cls, id_usuario: int, id_restaurante: int, *, lock: bool = False
+    ) -> dict[str, Any] | None:
+        suffix = " FOR UPDATE" if lock else ""
+        with shared_transaction() as conn, conn.cursor() as cur:
+            cur.execute(
+                f"SELECT * FROM {cls.table} WHERE id_usuario=%s "
+                f"AND id_restaurante=%s ORDER BY id_resena DESC LIMIT 1{suffix}",
+                (int(id_usuario), int(id_restaurante)),
+            )
+            return cur.fetchone()
+
+    @classmethod
     def insert(
         cls,
         *,

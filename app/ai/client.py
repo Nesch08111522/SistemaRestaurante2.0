@@ -239,7 +239,7 @@ def call_json(
             latencia_ms=int((time.perf_counter() - started) * 1000),
             estado="rate_limited", codigo_error="HTTP_429",
         )
-        return _mock_response(kind, {**mock_payload, "degradado": "rate_limited"})
+        return _mock_response(kind, {**(mock_payload or {}), "degradado": "rate_limited"})
     except _AIUnavailable:
         _registrar_decision(
             tipo=kind, entidad=entidad, id_entidad=id_entidad,
@@ -248,7 +248,7 @@ def call_json(
             latencia_ms=int((time.perf_counter() - started) * 1000),
             estado="unavailable", codigo_error="HTTP_5XX",
         )
-        return _mock_response(kind, {**mock_payload, "degradado": "unavailable"})
+        return _mock_response(kind, {**(mock_payload or {}), "degradado": "unavailable"})
     except _AIError as error:
         _registrar_decision(
             tipo=kind, entidad=entidad, id_entidad=id_entidad,
@@ -258,7 +258,7 @@ def call_json(
             estado="error", codigo_error=str(error)[:48],
         )
         logger.warning("Fallo IA (%s): %s", kind, error)
-        return _mock_response(kind, {**mock_payload, "degradado": "error"})
+        return _mock_response(kind, {**(mock_payload or {}), "degradado": "error"})
     except Exception as error:  # noqa: BLE001
         _registrar_decision(
             tipo=kind, entidad=entidad, id_entidad=id_entidad,
@@ -268,7 +268,7 @@ def call_json(
             estado="error", codigo_error=type(error).__name__[:48],
         )
         logger.exception("Error inesperado en IA (%s)", kind)
-        return _mock_response(kind, {**mock_payload, "degradado": "exception"})
+        return _mock_response(kind, {**(mock_payload or {}), "degradado": "exception"})
 
     # ---------- Parsear JSON ----------
     parsed = _safe_json(result["content"])
@@ -281,7 +281,7 @@ def call_json(
             estado="error", codigo_error="invalid_json",
         )
         logger.warning("Respuesta IA no es JSON: %s", result["content"][:200])
-        return _mock_response(kind, {**mock_payload, "degradado": "invalid_json"})
+        return _mock_response(kind, {**(mock_payload or {}), "degradado": "invalid_json"})
 
     # ---------- Registrar éxito ----------
     salida_attrs = _json_to_attrs(parsed)
@@ -355,7 +355,8 @@ def _safe_json(text: str) -> dict | None:
             lines = lines[:-1]
         text = "\n".join(lines)
     try:
-        return json.loads(text)
+        parsed = json.loads(text)
+        return parsed if isinstance(parsed, dict) else None
     except json.JSONDecodeError:
         pass
     start = text.find("{")
@@ -363,7 +364,8 @@ def _safe_json(text: str) -> dict | None:
     if start == -1 or end == -1 or end <= start:
         return None
     try:
-        return json.loads(text[start:end + 1])
+        parsed = json.loads(text[start:end + 1])
+        return parsed if isinstance(parsed, dict) else None
     except json.JSONDecodeError:
         return None
 

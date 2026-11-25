@@ -61,6 +61,13 @@ _PERMISSIONS: dict[str, FrozenSet[str]] = {
 }
 
 
+# Operational capabilities are explicit; reading orders does not imply payment authority.
+for _role in ('business_owner','business_admin','manager','kitchen','admin'):
+    _PERMISSIONS[_role] = _PERMISSIONS[_role] | {'orders.manage.business'}
+for _role in ('business_owner','business_admin','manager','admin'):
+    _PERMISSIONS[_role] = _PERMISSIONS[_role] | {'inventory.manage'}
+
+
 def _canonical_role(role: str | None) -> str:
     return _ROLE_ALIASES.get(str(role or "guest"), str(role or "guest"))
 

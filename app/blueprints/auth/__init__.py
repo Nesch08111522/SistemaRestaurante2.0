@@ -52,7 +52,7 @@ def login_submit():
     nombre = (user.get("profile") or {}).get("name") or user["username"]
     flash(f"¡Bienvenido, {nombre}!", "success")
 
-    destino = next_url if is_safe_redirect_url(next_url) else url_for("public.home")
+    destino = next_url if is_safe_redirect_url(next_url) else url_for("auth.workspace_home")
     return redirect(destino)
 
 
@@ -106,9 +106,11 @@ def register_submit():
     return redirect(url_for("public.home"))
 
 
-# El sidebar envía POST con CSRF. El header público redirige GET.
+# GET requests show a confirmation; only POST changes session state.
 @bp.route("/logout", methods=["GET", "POST"])
 def logout():
+    if request.method == "GET":
+        return render_template("workspace/logout.html")
     session.clear()
     flash("Sesión cerrada.", "info")
     return redirect(url_for("public.home"))
@@ -136,3 +138,13 @@ def api_whoami():
             "email": profile.get("email"),
         },
     }), 200
+
+from . import workspace_routes  # noqa: E402,F401
+
+from . import profile_routes  # noqa: E402,F401
+
+from . import favorite_routes  # noqa: E402,F401
+
+from . import notification_routes  # noqa: E402,F401
+
+from . import personal_routes  # noqa: E402,F401

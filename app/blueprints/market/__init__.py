@@ -29,3 +29,6 @@ def api_mis_pedidos():
     user_id = session.get("user_id")
     pedidos = OrderModel.list_by_usuario(int(user_id), limit=50, full=True)
     return jsonify({"total": len(pedidos), "pedidos": pedidos}), 200
+from . import order_routes  # noqa: E402,F401
+
+from . import checkout_routes  # noqa: E402,F401

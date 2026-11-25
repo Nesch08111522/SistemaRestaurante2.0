@@ -34,3 +34,6 @@ def api_pedidos():
         ):
             pedidos_pendientes.append(p)
     return jsonify({"total": len(pedidos_pendientes), "pedidos": pedidos_pendientes}), 200
+
+
+from . import operation_routes  # noqa: E402,F401
