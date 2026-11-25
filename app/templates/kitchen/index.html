@@ -1,8 +1,3 @@
-{% extends "base.html" %}
-{% block title %}Cocina · {{ APP_NAME }}{% endblock %}
-{% block content %}
-<section class="card">
-  <h1>KDS — Cocina</h1>
-  <p>Pedidos pendientes en tiempo real.</p>
-</section>
-{% endblock %}
+{% extends "workspace/base.html" %}
+{% block title %}Cocina{% endblock %}
+{% block content %}<section class="ws-card"><h1>Cocina</h1><p>Consulta los pedidos aceptados y actualiza su preparación.</p><a class="ws-button primary" href="{{ url_for('kitchen.board') }}">Abrir tablero de cocina</a></section>{% endblock %}

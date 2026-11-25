@@ -40,6 +40,7 @@ def data(monkeypatch):
     monkeypatch.setattr("app.models.promotion.PromotionModel.list_by_restaurante", lambda *a, **k: [])
     monkeypatch.setattr("app.repositories.empresas.EmpresasRepository.list_all", lambda **k: [company])
     monkeypatch.setattr("app.repositories.usuarios.UsuariosRepository.list_by_role", lambda *a, **k: [row])
+    monkeypatch.setattr('app.models.order.OrderModel.list_by_restaurante', lambda *a, **k: [])
     return row, user_read
 
 def sign_in(client):

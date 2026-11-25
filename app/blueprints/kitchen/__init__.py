@@ -6,16 +6,19 @@ from flask import Blueprint, jsonify, render_template
 
 from app.core.auth_guard import empresa_required, login_required, role_required
 from app.models.order import OrderModel
+from app.blueprints.workspace import workspace_errors
 
 bp = Blueprint("kitchen", __name__, template_folder="../../templates/kitchen")
 
 
 @bp.get("/")
+@workspace_errors
 @login_required
 @empresa_required
 @role_required("business_owner", "business_admin", "manager", "kitchen")
 def index():
-    return render_template("kitchen/index.html")
+    from .operation_routes import board
+    return board()
 
 
 @bp.get("/api/pedidos")

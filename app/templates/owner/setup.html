@@ -1,0 +1,13 @@
+{% extends 'workspace/base.html' %}
+{% block title %}Registrar mi empresa{% endblock %}
+{% block content %}
+<div class="ws-pagehead"><div><h1>Registra tu empresa</h1><p>Tu cuenta de empresario todavía no tiene una empresa activa. Registra tu negocio para acceder a su panel, salón y cocina.</p></div></div>
+<form class="ws-card ws-form" method="post" action="{{ url_for('owner.create_business') }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Nombre de la empresa<input name="empresa" maxlength="120" required autocomplete="organization"></label>
+<label>Nombre del restaurante<input name="restaurante" maxlength="120" required></label>
+<label>Dirección<input name="direccion" maxlength="250" required autocomplete="street-address"></label>
+<label>Distrito<input name="distrito" maxlength="100" required></label>
+<p class="muted">El restaurante se registrará sin publicar. Se asignará el plan básico; las funciones sujetas a otro plan conservarán sus restricciones.</p>
+<button class="ws-button primary" type="submit">Registrar empresa y restaurante</button>
+</form>{% endblock %}

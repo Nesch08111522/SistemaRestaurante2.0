@@ -41,3 +41,33 @@ def test_reviews_page_reads_only_active_user(app, data, monkeypatch):
         sign_in(client)
         assert client.get('/auth/reviews').status_code == 200
     listing.assert_called_once_with(1, limit=100)
+
+
+def test_review_form_submits_to_save_endpoint(app, data, monkeypatch):
+    from html.parser import HTMLParser
+
+    class Forms(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.forms = []
+
+        def handle_starttag(self, tag, attrs):
+            fields = dict(attrs)
+            if tag == 'form' and 'data-workspace-form' in fields:
+                self.forms.append(fields)
+
+    monkeypatch.setattr(ReviewModel, 'list_by_usuario', lambda *a, **k: [])
+    save = Mock(return_value={'id_resena': 8})
+    monkeypatch.setattr('app.blueprints.auth.personal_routes.save_review', save)
+    with app.test_client() as client:
+        sign_in(client)
+        page = client.get('/auth/reviews')
+        parser = Forms()
+        parser.feed(page.text)
+        form, = parser.forms
+        assert form['data-reload'] == 'true'
+        assert 'role="status"' in page.text
+        response = client.open(form['action'], method=form['data-method'],
+                               json={'restaurant_id': 1, 'rating': 5, 'comment': 'Excelente'})
+        assert response.status_code == 200
+    save.assert_called_once_with(user_id=1, restaurant_id=1, rating=5, comment='Excelente')
