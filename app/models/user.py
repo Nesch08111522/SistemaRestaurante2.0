@@ -32,7 +32,7 @@ from app.db.repository import shared_transaction
 
 logger = logging.getLogger("smartresto.auth")
 
-_ROLE_ALIASES = {"user": "diner", "owner": "business_owner"}
+from app.core.roles import canonical_role
 
 
 class UserModel:
@@ -87,7 +87,7 @@ class UserModel:
             "id": user_id,
             "username": row["nombre_usuario"],
             "password": row["hash_contrasena"],
-            "role": row["rol"],
+            "role": canonical_role(row["rol"]),
             "status": row.get("estado_cuenta"),
             "activacion_pendiente": row.get("activacion_pendiente"),
             "profile": {
@@ -225,9 +225,9 @@ class UserModel:
     @classmethod
     def is_admin(cls, user_id: int) -> bool:
         user = UsuariosRepository.get_by_id(user_id)
-        return bool(user) and user.get("rol") == "admin"
+        return bool(user) and canonical_role(user.get("rol")) == "admin"
 
     @classmethod
     def is_business_owner(cls, user_id: int) -> bool:
         user = UsuariosRepository.get_by_id(user_id)
-        return bool(user) and user.get("rol") == "business_owner"
+        return bool(user) and canonical_role(user.get("rol")) == "business_owner"

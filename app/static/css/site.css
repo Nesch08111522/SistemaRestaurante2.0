@@ -2135,3 +2135,29 @@ button {
         padding: 28px 18px;
     }
 }
+
+/* Shared public palette follows the selected theme. */
+:root[data-theme="dark"] {
+  --bg: var(--theme-bg);
+  --paper: var(--theme-surface);
+  --ink: var(--theme-text);
+  --muted: var(--theme-muted);
+  --line: var(--theme-border);
+  --green: #28684f;
+  --green2: var(--theme-accent);
+  --mint: var(--theme-accent-bg);
+  --mint2: var(--theme-elevated);
+  --shadow: 0 22px 55px rgb(0 0 0 / 30%);
+  --shadow-soft: 0 10px 28px rgb(0 0 0 / 23%);
+}
+:root {
+  --surface: var(--paper);
+  --surface-soft: var(--sr-surface-soft);
+  --text: var(--ink);
+  --border: var(--line);
+}
+[data-theme="dark"] :is(.modal, .cookie-banner, .search-box, .form-input) {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--line);
+}

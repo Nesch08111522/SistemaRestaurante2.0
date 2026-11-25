@@ -817,6 +817,7 @@
 }
 
 .forest-promo h3 {
+    color: white;
     margin: 0 0 8px;
 
     font-family:
@@ -1706,3 +1707,51 @@
 /* ============================================================
    FIN — SMARTRESTO DISCOVERY
    ============================================================ */
+
+/* Dark surfaces and readable text, including the home restaurant cards. */
+[data-theme="dark"] .forest-shell {
+    --forest-bg: var(--theme-bg);
+    --forest-surface: var(--theme-surface);
+    --forest-surface-soft: var(--theme-elevated);
+    --forest-primary-dark: var(--theme-text);
+    --forest-primary-light: var(--theme-accent);
+    --forest-accent: var(--theme-accent);
+    --forest-accent-soft: var(--theme-accent-bg);
+    --forest-text: var(--theme-text);
+    --forest-text-secondary: var(--theme-muted);
+    --forest-text-muted: var(--theme-muted);
+    --forest-border: var(--theme-border);
+    --forest-border-strong: #45594c;
+    --forest-face: linear-gradient(145deg, var(--theme-surface), var(--theme-elevated));
+    --forest-relief: 0 8px 24px rgb(0 0 0 / 23%);
+    --forest-lift: 0 14px 32px rgb(0 0 0 / 30%);
+    --forest-shadow-sm: var(--shadow-sm);
+    --forest-shadow-md: var(--shadow-md);
+    --forest-shadow-lg: var(--shadow-lg);
+}
+[data-theme="dark"] :is(.forest-hero, .forest-recommendation, .forest-home-kitchen) {
+    background: var(--forest-surface-soft);
+    border-color: var(--forest-border);
+}
+[data-theme="dark"] #forest-craving-form {
+    background: var(--forest-surface);
+}
+[data-theme="dark"] :is(.forest-query input, #forest-craving)::placeholder {
+    color: var(--forest-text-muted);
+}
+[data-theme="dark"] .forest-ai-search:hover {
+    background: var(--forest-surface-soft);
+}
+[data-theme="dark"] :is(.forest-search-submit, .forest-light-button, #forest-recommend):hover {
+    background: #20563f;
+}
+[data-theme="dark"] .forest-business {
+    background: #173b30;
+}
+[data-theme="dark"] .forest-business .forest-light-button {
+    background: var(--forest-surface);
+    color: var(--forest-text) !important;
+}
+[data-theme="dark"] .forest-text-link {
+    color: var(--theme-accent);
+}

@@ -94,12 +94,12 @@
         <div class="private-account">
           <button type="button" class="sr-account" data-account-toggle aria-expanded="false" aria-controls="private-account-menu" aria-label="Abrir opciones de cuenta">{{ (user.get('profile', {}).get('name') or user.get('username') or 'U')[0]|upper }}</button>
           <div id="private-account-menu" class="private-account-menu" hidden>
-            <a href="#" data-pendiente="auth.profile" aria-disabled="true">Mi perfil</a>
+            <a href="{{ url_for('auth.profile') }}">Mi perfil</a>
             <a href="#" data-pendiente="auth.account_security" aria-disabled="true">Configuración y seguridad</a>
             {% if sr_saas_private %}
             <a href="{{ url_for('public.home') }}">Ir al sitio web</a>
             {% else %}
-            <a href="{{ url_for('admin.dashboard' if user.role == 'admin' else 'owner.dashboard' if user.role == 'business_owner' else 'market.index') }}">Ir al sistema</a>
+            <a href="{{ url_for('admin.dashboard' if user.role == 'admin' else 'owner.dashboard' if user.role == 'business_owner' else 'auth.workspace_home') }}">Ir al sistema</a>
             {% endif %}
             <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
           </div>

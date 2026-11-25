@@ -1,4 +1,4 @@
-/* Theme toggle: persiste en localStorage y respeta prefers-color-scheme. */
+/* Theme toggle: persiste en localStorage; oscuro por defecto. */
 (function () {
   'use strict';
   const root = document.documentElement;
@@ -23,7 +23,7 @@
     });
   }
   function toggle() {
-    const next = read() === 'dark' ? 'light' : 'dark';
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
     try { localStorage.setItem(KEY, next); } catch (_) {}
     apply(next);
   }

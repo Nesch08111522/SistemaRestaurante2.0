@@ -162,10 +162,6 @@
   window.INITIAL_COORDS = {{ (CENTER_COORDS or [-8.1118, -79.0287])|tojson }};
   window.MONEDA = {{ MONEDA|tojson }};
 </script>
-<link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='css/forest/discovery.css') }}"
->
 <script defer src="{{ url_for('static', filename='js/forest/processor.js') }}"></script>
 <script defer src="{{ url_for('static', filename='js/forest/logic-rules.js') }}"></script>
 <script defer src="{{ url_for('static', filename='js/forest/ui.js') }}"></script>
