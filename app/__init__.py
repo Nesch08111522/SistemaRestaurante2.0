@@ -151,6 +151,8 @@ def create_app(test_config: dict | None = None) -> Flask:
     register_cli(app)
     from app.services.traceability import register_cli as register_traceability_cli
     register_traceability_cli(app)
+    from app.services.traceability_scheduler import register as register_traceability_scheduler
+    register_traceability_scheduler(app)
 
     logger.info("SmartResto inicializado correctamente.")
     return app

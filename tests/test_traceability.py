@@ -88,6 +88,7 @@ def test_onchain_persists_before_broadcast_and_recovers_same_transaction():
             self.rows[0].update(kwargs)
     class Publisher:
         def prepare(self, digest): return "abcd", "0x123", 7
+        def is_anchored(self, digest): return True
         def broadcast(self, raw):
             events.append(("broadcast", raw))
             raise TimeoutError("respuesta perdida")
@@ -99,3 +100,16 @@ def test_onchain_persists_before_broadcast_and_recovers_same_transaction():
     assert events[1] == ("broadcast", "abcd")
     traceability._process_onchain(store, limit=10, publisher=Publisher())
     assert events[-1][1]["estado"] == "confirmado"
+
+
+def test_successful_receipt_does_not_confirm_missing_hash():
+    from contextlib import nullcontext
+    class TestStore(Store):
+        def worker_lock(self): return nullcontext()
+    class Publisher:
+        def receipt(self, tx_hash): return {'status': 1}
+        def is_anchored(self, digest): return False
+    store = TestStore()
+    store.rows = [{'id_ancla': 1, 'estado': 'enviado', 'hash_transaccion': '0x123', 'hash_canonico': 'a' * 64}]
+    traceability._process_onchain(store, limit=1, publisher=Publisher())
+    assert store.marked[0][1]['estado'] == 'fallido'

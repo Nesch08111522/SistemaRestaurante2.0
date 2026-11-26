@@ -117,15 +117,16 @@ def process_pending(store: AnchorStore, *, limit: int = 50, mode: str = "dry_run
     return {"mode": mode, "processed": len(rows)}
 
 
-def _process_onchain(store, *, limit: int, publisher=None):
+def _process_onchain(store, *, limit: int, publisher=None, tipo_recurso=None):
     """Persist the signed transaction before broadcasting; never allocate another nonce while pending."""
     with store.worker_lock():
-        publisher = publisher or OnchainPublisher()
-        rows = store.pending(limit=limit)
+        rows = (store.pending(limit=limit, tipo_recurso=tipo_recurso)
+                if tipo_recurso else store.pending(limit=limit))
         # Prioritize recovery of already signed or submitted transactions.
         rows.sort(key=lambda row: (not bool(row.get("hash_transaccion")), row["id_ancla"]))
         if not rows:
             return {"mode": "onchain", "processed": 0}
+        publisher = publisher or OnchainPublisher()
         row = rows[0]
         now = datetime.now(timezone.utc)
         anchor_id = int(row["id_ancla"])
@@ -133,7 +134,11 @@ def _process_onchain(store, *, limit: int, publisher=None):
         if tx_hash:
             receipt = publisher.receipt(tx_hash)
             if receipt is not None:
-                store.mark(anchor_id, estado="confirmado" if int(receipt.get("status", 0)) == 1 else "revertido")
+                succeeded = int(receipt.get("status", 0)) == 1
+                if succeeded and not publisher.is_anchored(row['hash_canonico']):
+                    store.mark(anchor_id, estado='fallido', ultimo_error='La transacción no registró la huella en el contrato.')
+                else:
+                    store.mark(anchor_id, estado="confirmado" if succeeded else "revertido")
                 return {"mode": "onchain", "processed": 1}
             raw = row.get("transaccion_firmada")
             if not raw:
@@ -172,7 +177,8 @@ def _safe_error(exc: Exception) -> str:
 
 class OnchainPublisher:
     """Minimal EVM publisher; never prints private keys or RPC credentials."""
-    ABI = [{"inputs":[{"internalType":"bytes32","name":"hash","type":"bytes32"}],"name":"anchor","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+    ABI = [{"inputs":[{"internalType":"bytes32","name":"hash","type":"bytes32"}],"name":"anchor","outputs":[],"stateMutability":"nonpayable","type":"function"},
+           {"inputs":[{"name":"","type":"bytes32"}],"name":"anchoredAt","outputs":[{"name":"","type":"uint64"}],"stateMutability":"view","type":"function"}]
     def __init__(self) -> None:
         rpc, address, key = (os.getenv(name, "").strip() for name in ("CHAIN_RPC_URL", "ANCHOR_CONTRACT", "ANCHOR_PRIVATE_KEY"))
         if not rpc or not address or not key: raise RuntimeError("Modo onchain requiere RPC, contrato y clave privada.")
@@ -199,6 +205,8 @@ class OnchainPublisher:
         return signed.raw_transaction.hex(), signed.hash.hex(), nonce
     def broadcast(self, raw: str):
         return self.web3.eth.send_raw_transaction(bytes.fromhex(raw.removeprefix("0x")))
+    def is_anchored(self, digest: str) -> bool:
+        return bool(self.contract.functions.anchoredAt(bytes.fromhex(digest.strip())).call())
     def receipt(self, tx_hash: str):
         try: return self.web3.eth.get_transaction_receipt(tx_hash)
         except self._not_found: return None

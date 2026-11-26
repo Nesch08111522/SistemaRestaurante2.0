@@ -54,14 +54,17 @@ class AnclasTrazabilidadRepository:
             return cur.fetchone()
 
     @classmethod
-    def pending(cls, *, limit: int = 50) -> list[dict[str, Any]]:
+    def pending(cls, *, limit: int = 50, tipo_recurso: str | None = None) -> list[dict[str, Any]]:
+        if tipo_recurso not in (None, 'resena', 'decision_ia'):
+            raise ValueError('Tipo de recurso inválido.')
         with shared_transaction() as conn, conn.cursor() as cur:
             cur.execute(
                 f"""SELECT * FROM {cls.table}
                     WHERE estado IN ('pendiente', 'fallido', 'enviado', 'timeout')
+                      AND (%s::text IS NULL OR tipo_recurso = %s)
                       AND (estado IN ('enviado', 'timeout') OR proximo_intento_en IS NULL OR proximo_intento_en <= CURRENT_TIMESTAMP)
                     ORDER BY (hash_transaccion IS NULL), creado_en, id_ancla FOR UPDATE SKIP LOCKED LIMIT %s""",
-                (max(1, min(int(limit), 500)),),
+                (tipo_recurso, tipo_recurso, max(1, min(int(limit), 500))),
             )
             return list(cur.fetchall())
 
