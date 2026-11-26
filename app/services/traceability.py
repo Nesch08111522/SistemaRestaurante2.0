@@ -1,4 +1,4 @@
-"""Canonical, privacy-preserving audit anchors. No blockchain network client lives here."""
+"""Canonical, privacy-preserving audit anchors."""
 from __future__ import annotations
 
 import hashlib
@@ -24,9 +24,10 @@ def _normalise(value: object) -> str:
 
 
 def _secret() -> bytes:
-    secret = os.getenv("TRACEABILITY_PSEUDONYM_SECRET") or os.getenv("SECRET_KEY", "")
+    secret = (os.getenv("TRACEABILITY_PSEUDONYM_SECRET")
+              or os.getenv("ANCHOR_PSEUDONYM_SECRET") or os.getenv("SECRET_KEY", ""))
     if len(secret) < 32:
-        raise RuntimeError("TRACEABILITY_PSEUDONYM_SECRET o SECRET_KEY debe tener al menos 32 caracteres.")
+        raise RuntimeError("El secreto de pseudonimización debe tener al menos 32 caracteres.")
     return secret.encode("utf-8")
 
 
@@ -87,8 +88,11 @@ def process_pending(store: AnchorStore, *, limit: int = 50, mode: str = "dry_run
         return {"mode": "off", "processed": 0}
     if mode not in {"dry_run", "onchain"}:
         raise ValueError("Modo de anclaje inválido.")
+    if mode == "onchain":
+        return _process_onchain(store, limit=limit)
     rows = store.pending(limit=limit)
-    publisher = OnchainPublisher() if mode == "onchain" else None
+    rows = [row for row in rows if row.get("estado", "pendiente") in {"pendiente", "fallido"}]
+    publisher = None
     now = datetime.now(timezone.utc)
     for row in rows:
         if mode == "dry_run":
@@ -111,6 +115,45 @@ def process_pending(store: AnchorStore, *, limit: int = 50, mode: str = "dry_run
             store.mark(int(row["id_ancla"]), estado="fallido", ultimo_error=_safe_error(exc),
                        proximo_intento_en=now + timedelta(seconds=_setting("ANCHOR_RETRY_SECONDS", 60)))
     return {"mode": mode, "processed": len(rows)}
+
+
+def _process_onchain(store, *, limit: int, publisher=None):
+    """Persist the signed transaction before broadcasting; never allocate another nonce while pending."""
+    with store.worker_lock():
+        publisher = publisher or OnchainPublisher()
+        rows = store.pending(limit=limit)
+        # Prioritize recovery of already signed or submitted transactions.
+        rows.sort(key=lambda row: (not bool(row.get("hash_transaccion")), row["id_ancla"]))
+        if not rows:
+            return {"mode": "onchain", "processed": 0}
+        row = rows[0]
+        now = datetime.now(timezone.utc)
+        anchor_id = int(row["id_ancla"])
+        tx_hash = row.get("hash_transaccion")
+        if tx_hash:
+            receipt = publisher.receipt(tx_hash)
+            if receipt is not None:
+                store.mark(anchor_id, estado="confirmado" if int(receipt.get("status", 0)) == 1 else "revertido")
+                return {"mode": "onchain", "processed": 1}
+            raw = row.get("transaccion_firmada")
+            if not raw:
+                # Legacy submitted transaction: monitor only, never create a replacement.
+                store.mark(anchor_id, estado="timeout", proximo_intento_en=now + timedelta(seconds=20))
+                return {"mode": "onchain", "processed": 1}
+        else:
+            raw, tx_hash, nonce = publisher.prepare(row["hash_canonico"])
+            # This commits before any network broadcast. Crash recovery uses this exact transaction.
+            store.mark(anchor_id, estado="enviado", hash_transaccion=tx_hash,
+                       nonce_transaccion=nonce, transaccion_firmada=raw, enviada_en=now)
+        try:
+            publisher.broadcast(raw)
+        except Exception as exc:
+            # A network error can mean the transaction was accepted; retain the signed bytes.
+            store.mark(anchor_id, estado="timeout", ultimo_error=_safe_error(exc),
+                       proximo_intento_en=now + timedelta(seconds=20))
+        else:
+            store.mark(anchor_id, estado="enviado", proximo_intento_en=now + timedelta(seconds=20))
+        return {"mode": "onchain", "processed": 1}
 
 
 def _setting(name: str, default: int) -> int:
@@ -147,12 +190,15 @@ class OnchainPublisher:
         if not self.web3.eth.get_code(address): raise RuntimeError("ANCHOR_CONTRACT no tiene bytecode en la red configurada.")
         self.account = self.web3.eth.account.from_key(key); self.contract = self.web3.eth.contract(address=address, abi=self.ABI)
         self.next_nonce = int(self.web3.eth.get_transaction_count(self.account.address, "pending"))
-    def submit(self, digest: str) -> tuple[str, int]:
+    def prepare(self, digest: str) -> tuple[str, str, int]:
         if len(digest) != 64 or any(c not in "0123456789abcdefABCDEF" for c in digest): raise ValueError("Hash canónico inválido.")
         nonce = max(self.next_nonce, int(self.web3.eth.get_transaction_count(self.account.address, "pending")))
         tx = self.contract.functions.anchor(bytes.fromhex(digest)).build_transaction({"from":self.account.address,"nonce":nonce,"chainId":self.chain_id,"gas":_setting("ANCHOR_GAS_LIMIT",150000),"gasPrice":self.web3.eth.gas_price})
-        tx_hash = self.web3.eth.send_raw_transaction(self.account.sign_transaction(tx).raw_transaction).hex(); self.next_nonce = nonce + 1
-        return tx_hash, nonce
+        signed = self.account.sign_transaction(tx)
+        self.next_nonce = nonce + 1
+        return signed.raw_transaction.hex(), signed.hash.hex(), nonce
+    def broadcast(self, raw: str):
+        return self.web3.eth.send_raw_transaction(bytes.fromhex(raw.removeprefix("0x")))
     def receipt(self, tx_hash: str):
         try: return self.web3.eth.get_transaction_receipt(tx_hash)
         except self._not_found: return None

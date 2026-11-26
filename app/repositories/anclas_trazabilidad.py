@@ -2,12 +2,29 @@
 from __future__ import annotations
 
 from typing import Any
+from contextlib import contextmanager
+
+from app.db.connection import connection
 
 from app.db.repository import shared_transaction
 
 
 class AnclasTrazabilidadRepository:
     table = "public.anclas_trazabilidad"
+
+    @classmethod
+    @contextmanager
+    def worker_lock(cls):
+        # Dedicated session lock remains held across commits and RPC calls.
+        with connection(autocommit=True) as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT pg_try_advisory_lock(%s) AS acquired", (728543201,))
+                if not cur.fetchone()["acquired"]:
+                    raise RuntimeError("Ya hay un worker de anclaje en ejecución.")
+                try:
+                    yield
+                finally:
+                    cur.execute("SELECT pg_advisory_unlock(%s)", (728543201,))
 
     @classmethod
     def enqueue(
@@ -42,8 +59,8 @@ class AnclasTrazabilidadRepository:
             cur.execute(
                 f"""SELECT * FROM {cls.table}
                     WHERE estado IN ('pendiente', 'fallido', 'enviado', 'timeout')
-                      AND (proximo_intento_en IS NULL OR proximo_intento_en <= CURRENT_TIMESTAMP)
-                    ORDER BY creado_en, id_ancla FOR UPDATE SKIP LOCKED LIMIT %s""",
+                      AND (estado IN ('enviado', 'timeout') OR proximo_intento_en IS NULL OR proximo_intento_en <= CURRENT_TIMESTAMP)
+                    ORDER BY (hash_transaccion IS NULL), creado_en, id_ancla FOR UPDATE SKIP LOCKED LIMIT %s""",
                 (max(1, min(int(limit), 500)),),
             )
             return list(cur.fetchall())
@@ -52,7 +69,7 @@ class AnclasTrazabilidadRepository:
     def mark(
         cls, id_ancla: int, *, estado: str, hash_transaccion: str | None = None,
         nonce_transaccion: int | None = None, enviada_en=None, proximo_intento_en=None,
-        ultimo_error: str | None = None,
+        ultimo_error: str | None = None, transaccion_firmada: str | None = None,
     ) -> dict[str, Any] | None:
         if estado not in {"pendiente", "simulado", "enviado", "confirmado", "timeout", "fallido", "revertido"}:
             raise ValueError("Estado de ancla inválido.")
@@ -61,11 +78,12 @@ class AnclasTrazabilidadRepository:
                 f"""UPDATE {cls.table}
                     SET estado=%s, hash_transaccion=COALESCE(%s, hash_transaccion),
                         nonce_transaccion=COALESCE(%s, nonce_transaccion),
+                        transaccion_firmada=COALESCE(%s, transaccion_firmada),
                         enviada_en=COALESCE(%s, enviada_en), proximo_intento_en=%s,
                         ultimo_error=%s, intentos=intentos+1,
                         actualizado_en=CURRENT_TIMESTAMP
                     WHERE id_ancla=%s RETURNING *""",
-                (estado, hash_transaccion, nonce_transaccion, enviada_en, proximo_intento_en,
-                 (ultimo_error or None)[:500], int(id_ancla)),
+                (estado, hash_transaccion, nonce_transaccion, transaccion_firmada, enviada_en, proximo_intento_en,
+                 ultimo_error[:500] if ultimo_error else None, int(id_ancla)),
             )
             return cur.fetchone()
