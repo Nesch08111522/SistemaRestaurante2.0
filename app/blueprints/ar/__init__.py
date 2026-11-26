@@ -217,6 +217,26 @@ def publish(pid):
     return jsonify(success=True)
 
 
+@bp.route('/api/gestion/platos/<int:pid>/stock', methods=['GET', 'PUT'])
+@login_required
+def dish_stock(pid):
+    from app.services import commerce
+    from app.repositories.operations import OperationsRepository
+    from app.services.errors import DomainError
+    dish, restaurant, user = service.owned_dish(pid, 'inventory.manage')
+    if request.method == 'GET':
+        row = OperationsRepository.stock(pid) or {'disponibles': 0, 'version': 0}
+        return jsonify(success=True, stock=row)
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or set(data) != {'cantidad', 'version'}:
+        return jsonify(success=False, error='Indica cantidad y versión del stock.'), 400
+    try:
+        commerce.adjust_stock(user, pid, data['cantidad'], data['version'])
+    except DomainError as exc:
+        return jsonify(success=False, error=exc.message), exc.status
+    return jsonify(success=True, stock=OperationsRepository.stock(pid))
+
+
 @bp.get('/gestion/recursos/<int:resource_id>/<kind>')
 @login_required
 def private_asset(resource_id,kind):

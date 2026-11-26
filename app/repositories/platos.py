@@ -46,6 +46,19 @@ class PlatosRepository(PostgresRepository):
             return list(cur.fetchall())
 
     @classmethod
+    def list_publicados(cls, id_restaurante: int) -> list[dict[str, Any]]:
+        """Public dishes must be explicitly published and available."""
+        with shared_transaction() as conn, conn.cursor() as cur:
+            cur.execute(
+                "SELECT p.* FROM public.platos p "
+                "JOIN public.platos_menu3d m USING (id_plato) "
+                "WHERE p.id_restaurante=%s AND p.esta_disponible=TRUE "
+                "AND m.publicado=TRUE ORDER BY p.id_plato",
+                (int(id_restaurante),),
+            )
+            return list(cur.fetchall())
+
+    @classmethod
     def list_by_categoria_plato(
         cls, categoria: str, *, limit: int = 200
     ) -> list[dict[str, Any]]:

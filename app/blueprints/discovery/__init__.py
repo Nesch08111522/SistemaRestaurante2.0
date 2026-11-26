@@ -95,6 +95,7 @@ def api_recommend():
     from app.models.search_history import SearchHistoryModel
     from app.repositories.favoritos import FavoritosRepository
     from app.repositories.promociones import PromocionesRepository
+    from app.repositories.platos import PlatosRepository
     from app.repositories.feedback_recomendaciones_usuario import FeedbackRecomendacionesUsuarioRepository
     from app.repositories.usuarios import UsuariosPreferenciasRepository, UsuariosRestriccionesRepository
 
@@ -143,9 +144,12 @@ def api_recommend():
     restaurantes = RestaurantModel.list_published(limit=30)
     catalogo: list[dict] = []
     for r in restaurantes[:10]:
+        if r.get('suspendido') or r.get('rechazado'):
+            continue
         menu = RestaurantModel.get_full_menu(r["id_restaurante"])
+        public_ids = {row['id_plato'] for row in PlatosRepository.list_publicados(r['id_restaurante'])}
         promotion = bool(PromocionesRepository.list_by_restaurante(r["id_restaurante"], vigentes=True))
-        for p in menu[:5]:
+        for p in [dish for dish in menu if dish.get('id_plato') in public_ids][:5]:
             catalogo.append({
                 "id": p["id_plato"],
                 "tipo": "plato",

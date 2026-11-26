@@ -21,6 +21,10 @@ def restaurant_transaction(rid, request_key=None):
 
 class OperationsRepository:
     @staticmethod
+    def stock(pid):
+        return query('SELECT disponibles, version FROM public.web_stock_platos WHERE id_plato=%s', (pid,))
+
+    @staticmethod
     def catalog(rid, *, private=False):
         return query("SELECT p.*, COALESCE(s.disponibles,0) AS stock, COALESCE(s.version,0) AS stock_version "
             "FROM public.platos p LEFT JOIN public.web_stock_platos s USING(id_plato) "

@@ -3,6 +3,7 @@
 {% block content %}
 <section class="card">
   <h1>Panel de plataforma</h1>
+  <p><a href="{{ url_for('admin.moderations') }}">Revisar restaurantes pendientes</a></p>
   <p>Empresas: {{ total_empresas }} · Admins: {{ total_admins }}</p>
   <ul>
     {% for e in empresas %}

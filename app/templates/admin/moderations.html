@@ -1,0 +1,11 @@
+{% extends "workspace/base.html" %}
+{% block title %}Revisión de restaurantes{% endblock %}
+{% block content %}
+<div class="ws-pagehead"><div><h1>Restaurantes pendientes</h1><p>Revisa los datos del negocio antes de aprobar su publicación.</p></div></div>
+{% for restaurant in restaurants %}
+<section class="ws-card"><h2>{{ restaurant.nombre }}</h2><p>Restaurante #{{ restaurant.id_restaurante }} · Empresa #{{ restaurant.id_empresa }}</p>
+<form action="{{ url_for('admin.approve_restaurant', restaurant_id=restaurant.id_restaurante) }}" method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button class="ws-button primary" type="submit">Aprobar y publicar</button></form></section>
+{% else %}<p class="ws-card">No hay restaurantes pendientes.</p>{% endfor %}
+{% endblock %}

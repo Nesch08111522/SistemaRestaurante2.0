@@ -28,7 +28,7 @@ def checkout():
         except (UndefinedTable, UndefinedColumn) as error:
             current_app.logger.warning('Checkout schema unavailable: %s', type(error).__name__)
             ordering_available = False
-            dishes = PlatosRepository.list_by_restaurante(rid, only_available=True)
+            dishes = PlatosRepository.list_publicados(rid)
     return render_template('workspace/checkout.html', restaurants=restaurants,
                            restaurant=selected, dishes=dishes,
                            ordering_available=ordering_available)

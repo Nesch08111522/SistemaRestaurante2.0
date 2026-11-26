@@ -35,6 +35,24 @@ class RestaurantesRepository(PostgresRepository):
     })
 
     @classmethod
+    def list_pending_review(cls):
+        with shared_transaction() as conn, conn.cursor() as cur:
+            cur.execute("SELECT id_restaurante, id_empresa, nombre, estado, estado_publicacion "
+                        "FROM public.restaurantes WHERE estado='pending_review' "
+                        "ORDER BY id_restaurante LIMIT 200")
+            return list(cur.fetchall())
+
+    @classmethod
+    def approve_and_publish(cls, restaurant_id):
+        with shared_transaction() as conn, conn.cursor() as cur:
+            cur.execute("UPDATE public.restaurantes SET estado='active', estado_aprobacion='approved', "
+                        "estado_publicacion='published', moderado_en=now() "
+                        "WHERE id_restaurante=%s AND estado='pending_review' "
+                        "AND NOT COALESCE(suspendido,false) AND NOT COALESCE(rechazado,false) RETURNING *",
+                        (int(restaurant_id),))
+            return cur.fetchone()
+
+    @classmethod
     def get_by_id(cls, item_id: int) -> dict[str, Any] | None:
         with shared_transaction() as conn, conn.cursor() as cur:
             cur.execute(

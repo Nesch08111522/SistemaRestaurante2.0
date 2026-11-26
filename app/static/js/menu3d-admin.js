@@ -18,6 +18,16 @@ if(root){
       $('m3d-admin-grid').replaceChildren(...data.platos.map(d=>card(d,container=>{
         container.append(node('span',d.publicado?'Publicado':'Borrador','m3d-tag'),button('Editar',()=>editor(d)),button('Fotos y modelos',()=>startStudio(d)),button(d.publicado?'Despublicar':'Publicar plato',async e=>{
           e.currentTarget.disabled=true;try{await api(`/ar/api/gestion/platos/${d.id_plato}/publicacion`,{method:'POST',body:{publicado:!d.publicado}});await load();message('m3d-message',d.publicado?'Plato retirado del menú público.':'Plato publicado. Solo se mostrará un modelo si ha sido aprobado.');}catch(err){message('m3d-message',err.message,true);e.target.disabled=false;}
+        }),button('Asignar porciones',async event=>{
+          event.currentTarget.disabled=true;
+          try{
+            const current=await api(`/ar/api/gestion/platos/${d.id_plato}/stock`);
+            const value=window.prompt(`Porciones disponibles para ${d.nombre}:`,String(current.stock.disponibles));
+            if(value===null)return;
+            if(!/^\d+$/.test(value.trim()))throw Error('Ingresa un número entero de porciones.');
+            await api(`/ar/api/gestion/platos/${d.id_plato}/stock`,{method:'PUT',body:{cantidad:Number(value),version:current.stock.version}});
+            message('m3d-message','Porciones actualizadas.');
+          }catch(err){message('m3d-message',err.message,true);}finally{event.currentTarget.disabled=false;}
         }));if(d.modelo_url)container.append(button('Explorar en 3D',()=>open(d,true)));
       })));
       if(!data.platos.length)$('m3d-admin-grid').append(node('p','Registra tu primer plato para empezar.','m3d-empty'));

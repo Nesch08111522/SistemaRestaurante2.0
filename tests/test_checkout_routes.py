@@ -38,7 +38,7 @@ def test_checkout_missing_schema_keeps_menu_readable(app, data, monkeypatch):
     monkeypatch.setattr('app.repositories.operations.OperationsRepository.catalog',
                         Mock(side_effect=UndefinedTable('web_stock_platos')))
     listing = Mock(return_value=[{'id_plato': 3, 'nombre': 'Arroz con pollo', 'precio': 18}])
-    monkeypatch.setattr('app.repositories.platos.PlatosRepository.list_by_restaurante', listing)
+    monkeypatch.setattr('app.repositories.platos.PlatosRepository.list_publicados', listing)
     with app.test_client() as c:
         sign_in(c)
         response = c.get('/mercado/nuevo?restaurante_id=1')
@@ -50,7 +50,7 @@ def test_checkout_missing_schema_keeps_menu_readable(app, data, monkeypatch):
         assert 'id="checkout-form"' not in response.text
         assert 'Confirmar pedido' not in response.text
         assert 'SOLICITUD 503' not in response.text
-    listing.assert_called_once_with(1, only_available=True)
+    listing.assert_called_once_with(1)
 
 
 def test_checkout_ready_schema_allows_ordering(app, data, monkeypatch):

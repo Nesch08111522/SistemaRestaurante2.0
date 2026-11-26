@@ -34,6 +34,7 @@ def data(monkeypatch):
     monkeypatch.setattr("app.models.restaurant.RestaurantModel.list_published", lambda **k: [restaurant])
     monkeypatch.setattr("app.models.restaurant.RestaurantModel.list_by_empresa", lambda *a: [restaurant])
     monkeypatch.setattr("app.models.restaurant.RestaurantModel.get_by_id", lambda *a, **k: restaurant)
+    monkeypatch.setattr("app.repositories.platos.PlatosRepository.list_publicados", lambda *a: [])
     monkeypatch.setattr("app.models.menu.MenuModel.list_by_restaurante", lambda *a, **k: [])
     monkeypatch.setattr("app.models.review.ReviewModel.list_by_restaurante", lambda *a, **k: [])
     monkeypatch.setattr("app.models.review.ReviewModel.summary", lambda *a: dict(total_resenas=0, promedio_calificacion=0))
