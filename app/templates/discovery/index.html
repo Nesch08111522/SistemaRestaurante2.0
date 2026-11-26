@@ -3,11 +3,9 @@
 
 {% block title %}Descubrir · {{ APP_NAME }}{% endblock %}
 
-{% block page_css %}
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/discovery-cards.css') }}">
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/discovery-page.css') }}">
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/maplibre/maplibre-gl.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -155,18 +153,13 @@
             <section class="map-preview card discovery-map-preview"
                      aria-labelledby="discovery-map-title">
 
-                <div class="map-art" aria-hidden="true">
-                    <span class="map-road road-one"></span>
-                    <span class="map-road road-two"></span>
-                    <span class="map-road road-three"></span>
-                    <span class="map-water"></span>
-
-                    <span class="map-pin pin-a">🍽️</span>
-                    <span class="map-pin pin-b">☕</span>
-                    <span class="map-pin pin-c">🥐</span>
-                    <span class="map-pin pin-d">🛵</span>
-
-                    <span class="map-you">Tú</span>
+                <div class="discovery-map-frame">
+                    <div id="discovery-map" class="map-art discovery-live-map" role="application" aria-label="Mapa interactivo de restaurantes"></div>
+                    <div class="discovery-map-controls" aria-label="Controles del mapa">
+                        <button type="button" data-map-action="zoom-in" aria-label="Acercar mapa" title="Acercar">+</button>
+                        <button type="button" data-map-action="zoom-out" aria-label="Alejar mapa" title="Alejar">−</button>
+                        <button type="button" data-map-action="reset" aria-label="Ver todos los restaurantes" title="Ver todos">⌖</button>
+                    </div>
                 </div>
 
                 <div class="map-copy">
@@ -189,15 +182,7 @@
                         Cargando ubicaciones...
                     </p>
 
-                    <a
-                        class="btn btn-outline btn-small"
-                        id="discovery-google-maps"
-                        href="https://www.google.com/maps/search/restaurantes+Trujillo+Peru/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Abrir búsqueda en Google Maps ↗
-                    </a>
+
                 </div>
 
             </section>
@@ -385,6 +370,7 @@
 </main>
 
 
+<script src="{{ url_for('static', filename='vendor/maplibre/maplibre-gl.js') }}"></script>
 <script>
 (() => {
     'use strict';
@@ -423,7 +409,6 @@
         search: document.getElementById('catalog-search'),
         location: document.getElementById('use-location'),
         locationStatus: document.getElementById('discovery-location-status'),
-        googleMaps: document.getElementById('discovery-google-maps'),
 
         sort: document.getElementById('discovery-sort-select'),
         budget: document.getElementById('discovery-budget-select'),
@@ -1049,6 +1034,17 @@
             .filter(Boolean);
 
         el.grid.innerHTML = cards.join('');
+        const restaurantPoints = visible.map(restaurant => {
+            const fallback = mapPoints.get(String(restaurant.id_restaurante ?? restaurant.id));
+            return {
+                id: restaurant.id_restaurante ?? restaurant.id ?? fallback?.id,
+                nombre: restaurant.nombre ?? fallback?.nombre,
+                lat: restaurant.latitud ?? fallback?.lat,
+                lng: restaurant.longitud ?? fallback?.lng,
+                url: fallback?.url
+            };
+        }).filter(hasValidMapCoordinates);
+        if (window.maplibregl) renderDiscoveryMap(restaurantPoints);
 
         const count = cards.length;
 
@@ -1170,22 +1166,6 @@
 
                 el.locationStatus.textContent =
                     'Ubicación obtenida. Puedes ordenar los negocios por cercanía.';
-
-                const mapsURL = new URL(
-                    'https://www.google.com/maps/search/'
-                );
-
-                mapsURL.searchParams.set(
-                    'api',
-                    '1'
-                );
-
-                mapsURL.searchParams.set(
-                    'query',
-                    `${userPosition.lat},${userPosition.lng}`
-                );
-
-                el.googleMaps.href = mapsURL.href;
 
                 renderResults();
             },
@@ -1348,6 +1328,77 @@
        API COMPLEMENTARIA: api_map
     ====================================================== */
 
+    let discoveryMap;
+    let activeMapPopup;
+    let allMapPoints = [];
+    const discoveryMarkers = [];
+    const mapStyles = { dark: 'https://tiles.openfreemap.org/styles/liberty', light: 'https://tiles.openfreemap.org/styles/positron' };
+
+    function renderDiscoveryMap(points) {
+        const container = document.getElementById('discovery-map');
+        if (!container || !window.maplibregl) return;
+        const styleForTheme = () => mapStyles[document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'];
+        if (!discoveryMap) {
+            discoveryMap = new maplibregl.Map({ container, style: styleForTheme(), center: [-79.0287, -8.1116], zoom: 12, attributionControl: true });
+            discoveryMap.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+            // El contenedor también cambia por el grid, no solo por window.resize.
+            new ResizeObserver(() => discoveryMap.resize()).observe(container);
+            new MutationObserver(() => discoveryMap.setStyle(styleForTheme())).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        }
+        const visiblePoints = points.filter(hasValidMapCoordinates);
+        allMapPoints = visiblePoints;
+        discoveryMarkers.splice(0).forEach(marker => marker.remove());
+        activeMapPopup?.remove();
+        visiblePoints.forEach(point => {
+            const element = document.createElement('button');
+            element.type = 'button';
+            element.className = 'discovery-restaurant-marker';
+            element.setAttribute('aria-label', `Ver ${point.nombre || 'Restaurante'} en el mapa`);
+            element.title = point.nombre || 'Restaurante';
+            element.innerHTML = '<span aria-hidden="true">●</span>';
+            element.addEventListener('click', event => {
+                event.stopPropagation();
+                activeMapPopup?.remove();
+                const link = document.createElement('a');
+                link.href = point.url || '#';
+                link.textContent = point.nombre || 'Restaurante';
+                activeMapPopup = new maplibregl.Popup({ offset: 18 }).setLngLat([Number(point.lng), Number(point.lat)]).setDOMContent(link).addTo(discoveryMap);
+            });
+            // MapLibre controla la proyección; el botón interior conserva sus estilos.
+            const anchor = document.createElement('div');
+            anchor.className = 'discovery-marker-anchor';
+            anchor.appendChild(element);
+            discoveryMarkers.push(new maplibregl.Marker({ element: anchor, anchor: 'center' })
+                .setLngLat([Number(point.lng), Number(point.lat)])
+                .addTo(discoveryMap));
+        });
+        const bounds = new maplibregl.LngLatBounds();
+        visiblePoints.forEach(point => bounds.extend([Number(point.lng), Number(point.lat)]));
+        discoveryMap.resize();
+        if (!bounds.isEmpty()) discoveryMap.fitBounds(bounds, { padding: 40, maxZoom: 14, duration: 0 });
+        el.mapCount.textContent = `${visiblePoints.length} ubicaciones disponibles en el mapa`;
+    }
+
+    function hasValidMapCoordinates(point) {
+        const lat = numeric(point.lat);
+        const lng = numeric(point.lng);
+        return lat !== null && lng !== null &&
+            Math.abs(lat) <= 90 && Math.abs(lng) <= 180;
+    }
+
+    document.querySelectorAll('[data-map-action]').forEach(button => {
+        button.addEventListener('click', () => {
+            if (!discoveryMap) return;
+            if (button.dataset.mapAction === 'zoom-in') discoveryMap.zoomIn({ duration: 250 });
+            if (button.dataset.mapAction === 'zoom-out') discoveryMap.zoomOut({ duration: 250 });
+            if (button.dataset.mapAction === 'reset') {
+                const bounds = new maplibregl.LngLatBounds();
+                allMapPoints.forEach(point => bounds.extend([Number(point.lng), Number(point.lat)]));
+                if (!bounds.isEmpty()) discoveryMap.fitBounds(bounds, { padding: 28, maxZoom: 14, duration: 350 });
+            }
+        });
+    });
+
     async function loadMapPoints() {
         try {
             const response = await fetch(API_MAP, {
@@ -1385,10 +1436,6 @@
             el.mapCount.textContent =
                 `${points.length} ubicaciones disponibles en el mapa`;
 
-            /*
-             * Se vuelven a generar las tarjetas para incorporar
-             * coordenadas y enlaces del mapa, si están disponibles.
-             */
             renderResults();
 
             console.info('SmartResto Map:', {
@@ -1431,7 +1478,6 @@
         'search',
         'location',
         'locationStatus',
-        'googleMaps',
         'sort',
         'budget',
         'clear'
