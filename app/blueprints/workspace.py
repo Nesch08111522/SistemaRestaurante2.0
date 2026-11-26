@@ -72,7 +72,7 @@ def navigation():
     role = (user or {}).get('role', 'guest')
     business = role in {'business_owner', 'business_admin', 'manager', 'admin'}
     service = business or role in {'cashier', 'waiter'}
-    kitchen = business or role == 'kitchen'
+    kitchen = role in {'business_admin', 'manager', 'admin', 'kitchen'}
     groups = [ ('MI EXPERIENCIA', [
         ('auth.workspace_home', 'Mi inicio', 'home', True),
         ('market.checkout', 'Hacer un pedido', 'menu', True),
