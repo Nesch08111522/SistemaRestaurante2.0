@@ -121,6 +121,49 @@ def recover_form():
     return render_template("auth/login.html", recover=True, next="")
 
 
+@bp.post("/recover")
+def recover_submit():
+    """Request a password-reset code without disclosing account existence."""
+    from app.services.account_recovery import issue
+    username = normalize_text(request.form.get("username"), max_length=254)
+    channel = normalize_text(request.form.get("channel") or "email", max_length=10).lower()
+    try:
+        if username:
+            issue(username, channel)
+    except DomainError as exc:
+        flash(exc.message, "error")
+        return render_template("auth/login.html", recover=True, next=""), exc.status
+    flash("Si la cuenta existe y tiene un correo válido, recibirás un código.", "info")
+    return render_template("auth/login.html", recover=True, next=""), 200
+
+
+@bp.post("/recover/complete")
+def recover_complete():
+    """Consume the code sent by ``recover_submit`` and rotate the password."""
+    from app.services.account_recovery import complete
+    from app.services.errors import DomainError
+
+    username = normalize_text(request.form.get("username"), max_length=254)
+    challenge = request.form.get("challenge") or ""
+    code = request.form.get("code") or ""
+    password = request.form.get("password") or ""
+    confirmation = request.form.get("confirm") or ""
+    if password != confirmation:
+        flash("Las contraseñas no coinciden.", "error")
+        return render_template("auth/login.html", recover=True, next=""), 400
+    try:
+        changed = complete(username, challenge, code, password)
+    except DomainError as exc:
+        flash(exc.message, "error")
+        return render_template("auth/login.html", recover=True, next=""), exc.status
+    if not changed:
+        flash("El código no es válido, expiró o ya fue usado.", "error")
+        return render_template("auth/login.html", recover=True, next=""), 400
+    flash("Contraseña actualizada. Ya puedes iniciar sesión.", "success")
+    return redirect(url_for("auth.login_form"))
+
+
+
 @bp.get("/api/whoami")
 def api_whoami():
     from app.core.security import fresh_session_user

@@ -187,6 +187,7 @@ def home():
 # PWA: PÁGINA OFFLINE
 # ============================================================
 
+
 @bp.get("/para-negocios")
 def business_plans():
     """Public business plans and product preview."""

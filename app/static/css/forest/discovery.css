@@ -562,6 +562,7 @@
 .forest-restaurants,
 .forest-offers,
 .forest-nearby,
+.forest-home-kitchen,
 .forest-business {
     width: min(100%, var(--forest-container));
     margin-right: auto;
@@ -1002,7 +1003,8 @@
     gap: 19px;
 }
 
-.forest-nearby h2 {
+.forest-nearby h2,
+.forest-home-kitchen h2 {
     margin: 0 0 7px;
 
     color: var(--forest-primary-dark);
@@ -1016,7 +1018,8 @@
     font-weight: 400;
 }
 
-.forest-nearby p {
+.forest-nearby p,
+.forest-home-kitchen p {
     margin: 0;
     color: var(--forest-text-muted);
     font-size: 0.87rem;
@@ -1041,6 +1044,32 @@
     color: var(--forest-primary);
 
     font-size: 1.25rem;
+}
+
+
+/* ============================================================
+   17. MI COCINA
+   ============================================================ */
+
+.forest-home-kitchen {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-bottom: 65px;
+    padding: 25px 30px;
+
+    border: 1px solid var(--forest-border);
+    border-radius: var(--forest-radius-lg);
+
+    background: #f0f2eb;
+}
+
+.forest-home-kitchen-copy {
+    display: flex;
+    align-items: center;
+    gap: 19px;
 }
 
 
@@ -1341,7 +1370,8 @@
         height: 90px;
     }
 
-    .forest-nearby {
+    .forest-nearby,
+    .forest-home-kitchen {
         padding: 23px;
     }
 
@@ -1543,14 +1573,29 @@
         gap: 13px;
     }
 
-    .forest-nearby h2 {
+    .forest-nearby h2,
+    .forest-home-kitchen h2 {
         font-size: 1.4rem;
     }
 
-    .forest-nearby p {
+    .forest-nearby p,
+    .forest-home-kitchen p {
         font-size: 0.81rem;
     }
 
+    .forest-home-kitchen {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 17px;
+
+        padding: 21px;
+        margin-bottom: 45px;
+    }
+
+    .forest-home-kitchen-copy {
+        align-items: flex-start;
+        gap: 13px;
+    }
 
     .forest-compact-icon {
         flex-basis: 43px;
@@ -1684,7 +1729,7 @@
     --forest-shadow-md: var(--shadow-md);
     --forest-shadow-lg: var(--shadow-lg);
 }
-[data-theme="dark"] :is(.forest-hero, .forest-recommendation) {
+[data-theme="dark"] :is(.forest-hero, .forest-recommendation, .forest-home-kitchen) {
     background: var(--forest-surface-soft);
     border-color: var(--forest-border);
 }

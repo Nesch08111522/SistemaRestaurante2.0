@@ -2,7 +2,7 @@
 <nav>
   <a href="{{ url_for('public.home') }}">Inicio</a>
   <a href="{{ url_for('discovery.index') }}">Descubrir</a>
-  <a href="{{ url_for('market.index') }}">Pedir comida</a>
+  <a href="{{ url_for('market.index') }}">Mercado</a>
   <a href="{{ url_for('loyalty.index') }}">Recompensas</a>
   <span class="nav-user">{{ current_user.name or current_user.username }}</span>
   <a href="{{ url_for('auth.logout') }}">Salir</a>
