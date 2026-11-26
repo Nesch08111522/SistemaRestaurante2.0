@@ -549,3 +549,36 @@
         animation-iteration-count: 1 !important;
     }
 }
+
+
+.discovery-page .discovery-live-map { min-height: 290px; background: var(--surface, #e8eee5); }
+.discovery-page .discovery-live-map .maplibregl-popup-content { font: inherit; }
+.discovery-page .discovery-live-map .maplibregl-popup-content a { color: var(--primary, #28684f); font-weight: 700; }
+@media (max-width: 700px) { .discovery-page .discovery-map-preview { grid-template-columns: 1fr; } .discovery-page .discovery-live-map { min-height: 260px; } }
+
+
+/* Mantiene el lienzo del mapa dentro de su columna y quita la capa decorativa del mapa ilustrado. */
+.discovery-page #discovery-map.discovery-live-map { height: 300px; min-height: 300px; max-height: 300px; align-self: stretch; }
+.discovery-page #discovery-map.discovery-live-map::after { content: none; display: none; }
+
+
+/* Mapa compacto, responsive y con controles táctiles visibles. */
+.discovery-page .discovery-map-preview { grid-template-columns: minmax(0, 1.08fr) minmax(260px, .92fr); gap: 24px; min-width: 0; }
+.discovery-page .discovery-map-frame { position: relative; min-width: 0; height: 230px; overflow: hidden; border-radius: 16px; isolation: isolate; }
+.discovery-page #discovery-map.discovery-live-map { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; max-height: none; border-radius: inherit; }
+.discovery-page #discovery-map.discovery-live-map::after { content: none; display: none; }
+.discovery-page .discovery-map-controls { position: absolute; z-index: 5; top: 10px; right: 10px; display: grid; gap: 6px; }
+.discovery-page .discovery-map-controls button { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid rgba(30,70,55,.18); border-radius: 10px; background: var(--surface, #fff); color: var(--primary, #28684f); box-shadow: 0 2px 8px rgba(0,0,0,.15); font: 700 20px/1 sans-serif; cursor: pointer; }
+.discovery-page .discovery-map-controls button:hover { transform: translateY(-1px); }
+.discovery-page .discovery-map-controls button:focus-visible { outline: 3px solid var(--primary, #28684f); outline-offset: 2px; }
+.discovery-page .discovery-map-copy { min-width: 0; }
+@media (max-width: 760px) { .discovery-page .discovery-map-preview { grid-template-columns: minmax(0,1fr); gap: 14px; } .discovery-page .discovery-map-frame { height: 205px; } .discovery-page .discovery-map-preview .map-copy { padding: 4px; } }
+
+
+/* El lienzo y los marcadores comparten el tamaño calculado por MapLibre. */
+.discovery-page #discovery-map .maplibregl-canvas { max-width: none; }
+.discovery-page #discovery-map .discovery-marker-anchor { width: 30px; height: 30px; }
+.discovery-page #discovery-map .discovery-restaurant-marker { display: grid; place-items: center; box-sizing: border-box; width: 30px; height: 30px; padding: 0; border: 3px solid #fff; border-radius: 50%; background: #e44835; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.5); cursor: pointer; }
+.discovery-page #discovery-map .discovery-restaurant-marker span { font-size: 13px; line-height: 1; }
+.discovery-page #discovery-map .discovery-marker-anchor:hover, .discovery-page #discovery-map .discovery-marker-anchor:focus-within { z-index: 2; }
+.discovery-page #discovery-map .discovery-restaurant-marker:hover, .discovery-page #discovery-map .discovery-restaurant-marker:focus-visible { background: #b9271d; outline: 2px solid #fff; outline-offset: 2px; }
