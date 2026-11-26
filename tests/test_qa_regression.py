@@ -40,6 +40,7 @@ def data(monkeypatch):
     monkeypatch.setattr("app.models.promotion.PromotionModel.list_by_restaurante", lambda *a, **k: [])
     monkeypatch.setattr("app.repositories.empresas.EmpresasRepository.list_all", lambda **k: [company])
     monkeypatch.setattr("app.repositories.usuarios.UsuariosRepository.list_by_role", lambda *a, **k: [row])
+    monkeypatch.setattr('app.models.order.OrderModel.list_by_restaurante', lambda *a, **k: [])
     return row, user_read
 
 def sign_in(client):
@@ -52,6 +53,7 @@ def test_public_views(app, data, path):
     with app.test_client() as c:
         response = c.get(path)
         assert response.status_code == 200
+        assert "/mi-cocina" not in response.text
         assert b"food-scene.js" not in response.data
         assert b"chart-4.3.0" not in response.data
         for asset in re.findall(r'(?:src|href)="(/static/[^"?]+)', response.text):
@@ -66,7 +68,7 @@ def test_login_and_all_private_views(app, data, role):
                "/kitchen/": {"business_owner", "business_admin", "manager", "kitchen", "admin"}}
     with app.test_client() as c:
         assert c.post("/auth/login", data={"username": "qa", "password": "QA-only-pass123"}).status_code == 302
-        for path in ["/", "/admin/", "/owner/", "/salon/", "/kitchen/", "/recompensas/", "/mi-cocina/"]:
+        for path in ["/", "/admin/", "/owner/", "/salon/", "/kitchen/", "/recompensas/"]:
             reads.reset_mock()
             response = c.get(path)
             assert response.status_code == (403 if path in allowed and role not in allowed[path] else 200), (role, path)
@@ -130,3 +132,12 @@ def test_search_contract(app, data):
     response = app.test_client().get("/descubrir/api/restaurants?q=QA")
     assert response.status_code == 200
     assert response.json["restaurantes"][0]["nombre"] == "QA restaurante"
+
+
+@pytest.mark.parametrize("authenticated", [False, True])
+@pytest.mark.parametrize("path", ["/mi-cocina/", "/mi-cocina/api/despensa"])
+def test_home_kitchen_removed(app, data, authenticated, path):
+    with app.test_client() as client:
+        if authenticated:
+            sign_in(client)
+        assert client.get(path).status_code == 404

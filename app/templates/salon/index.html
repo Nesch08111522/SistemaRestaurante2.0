@@ -1,8 +1,15 @@
-{% extends "base.html" %}
-{% block title %}Salón · {{ APP_NAME }}{% endblock %}
+{% extends 'workspace/base.html' %}
+{% block title %}Salón y mesas{% endblock %}
 {% block content %}
-<section class="card">
-  <h1>Salón</h1>
-  <p>Mesas en vivo (pendiente de tabla `mesas`).</p>
-</section>
+<div class="ws-pagehead"><div><h1>Salón y mesas</h1><p>Registra mesas y controla su ocupación y limpieza.</p></div><a class="ws-button" href="{{ url_for('owner.dashboard') }}">Mi empresa</a></div>
+{% if restaurant %}
+<form class="ws-toolbar" method="get"><label for="restaurant">Restaurante</label><select id="restaurant" name="restaurante_id">{% for r in restaurants %}<option value="{{ r.id_restaurante }}" {% if r.id_restaurante == restaurant.id_restaurante %}selected{% endif %}>{{ r.nombre }}</option>{% endfor %}</select><button class="ws-button">Consultar</button></form>
+<section id="salon" data-endpoint="{{ url_for('salon.api_mesas', restaurante_id=restaurant.id_restaurante) }}">
+<p id="salon-status" class="ws-notice" role="status" aria-live="polite">Cargando mesas…</p>
+<button id="salon-refresh" class="ws-button" type="button">Actualizar salón</button>
+<form id="salon-create" class="ws-card ws-form" hidden><h2>Registrar mesa</h2><label>Nombre<input name="nombre" maxlength="24" required></label><label>Zona<input name="zona" maxlength="40" value="General" required></label><label>Capacidad<input name="capacidad" type="number" min="1" max="40" value="4" required></label><button class="ws-button primary" type="submit">Guardar mesa</button></form>
+<p id="salon-plan" class="muted" hidden>Tu plan o rol permite atender mesas, pero no administrarlas. Solicita al administrador el permiso de gestión de mesas.</p>
+<div id="salon-tables" class="ws-section ws-grid three"></div></section>
+{% else %}<section class="ws-card"><p>No hay restaurantes registrados.</p><a class="ws-button" href="{{ url_for('owner.dashboard') }}">Registrar restaurante</a></section>{% endif %}
 {% endblock %}
+{% block scripts %}<script type="module" src="{{ url_for('static',filename='js/workspace-salon.js') }}"></script>{% endblock %}

@@ -9,3 +9,9 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
 .workspace fieldset{border:1px solid var(--line);border-radius:12px;padding:12px}.workspace legend{color:var(--muted);font-size:12px}.ws-check{display:flex;align-items:center;gap:8px;padding:7px 0}.ws-check input{accent-color:var(--teal)}
+
+/* Keep the return action visible on every private page, including narrow screens. */
+.ws-return{white-space:nowrap;font-size:12px;min-height:40px;flex-shrink:0}.ws-avatar{flex-shrink:0}
+@media(max-width:760px){.ws-topbar{flex-wrap:wrap;gap:10px}.ws-top-left{flex:1 1 auto}.ws-top-actions{margin-left:auto;gap:8px}.ws-return{padding:9px 11px}}
+
+.ws-order-steps{display:flex;flex-wrap:wrap;gap:12px 24px;list-style:none;padding:16px 0;margin:0 0 24px;border-bottom:1px solid var(--line);color:var(--muted);font-size:12px}.ws-order-steps li{display:flex;align-items:center;gap:8px}.ws-order-steps li[aria-current]{color:var(--teal);font-weight:700}.ws-order-steps span{display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--line);border-radius:50%}.ws-order-steps li[aria-current] span{background:rgba(86,214,192,.12);border-color:var(--teal)}.ws-business-choice{display:flex;flex-direction:column;gap:12px}.ws-business-choice h2,.ws-business-choice p{margin:0}.ws-business-choice .ws-button{margin-top:auto;align-self:flex-start}

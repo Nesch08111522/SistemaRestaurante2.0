@@ -33,8 +33,5 @@ def register_blueprints(app):
     from app.blueprints.loyalty import bp as loyalty_bp
     app.register_blueprint(loyalty_bp, url_prefix="/recompensas")
 
-    from app.blueprints.pantry import bp as pantry_bp
-    app.register_blueprint(pantry_bp, url_prefix="/mi-cocina")
-
     from app.blueprints.ar import bp as ar_bp
     app.register_blueprint(ar_bp, url_prefix="/ar")

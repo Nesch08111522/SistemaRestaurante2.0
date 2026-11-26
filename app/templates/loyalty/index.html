@@ -1,8 +1,11 @@
-{% extends "base.html" %}
-{% block title %}Recompensas · {{ APP_NAME }}{% endblock %}
+{% extends "workspace/base.html" %}
+{% block title %}Mis puntos{% endblock %}
+{% block section %}Mi cuenta{% endblock %}
 {% block content %}
-<section class="card">
-  <h1>Recompensas</h1>
-  <p>Puntos pendientes de migración.</p>
+<div class="ws-pagehead"><div><span class="ws-eyebrow">MI CUENTA</span><h1>Mis puntos</h1><p>Tus próximas recompensas, en un solo lugar.</p></div><span class="ws-badge">Próximamente</span></div>
+<section class="ws-card ws-empty">
+  <h2>Estamos preparando tus recompensas</h2>
+  <p>El programa de puntos aún no está disponible. Cuando se active, aquí podrás consultar tu saldo y tus recompensas.</p>
+  <a class="ws-button primary" href="{{ url_for('public.home') }}">Explorar negocios ↗</a>
 </section>
 {% endblock %}

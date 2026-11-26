@@ -163,6 +163,7 @@ def recover_complete():
     return redirect(url_for("auth.login_form"))
 
 
+
 @bp.get("/api/whoami")
 def api_whoami():
     from app.core.security import fresh_session_user

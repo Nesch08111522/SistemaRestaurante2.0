@@ -3,7 +3,7 @@ import logging
 import uuid
 from time import perf_counter
 
-from flask import Flask, g, jsonify, render_template, request
+from flask import Flask, Request, g, jsonify, render_template, request
 from flask_wtf.csrf import CSRFError
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -13,8 +13,18 @@ from app.extensions import csrf
 logger = logging.getLogger(__name__)
 
 
+class SmartRestoRequest(Request):
+    @property
+    def max_content_length(self):
+        limit = super().max_content_length
+        if self.endpoint == "ar.upload":
+            return min(limit, 9 * 1024 * 1024) if limit is not None else 9 * 1024 * 1024
+        return limit
+
+
 def create_app(test_config: dict | None = None) -> Flask:
     app = Flask(__name__)
+    app.request_class = SmartRestoRequest
     app.config.from_object(Config)
     if test_config:
         app.config.update(test_config)
@@ -44,12 +54,6 @@ def create_app(test_config: dict | None = None) -> Flask:
         from app.db.connection import check_application_schema
         check_application_schema()
         logger.info("Esquema PostgreSQL verificado.")
-
-    # Bound multipart size before Flask-WTF reads the body for CSRF validation.
-    @app.before_request
-    def menu3d_upload_limit():
-        if request.endpoint == "ar.upload":
-            request.max_content_length = 9 * 1024 * 1024
 
     # 4. CSRF
     csrf.init_app(app)

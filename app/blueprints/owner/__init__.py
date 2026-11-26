@@ -8,17 +8,26 @@ from app.core.auth_guard import empresa_required, login_required, role_required
 from app.models.order import OrderModel
 from app.models.restaurant import RestaurantModel
 from app.models.review import ReviewModel
+from app.blueprints.workspace import workspace_errors
 
 bp = Blueprint("owner", __name__, template_folder="../../templates/owner")
 
 
 @bp.get("/")
+@workspace_errors
 @login_required
-@empresa_required
 @role_required("business_owner", "business_admin", "manager")
 def dashboard():
     from flask import g
-    empresa = g.empresa
+    from app.models.company import get_company_for_user
+    from app.blueprints.workspace import actor, WorkspaceError
+    empresa = get_company_for_user(actor()['id'])
+    if not empresa:
+        if actor()['role'] in {'business_owner', 'admin'}:
+            from .business_routes import registration_form
+            return registration_form()
+        raise WorkspaceError('Solicita una membresía activa al administrador de tu empresa.', 403)
+    g.empresa = empresa
     restaurantes = RestaurantModel.list_by_empresa(empresa["id_empresa"])
     total_resenas = 0
     promedio = 0.0
@@ -176,4 +185,4 @@ def api_menu_import_confirm():
     return jsonify({"success": True, **result}), 200
 
 
-from . import operation_routes  # noqa: E402,F401
+from . import operation_routes, business_routes, document_routes  # noqa: E402,F401

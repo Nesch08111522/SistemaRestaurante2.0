@@ -51,12 +51,13 @@ def test_enqueue_chains_an_amended_review():
     assert second["hash_previo"] == first["hash_canonico"]
 
 
-def test_dry_run_never_submits_onchain():
+def test_dry_run_never_submits_onchain(monkeypatch):
+    def forbidden():
+        raise AssertionError("dry-run no debe crear un cliente blockchain")
+    monkeypatch.setattr(traceability, "OnchainPublisher", forbidden)
     store = Store()
     traceability.enqueue_ai_decision({"id_decision": 8, "tipo": "recommend", "entidad": "menu",
                                       "id_usuario_actor": 21, "hash_entrada": "a" * 64,
                                       "estado": "ok", "creado_en": "2026-01-01"}, store)
     assert traceability.process_pending(store, mode="dry-run") == {"mode": "dry_run", "processed": 1}
     assert store.marked == [(1, {"estado": "simulado"})]
-    with pytest.raises(ValueError, match="on-chain"):
-        traceability.process_pending(store, mode="onchain")

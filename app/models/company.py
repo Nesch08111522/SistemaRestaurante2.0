@@ -125,11 +125,17 @@ def get_company_for_user(user_id: int) -> dict[str, Any] | None:
     if not membresias:
         return None
 
-    primera = membresias[0]
-    id_empresa = primera["id_empresa"]
-    empresa = EmpresasRepository.get_by_id(id_empresa)
+    empresa = None
+    for primera in membresias:
+        if primera.get('estado') != 'active':
+            continue
+        candidate = EmpresasRepository.get_by_id(primera['id_empresa'])
+        if candidate and candidate.get('estado') == 'active':
+            empresa = candidate
+            break
     if not empresa:
         return None
+    id_empresa = empresa['id_empresa']
 
     suscripcion = EmpresasSuscripcionesRepository.get_by_empresa(id_empresa) or {}
     sucursales = SucursalesRepository.list_by_empresa(id_empresa)
