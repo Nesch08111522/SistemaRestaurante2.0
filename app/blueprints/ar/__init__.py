@@ -221,3 +221,5 @@ def publish(pid):
 def private_asset(resource_id,kind):
     row,_,_ = service.owned_resource(resource_id)
     return asset(row,kind)
+
+from . import menu_import_routes

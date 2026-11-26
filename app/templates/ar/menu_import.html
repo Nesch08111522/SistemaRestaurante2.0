@@ -1,0 +1,21 @@
+<section class="m3d-bulk" aria-labelledby="bulk-title">
+  <span class="m3d-eyebrow">TU CARTA, EN MENOS PASOS</span>
+  <h2 id="bulk-title">Registra varios platos a la vez</h2>
+  <p>Completa una plantilla o fotografía tu carta. Revisa los datos y elige qué platos guardar en el restaurante seleccionado.</p>
+  <div class="m3d-bulk-options">
+    <div><h3>1. Desde Excel o Word</h3><p>Una fila por plato, hasta 100 platos. Nombre y precio obligatorios.</p>
+      <div class="m3d-actions"><a id="bulk-excel">Descargar Excel</a><a id="bulk-word">Descargar Word</a></div>
+      <form id="bulk-document"><label>Plantilla completada<input name="archivo" type="file" accept=".xlsx,.docx" required></label><button type="submit">Leer plantilla</button></form>
+    </div>
+    <div><h3>2. Desde una foto de la carta</h3><p>Sube una imagen o usa la cámara del celular. JPEG, PNG o WebP; máximo 2 MB por archivo.</p>
+      <form id="bulk-photo"><input type="hidden" name="tipo" value="foto"><label>Foto de la carta<input name="archivo" type="file" accept="image/jpeg,image/png,image/webp" required></label><label>O tomar una foto<input id="bulk-camera" type="file" accept="image/*" capture="environment"></label><button type="submit">Leer foto de la carta</button></form>
+      <p class="m3d-note">La foto se envía al servicio de IA para leerla. Verifica los precios y los datos extraídos antes de guardar.</p>
+    </div>
+  </div>
+  <p id="bulk-status" role="status" aria-live="polite"></p>
+  <form id="bulk-review" hidden>
+    <h3>3. Revisa y registra tus platos</h3><p>Corrige los campos necesarios. Desmarca los platos que no quieras importar. Usa punto y coma para separar ingredientes y otras listas.</p>
+    <div id="bulk-rows"></div>
+    <div class="m3d-actions"><button type="submit" id="bulk-save">Registrar platos seleccionados</button><button type="button" id="bulk-cancel">Descartar borrador</button></div>
+  </form>
+</section>

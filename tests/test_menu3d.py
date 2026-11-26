@@ -212,6 +212,7 @@ def test_save_dish_reuses_existing_tables(app,operations,monkeypatch):
     with app.test_request_context():result=service.save_dish(1,{'nombre':'QA','precio':'10.50','ingredientes':['Tomate']})
     assert result['id_plato']==12;assert insert.call_args.kwargs['id_restaurante']==1
     replacements[0].assert_called_once_with(12,['Tomate'])
+    assert insert.call_args.kwargs['categoria'] is None
 
 
 def resource(**kw):
@@ -368,3 +369,22 @@ def test_allegens_validated_not_inferred():
     result=dish_payload({'nombre':'QA','precio':'12','alergenos':['Maní']})
     assert result['alergenos']==['Maní']
     assert dish_payload({'nombre':'QA','precio':'12'})['alergenos']==[]
+
+
+@pytest.mark.parametrize('category,expected', [('', None), (' fondo ', 'Fondo'), ('Entrada', 'Entrada')])
+def test_save_category_matches_database_contract(app,operations,monkeypatch,category,expected):
+    monkeypatch.setattr('app.repositories.categorias_plato.CategoriasPlatoRepository.list_all',lambda:['Fondo','Entrada'])
+    insert=Mock(return_value={'id_plato':12});monkeypatch.setattr(service.PlatosRepository,'insert',insert)
+    for repo in [service.PlatosIngredientesRepository,service.PlatosEtiquetasRepository,service.PlatosRestriccionesDieteticasRepository]:
+        monkeypatch.setattr(repo,'replace_for',Mock())
+    monkeypatch.setattr(service,'query',Mock())
+    with app.test_request_context():service.save_dish(1,{'nombre':'QA','precio':'10.50','categoria':category})
+    assert insert.call_args.kwargs['categoria']==expected
+
+
+def test_save_unknown_category_is_validation_error_before_insert(app,operations,monkeypatch):
+    monkeypatch.setattr('app.repositories.categorias_plato.CategoriasPlatoRepository.list_all',lambda:['Fondo','Entrada'])
+    insert=Mock();monkeypatch.setattr(service.PlatosRepository,'insert',insert)
+    with app.test_request_context(), pytest.raises(ValueError,match='Categoría no válida'):
+        service.save_dish(1,{'nombre':'QA','precio':'10.50','categoria':'Ceviches'})
+    insert.assert_not_called()

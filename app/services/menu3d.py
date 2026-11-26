@@ -62,6 +62,16 @@ def save_dish(rid, body, pid=None):
         dish = PlatosRepository.get_by_id(pid)
         if not dish or dish['id_restaurante'] != rid: abort(404)
     data = dish_payload(body)
+    # Empty optional categories must be SQL NULL, never an empty foreign key.
+    if data['categoria']:
+        from app.repositories.categorias_plato import CategoriasPlatoRepository
+        categories = CategoriasPlatoRepository.list_all()
+        canonical = next((name for name in categories if name.casefold() == data['categoria'].casefold()), None)
+        if canonical is None:
+            raise ValueError('Categoría no válida para ' + data['nombre'] + '. Selecciona: ' + ', '.join(categories) + ', o deja la categoría vacía.')
+        data['categoria'] = canonical
+    else:
+        data['categoria'] = None
     ingredients = data.pop('ingredientes'); tags = data.pop('etiquetas'); restrictions = data.pop('restricciones_dieteticas')
     allergens = data.pop('alergenos')
     with shared_transaction():

@@ -76,5 +76,6 @@ if(root){
     e.preventDefault();const b=photoForm.querySelector('[type=submit]');b.disabled=true;
     try{await api(`/ar/api/gestion/platos/${currentDish.id_plato}/fotografias`,{method:'POST',body:new FormData(photoForm)});photoForm.reset();clearPreviews();message('m3d-studio-message','Fotografías guardadas. La generación requiere tu confirmación de costo.');await resources();}catch(err){message('m3d-studio-message',err.message,true);}finally{b.disabled=false;}
   });
+  select.addEventListener('menu-imported',()=>{page=1;load();});
   studio.addEventListener('close',load);load();
 }

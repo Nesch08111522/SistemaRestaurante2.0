@@ -1,11 +1,12 @@
 {% extends "workspace/base.html" %}
 {% block title %}Gestionar Menú 3D · SmartResto{% endblock %}
-{% block head %}<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="{{ url_for('static', filename='css/menu3d.css') }}">{% endblock %}
+{% block head %}<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="{{ url_for('static', filename='css/menu3d.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/menu-import.css') }}">{% endblock %}
 {% block content %}
 <div class="m3d" id="menu3d-admin">
   <header class="m3d-heading"><span class="m3d-eyebrow">TU RESTAURANTE / ESTUDIO 3D</span><h1>De tu cocina,<br>a una nueva dimensión.</h1><p>Administra tu carta, fotografía tus platos y aprueba cada modelo antes de compartirlo.</p></header>
   <div class="m3d-toolbar"><label>Restaurante<select id="m3d-restaurant">{% for r in restaurantes %}<option value="{{ r.id_restaurante }}">{{ r.nombre }}</option>{% endfor %}</select></label><button id="m3d-new" {% if not restaurantes %}disabled{% endif %}>＋ Registrar plato</button><a id="m3d-public-link" hidden>Ver menú público ↗</a></div>
   {% if not restaurantes %}<p class="m3d-empty">No hay restaurantes que puedas administrar con tu membresía y suscripción actuales.</p>{% endif %}
+  {% include 'ar/menu_import.html' %}
   <div class="m3d-stats" id="m3d-stats"></div>
   <p id="m3d-message" role="status" aria-live="polite"></p>
   <div class="m3d-grid" id="m3d-admin-grid"></div>
@@ -32,4 +33,4 @@
   {% include 'ar/viewer.html' %}
 </div>
 {% endblock %}
-{% block scripts %}<script type="module" src="{{ url_for('static',filename='js/menu3d-admin.js') }}"></script>{% endblock %}
+{% block scripts %}<script type="module" src="{{ url_for('static',filename='js/menu3d-admin.js') }}"></script><script type="module" src="{{ url_for('static', filename='js/menu-import.js') }}"></script>{% endblock %}
