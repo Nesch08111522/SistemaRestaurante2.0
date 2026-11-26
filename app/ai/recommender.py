@@ -16,6 +16,11 @@ def recommend(
     preferencias: list[str],
     catalogo: list[dict],
     contexto: str = "busco algo rico cerca de mí",
+    max_price: object | None = None,
+    favorite_restaurant_ids: set[int] | None = None,
+    search_terms: list[str] | None = None,
+    origin: tuple[float, float] | None = None,
+    feedback_by_dish: dict[int, str] | None = None,
 ) -> dict[str, Any]:
     """
     Genera recomendaciones con explicación.
@@ -23,6 +28,9 @@ def recommend(
     """
     shortlist = rank_catalog(
         catalog=catalogo, preferences=preferencias, restrictions=restricciones,
+        max_price=max_price, favorite_restaurant_ids=favorite_restaurant_ids,
+        search_terms=search_terms, origin=origin,
+        feedback_by_dish=feedback_by_dish,
     )
     if not shortlist:
         return {"razon": "No hay opciones compatibles con las restricciones indicadas.", "items": [], "confianza": 1.0, "candidatos": []}

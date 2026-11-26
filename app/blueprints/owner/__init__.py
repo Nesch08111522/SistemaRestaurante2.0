@@ -149,4 +149,31 @@ def api_menu_import_preview():
     return jsonify({"success": True, "platos": platos, "total": len(platos)}), 200
 
 
+@bp.post("/api/menu/import-confirm")
+@login_required
+@empresa_required
+@role_required("business_owner", "business_admin", "manager")
+def api_menu_import_confirm():
+    """Persist an explicitly confirmed, server-revalidated menu preview."""
+    from flask import g
+    from app.services.errors import DomainError
+    from app.services.menu_import import confirm
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"success": False, "error": "Envía un JSON con restaurante_id y platos."}), 400
+    try:
+        restaurant_id = int(data.get("restaurante_id"))
+    except (TypeError, ValueError):
+        return jsonify({"success": False, "error": "restaurante_id es obligatorio."}), 400
+    restaurant = RestaurantModel.get_by_id(restaurant_id, full=False)
+    if not restaurant or restaurant.get("id_empresa") != g.empresa["id_empresa"]:
+        return jsonify({"success": False, "error": "No puedes importar en ese restaurante."}), 404
+    try:
+        result = confirm(restaurant_id, data.get("platos"))
+    except DomainError as exc:
+        return jsonify({"success": False, "error": exc.message}), exc.status
+    return jsonify({"success": True, **result}), 200
+
+
 from . import operation_routes  # noqa: E402,F401
