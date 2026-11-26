@@ -21,7 +21,7 @@
   --forest-border: var(--content-border);
   --forest-face: linear-gradient(145deg, var(--content-surface), var(--content-soft));
 }
-.sr-public-site #main-content :is(.forest-hero, .forest-recommendation) {
+.sr-public-site #main-content :is(.forest-hero, .forest-recommendation, .forest-home-kitchen) {
   background: linear-gradient(135deg, var(--sr-primary-soft), var(--content-soft));
   border-color: var(--content-border);
 }
@@ -29,7 +29,7 @@
   background: var(--content-surface);
   border-color: var(--content-border);
 }
-.sr-public-site #main-content :is(.forest-section-heading h2, .forest-recommendation h2, .forest-nearby h2) {
+.sr-public-site #main-content :is(.forest-section-heading h2, .forest-recommendation h2, .forest-nearby h2, .forest-home-kitchen h2) {
   color: var(--content-text);
 }
 .sr-public-site #main-content :is(.forest-text-link, .forest-outline, .forest-hero-personal) {

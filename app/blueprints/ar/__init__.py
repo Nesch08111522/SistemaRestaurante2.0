@@ -16,6 +16,7 @@ from app.services.menu3d_storage import Storage, IntegrationError
 bp = Blueprint('ar',__name__)
 
 
+
 @bp.errorhandler(ValueError)
 def invalid(error):
     return jsonify(success=False,error=str(error),code='invalid_input'),400

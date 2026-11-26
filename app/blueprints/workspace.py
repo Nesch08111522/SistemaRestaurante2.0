@@ -72,7 +72,7 @@ def navigation():
     role = (user or {}).get('role', 'guest')
     business = role in {'business_owner', 'business_admin', 'manager', 'admin'}
     service = business or role in {'cashier', 'waiter'}
-    kitchen = role in {'business_admin', 'manager', 'admin', 'kitchen'}
+    kitchen = business or role == 'kitchen'
     groups = [ ('MI EXPERIENCIA', [
         ('auth.workspace_home', 'Mi inicio', 'home', True),
         ('market.checkout', 'Hacer un pedido', 'menu', True),
@@ -94,6 +94,6 @@ def navigation():
         ('MI CUENTA', [
         ('auth.notifications', 'Notificaciones', 'bell', True),
         ('auth.profile', 'Mi perfil', 'user', True),
-        ('loyalty.index', 'Mis puntos · Próximamente', 'star', True)])]
+        ('loyalty.index', 'Mis puntos', 'star', True)])]
     return [(title, [(url_for(ep), label, icon, ep == request.endpoint) for ep,label,icon,allowed in entries
                      if allowed and ep in current_app.view_functions]) for title,entries in groups]

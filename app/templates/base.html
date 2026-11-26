@@ -1,7 +1,7 @@
 
 {%- set shell_user = current_user or {} -%}
 {%- set sr_authenticated = session.get('user_id') is not none -%}
-{%- set sr_private = sr_authenticated and request.blueprint in ('owner', 'admin', 'salon', 'kitchen', 'copilot', 'intelligence', 'loyalty', 'comunicacion', 'catalog', 'sites', 'trust_center', 'companies', 'business_access') -%}
+{%- set sr_private = sr_authenticated and request.blueprint in ('owner', 'admin', 'salon', 'kitchen', 'copilot', 'intelligence', 'loyalty', 'pantry', 'home_kitchen', 'comunicacion', 'catalog', 'sites', 'trust_center', 'companies', 'business_access') -%}
 {%- set sr_auth = request.blueprint == 'auth' -%}
 {%- set sr_discover = request.endpoint == 'public.home' -%}
 {%- set sr_admin_ui = sr_private and shell_user is mapping and shell_user.get('role') == 'admin' -%}

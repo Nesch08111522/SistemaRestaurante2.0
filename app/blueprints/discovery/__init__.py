@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from flask import Blueprint, jsonify, render_template, request
 
+from app.core.auth_guard import login_required
 from app.models.restaurant import RestaurantModel
 
 bp = Blueprint("discovery", __name__, template_folder="../../templates/discovery")
@@ -91,28 +92,71 @@ def api_recommend():
     """
     from flask import session
     from app.ai.recommender import recommend
+    from app.models.search_history import SearchHistoryModel
+    from app.repositories.favoritos import FavoritosRepository
+    from app.repositories.promociones import PromocionesRepository
+    from app.repositories.feedback_recomendaciones_usuario import FeedbackRecomendacionesUsuarioRepository
+    from app.repositories.usuarios import UsuariosPreferenciasRepository, UsuariosRestriccionesRepository
 
     payload = request.get_json(silent=True) or {}
     restricciones = payload.get("restricciones") or []
     preferencias = payload.get("preferencias") or []
+    if (not isinstance(restricciones, list) or not isinstance(preferencias, list)
+            or not all(isinstance(value, str) for value in [*restricciones, *preferencias])):
+        return jsonify({"success": False, "error": "preferencias y restricciones deben ser listas de texto."}), 400
     contexto = payload.get("contexto") or "busco algo rico cerca de mí"
 
     user_id = session.get("user_id")
     id_usuario_actor = int(user_id) if user_id else 0
+    if user_id:
+        # Stored profile signals supplement, but never replace, explicit request values.
+        preferencias = list(dict.fromkeys([*UsuariosPreferenciasRepository.list_for_user(id_usuario_actor), *preferencias]))
+        restricciones = list(dict.fromkeys([*UsuariosRestriccionesRepository.list_for_user(id_usuario_actor), *restricciones]))
+        history = SearchHistoryModel.get_full(id_usuario_actor)["busquedas"]
+        search_terms = [entry.get("termino", "") for entry in history]
+        favorites = {row["id_restaurante"] for row in FavoritosRepository.list_by_usuario(id_usuario_actor)}
+        feedback = FeedbackRecomendacionesUsuarioRepository.list_for_user(id_usuario_actor)
+    else:
+        search_terms, favorites, feedback = [], set(), {}
+    location = payload.get("ubicacion")
+    origin = None
+    if location is not None:
+        if not isinstance(location, dict):
+            return jsonify({"success": False, "error": "ubicacion debe incluir latitud y longitud."}), 400
+        try:
+            origin = (float(location["latitud"]), float(location["longitud"]))
+            if not (-90 <= origin[0] <= 90 and -180 <= origin[1] <= 180):
+                raise ValueError
+        except (KeyError, TypeError, ValueError):
+            return jsonify({"success": False, "error": "Ubicación inválida."}), 400
+    max_price = payload.get("max_price")
+    if max_price is not None:
+        from decimal import Decimal, InvalidOperation
+        try:
+            parsed_price = Decimal(str(max_price))
+            if not parsed_price.is_finite() or parsed_price < 0:
+                raise InvalidOperation
+        except (InvalidOperation, ValueError):
+            return jsonify({"success": False, "error": "max_price es inválido."}), 400
 
     # Catálogo simplificado de platos publicados
     restaurantes = RestaurantModel.list_published(limit=30)
     catalogo: list[dict] = []
     for r in restaurantes[:10]:
         menu = RestaurantModel.get_full_menu(r["id_restaurante"])
+        promotion = bool(PromocionesRepository.list_by_restaurante(r["id_restaurante"], vigentes=True))
         for p in menu[:5]:
             catalogo.append({
                 "id": p["id_plato"],
                 "tipo": "plato",
                 "nombre": p["nombre"],
                 "restaurante": r["nombre"],
+                "id_restaurante": r["id_restaurante"],
                 "precio": float(p.get("precio") or 0),
                 "restricciones": p.get("restricciones_dieteticas") or [],
+                "etiquetas": p.get("etiquetas") or [], "categoria": p.get("categoria"),
+                "calificacion": r.get("calificacion"), "latitud": r.get("latitud"),
+                "longitud": r.get("longitud"), "promocion": promotion,
             })
 
     resultado = recommend(
@@ -121,5 +165,36 @@ def api_recommend():
         preferencias=[str(x) for x in preferencias],
         catalogo=catalogo,
         contexto=str(contexto)[:300],
+        max_price=max_price, favorite_restaurant_ids=favorites,
+        search_terms=search_terms, origin=origin,
+        feedback_by_dish=feedback,
     )
+    if user_id and isinstance(contexto, str) and contexto.strip():
+        SearchHistoryModel.register_search(id_usuario_actor, termino=contexto.strip()[:240], consulta=contexto.strip()[:240])
     return jsonify({"success": True, "catalogo_total": len(catalogo), "recomendacion": resultado}), 200
+
+
+@bp.post("/api/recommend/feedback")
+@login_required
+def api_recommend_feedback():
+    """Store a private positive or negative signal for a real catalog dish."""
+    from flask import session
+    from app.repositories.feedback_recomendaciones_usuario import FeedbackRecomendacionesUsuarioRepository
+    from app.repositories.platos import PlatosRepository
+
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"success": False, "error": "Envía id_plato y valor."}), 400
+    try:
+        dish_id = int(payload.get("id_plato"))
+    except (TypeError, ValueError):
+        return jsonify({"success": False, "error": "id_plato es obligatorio."}), 400
+    value = payload.get("valor")
+    if value not in {"me_interesa", "no_me_interesa"}:
+        return jsonify({"success": False, "error": "valor debe ser me_interesa o no_me_interesa."}), 400
+    if not PlatosRepository.get_by_id(dish_id):
+        return jsonify({"success": False, "error": "Plato no encontrado."}), 404
+    row = FeedbackRecomendacionesUsuarioRepository.upsert(
+        id_usuario=int(session["user_id"]), id_plato=dish_id, valor=value
+    )
+    return jsonify({"success": True, "feedback": row}), 200

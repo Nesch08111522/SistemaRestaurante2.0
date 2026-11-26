@@ -9,6 +9,7 @@ from app.repositories.decisiones_ia import (
     DecisionesIARepository,
     DecisionesIAAtributosRepository,
 )
+from app.db.repository import shared_transaction
 
 
 class AIDecisionModel:
@@ -50,20 +51,23 @@ class AIDecisionModel:
         )
         hash_entrada = sha256(raw.encode("utf-8")).hexdigest()
 
-        row = DecisionesIARepository.insert(
-            tipo=tipo,
-            entidad=entidad,
-            id_usuario_actor=id_usuario_actor,
-            hash_entrada=hash_entrada,
-            id_entidad=id_entidad,
-            modelo=modelo,
-            confianza=confianza,
-            estado=estado,
-            latencia_ms=latencia_ms,
-            codigo_error=codigo_error,
-        )
-        if salida:
-            DecisionesIAAtributosRepository.replace_for(
-                row["id_decision"], "salida", salida
+        with shared_transaction():
+            row = DecisionesIARepository.insert(
+                tipo=tipo,
+                entidad=entidad,
+                id_usuario_actor=id_usuario_actor,
+                hash_entrada=hash_entrada,
+                id_entidad=id_entidad,
+                modelo=modelo,
+                confianza=confianza,
+                estado=estado,
+                latencia_ms=latencia_ms,
+                codigo_error=codigo_error,
             )
+            if salida:
+                DecisionesIAAtributosRepository.replace_for(
+                    row["id_decision"], "salida", salida
+                )
+            from app.services.traceability import enqueue_ai_decision
+            enqueue_ai_decision(row)
         return cls.get_by_id(row["id_decision"])

@@ -39,4 +39,9 @@ def save_review(*, user_id: int, restaurant_id: int, rating: int, comment: str) 
                 "VALUES (%s,%s,%s,%s,NOW(),NOW()) RETURNING *",
                 (int(restaurant_id), int(user_id), rating, comment or None),
             )
-        return cur.fetchone()
+        review = cur.fetchone()
+        # A review and its anchor are committed together; an unanchored review
+        # is not silently accepted when traceability is enabled by migration.
+        from app.services.traceability import enqueue_review
+        enqueue_review(review)
+        return review
